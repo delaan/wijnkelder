@@ -1,0 +1,12 @@
+{
+  "name": "Wijnkelder",
+  "short_name": "Wijnkelder",
+  "description": "Beheer je persoonlijke wijnvoorraad",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#faf7f2",
+  "theme_color": "#3d0f16",
+  "icons": [
+    { "src": "/wine-icon.svg", "sizes": "any", "type": "image/svg+xml" }
+  ]
+}
