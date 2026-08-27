@@ -56,6 +56,8 @@ export default {
           'system-ui',
           'sans-serif',
         ],
+        // Krantenkop-serif (Broadsheet-ontwerp) — voor titels en beeldmerk, nooit voor lopende UI-tekst.
+        serif: ['"Newsreader"', 'Georgia', '"Times New Roman"', 'serif'],
       },
       borderRadius: {
         'token-sm': 'var(--radius-sm)',

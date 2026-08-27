@@ -3,7 +3,7 @@ import { HeartIcon, StarIcon } from './icons'
 
 export default function WineListRow({ wine, onOpen, onToggleFavorite, hidePrivate }) {
   return (
-    <div className="flex items-center gap-1 py-1.5 px-1.5 rounded-token-md hover:bg-surface-2 transition-colors">
+    <div className="flex items-center gap-1 py-1 border-t border-border">
       <div
         role="button"
         tabIndex={0}
@@ -14,9 +14,9 @@ export default function WineListRow({ wine, onOpen, onToggleFavorite, hidePrivat
             onOpen(wine)
           }
         }}
-        className="flex flex-1 min-w-0 items-center gap-3 py-1.5 px-1.5 text-left cursor-pointer"
+        className="flex flex-1 min-w-0 items-center gap-3 py-2 text-left cursor-pointer"
       >
-        <span className="w-11 h-11 rounded-token-md bg-surface-2 flex items-center justify-center shrink-0 overflow-hidden">
+        <span className="w-11 h-11 bg-surface-2 flex items-center justify-center shrink-0 overflow-hidden">
           {wine.label_photo_url ? (
             <img src={wine.label_photo_url} alt="" className="w-full h-full object-cover" />
           ) : (
@@ -25,30 +25,26 @@ export default function WineListRow({ wine, onOpen, onToggleFavorite, hidePrivat
         </span>
 
         <div className="flex-1 min-w-0">
-          <p className="font-medium text-text-primary truncate flex items-center gap-1.5">
+          <p className="font-serif font-semibold text-[15px] text-text-primary truncate flex items-center gap-1.5">
             {wine.name}
             {wine.rating > 0 && (
-              <span className="inline-flex items-center gap-0.5 text-warning text-xs font-normal shrink-0">
+              <span className="inline-flex items-center gap-0.5 text-warning text-xs font-sans font-normal shrink-0">
                 <StarIcon filled size={11} />
                 {wine.rating}
               </span>
             )}
           </p>
-          <p className="text-text-secondary text-xs truncate">
+          <p className="byline truncate">
             {wine.producer || '—'} {wine.vintage ? `· ${wine.vintage}` : ''} {wine.region ? `· ${wine.region}` : ''}
           </p>
         </div>
 
         <div className="hidden sm:flex flex-col items-end shrink-0 w-32">
-          <span className="text-xs text-text-tertiary">{colorLabel(wine.color)}</span>
-          {wine.tasting_profile && (
-            <span className="text-xs text-text-tertiary">{tasteLabel(wine.tasting_profile)}</span>
-          )}
+          <span className="byline">{colorLabel(wine.color)}</span>
+          {wine.tasting_profile && <span className="byline">{tasteLabel(wine.tasting_profile)}</span>}
         </div>
 
-        {!hidePrivate && (
-          <span className="text-text-primary text-sm font-medium w-10 text-right shrink-0">{wine.quantity}×</span>
-        )}
+        {!hidePrivate && <span className="byline w-10 text-right shrink-0">{wine.quantity}×</span>}
       </div>
 
       {onToggleFavorite && (

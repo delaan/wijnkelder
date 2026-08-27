@@ -3,6 +3,7 @@ import { useCellarZones } from '../hooks/useCellarZones'
 import { colorDot } from '../lib/wineHelpers'
 import { MapIcon, PlusIcon, TrashIcon, XIcon, CheckIcon } from './icons'
 import Spinner from './Spinner'
+import PageHeader from './PageHeader'
 
 const inputClass =
   'w-full h-11 rounded-token-md border border-border bg-surface px-3 text-base text-text-primary focus:outline-none focus:ring-2 focus:ring-accent'
@@ -26,7 +27,7 @@ function AddZoneForm({ onSave, onClose }) {
   }
 
   return (
-    <form onSubmit={handleSubmit} className="bg-surface border border-border rounded-token-lg p-4 space-y-3">
+    <form onSubmit={handleSubmit} className="border border-border-strong bg-surface p-4 space-y-3">
       <div>
         <label className={labelClass}>Naam van de zone/rek</label>
         <input required autoFocus value={name} onChange={(e) => setName(e.target.value)} placeholder="bv. Rek A, Kelderkast" className={inputClass} />
@@ -55,14 +56,15 @@ function AddZoneForm({ onSave, onClose }) {
 
 function ZoneCell({ wine, onOpenWine }) {
   if (!wine) {
-    return <div className="aspect-square rounded-token-sm border border-dashed border-border bg-surface-2/50" />
+    return <div className="aspect-square border border-border-strong bg-transparent" />
   }
   return (
     <button
       type="button"
       onClick={() => onOpenWine(wine)}
       title={wine.name}
-      className="aspect-square rounded-token-sm border border-border bg-surface-2 overflow-hidden flex items-center justify-center relative hover:ring-2 hover:ring-accent"
+      className="aspect-square border overflow-hidden flex items-center justify-center relative hover:ring-2 hover:ring-accent"
+      style={{ borderColor: colorDot(wine.color), backgroundColor: `${colorDot(wine.color)}1a` }}
     >
       {wine.label_photo_url ? (
         <img src={wine.label_photo_url} alt="" className="w-full h-full object-cover" />
@@ -102,7 +104,7 @@ function ZoneCard({ zone, wines, onOpenWine, onUpdateZone, onDeleteZone }) {
   }
 
   return (
-    <div className="bg-surface border border-border rounded-token-lg p-4 space-y-3">
+    <div className="pt-5 border-t border-border-strong space-y-3">
       {editing ? (
         <form onSubmit={handleSaveEdit} className="space-y-3">
           <div>
@@ -130,13 +132,13 @@ function ZoneCard({ zone, wines, onOpenWine, onUpdateZone, onDeleteZone }) {
         </form>
       ) : (
         <>
-          <div className="flex items-start justify-between gap-3">
-            <div>
-              <h3 className="font-semibold text-text-primary">{zone.name}</h3>
-              <p className="text-text-tertiary text-xs mt-0.5">
-                {zone.rows} × {zone.cols} · {filledCount} van {zone.rows * zone.cols} plekken bezet
-              </p>
-            </div>
+          <div className="flex items-baseline justify-between gap-3">
+            <h3 className="font-serif text-xl font-semibold text-text-primary">{zone.name}</h3>
+            <p className="byline whitespace-nowrap">
+              {zone.rows} × {zone.cols} · {filledCount} van {zone.rows * zone.cols} plekken bezet
+            </p>
+          </div>
+          <div className="flex items-center justify-end gap-3 -mt-2">
             <div className="flex items-center gap-1 shrink-0">
               {!confirmDelete ? (
                 <>
@@ -198,22 +200,20 @@ export default function CellarMap({ userId, wines, onOpenWine }) {
 
   return (
     <div className="space-y-5">
-      <div className="flex items-center justify-between gap-3">
-        <div>
-          <h1 className="text-2xl font-bold text-text-primary flex items-center gap-2.5">
-            <MapIcon size={20} className="text-accent-soft-text" /> Kelderkaart
-          </h1>
-          <p className="text-text-secondary text-sm mt-1">Waar je flessen precies liggen, per rek of zone.</p>
-        </div>
-        {!addOpen && (
-          <button
-            onClick={() => setAddOpen(true)}
-            className="h-11 px-4 rounded-token-md bg-accent hover:bg-accent-hover text-accent-contrast text-sm font-semibold flex items-center gap-1.5 shrink-0"
-          >
-            <PlusIcon size={15} /> Zone toevoegen
-          </button>
-        )}
-      </div>
+      <PageHeader
+        eyebrow="Waar staat wat"
+        title="Kelderkaart"
+        action={
+          !addOpen && (
+            <button
+              onClick={() => setAddOpen(true)}
+              className="h-11 px-4 border border-border-strong text-text-secondary text-sm font-medium flex items-center gap-1.5 hover:border-text-primary hover:text-text-primary transition-colors"
+            >
+              <PlusIcon size={14} /> Zone toevoegen
+            </button>
+          )
+        }
+      />
 
       {addOpen && <AddZoneForm onSave={addZone} onClose={() => setAddOpen(false)} />}
 
@@ -224,7 +224,7 @@ export default function CellarMap({ userId, wines, onOpenWine }) {
       ) : error ? (
         <p className="text-danger-text text-sm">Kelderkaart kon niet worden opgehaald: {error}</p>
       ) : zones.length === 0 && !addOpen ? (
-        <div className="bg-surface border border-border rounded-token-lg text-center py-16">
+        <div className="text-center py-16 border-t border-border">
           <MapIcon size={28} className="text-text-tertiary mx-auto mb-3" />
           <p className="text-text-secondary text-sm">Nog geen zones ingedeeld.</p>
           <p className="text-text-tertiary text-xs mt-1">

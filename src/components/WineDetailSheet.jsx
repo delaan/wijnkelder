@@ -15,8 +15,8 @@ function Field({ label, value }) {
   if (!value) return null
   return (
     <div>
-      <p className="text-text-tertiary text-xs uppercase tracking-wide">{label}</p>
-      <p className="text-text-primary text-sm mt-0.5">{value}</p>
+      <dt>{label}</dt>
+      <dd>{value}</dd>
     </div>
   )
 }
@@ -131,29 +131,32 @@ export default function WineDetailSheet({ wine, onClose, onToggleFavorite, onUnc
 
         <div className="p-5 space-y-6">
           <div>
-            <p className="text-text-secondary text-sm">{wine.producer || '—'}</p>
-            <div className="flex flex-wrap items-center gap-2 mt-2">
-              <span className="text-xs px-2.5 py-1 rounded-token-full bg-surface-2 text-text-secondary">
+            <p className="kicker mb-1">{wine.producer || '—'}</p>
+            <h1 className="font-serif text-2xl font-semibold text-text-primary leading-tight">{wine.name}</h1>
+            <div className="flex flex-wrap items-center gap-1.5 mt-3">
+              <span className="text-[10.5px] font-semibold uppercase tracking-wide px-2 py-1 border border-border-strong text-text-secondary">
                 {colorLabel(wine.color)}
               </span>
               {wine.vintage && (
-                <span className="text-xs px-2.5 py-1 rounded-token-full bg-surface-2 text-text-secondary">
+                <span className="text-[10.5px] font-semibold uppercase tracking-wide px-2 py-1 border border-border-strong text-text-secondary">
                   {wine.vintage}
                 </span>
               )}
               {tasteLabel(wine.tasting_profile) && (
-                <span className="text-xs px-2.5 py-1 rounded-token-full bg-surface-2 text-text-secondary">
+                <span className="text-[10.5px] font-semibold uppercase tracking-wide px-2 py-1 border border-border-strong text-text-secondary">
                   {tasteLabel(wine.tasting_profile)}
                 </span>
               )}
               {status && (
-                <span className={`text-xs px-2.5 py-1 rounded-token-full ${status.tone}`}>{status.label}</span>
+                <span className={`text-[10.5px] font-semibold uppercase tracking-wide px-2 py-1 border border-border-strong ${status.tone}`}>
+                  {status.label}
+                </span>
               )}
               <StarRating value={wine.rating || 0} size={14} />
             </div>
           </div>
 
-          <div className="grid grid-cols-2 gap-4">
+          <dl className="fact-list grid grid-cols-2 gap-4">
             <Field label="Regio" value={wine.region} />
             <Field label="Land" value={wine.country} />
             <Field label="Appellatie" value={wine.appellation} />
@@ -165,14 +168,14 @@ export default function WineDetailSheet({ wine, onClose, onToggleFavorite, onUnc
               label="Drinkvenster"
               value={wine.drink_from || wine.drink_until ? `${wine.drink_from || '…'} – ${wine.drink_until || '…'}` : null}
             />
-          </div>
+          </dl>
 
           {foodPairing.length > 0 && (
             <div>
-              <p className="text-text-tertiary text-xs uppercase tracking-wide mb-1.5">Food pairing</p>
+              <p className="kicker mb-1.5">Food pairing</p>
               <div className="flex flex-wrap gap-1.5">
                 {foodPairing.map((f) => (
-                  <span key={f} className="text-xs px-2.5 py-1 rounded-token-full bg-surface-2 text-text-secondary">
+                  <span key={f} className="text-[10.5px] font-semibold uppercase tracking-wide px-2 py-1 border border-border-strong text-text-secondary">
                     {pairingLabel(f)}
                   </span>
                 ))}
@@ -182,26 +185,26 @@ export default function WineDetailSheet({ wine, onClose, onToggleFavorite, onUnc
 
           {!hidePrivate && (
             <>
-              <div className="border-t border-border pt-5 grid grid-cols-2 gap-4">
+              <dl className="fact-list border-t border-border pt-5 grid grid-cols-2 gap-4">
                 <Field label="Aankoopprijs" value={wine.purchase_price ? formatCurrency(wine.purchase_price) : null} />
                 <Field label="Geschatte waarde" value={wine.estimated_value ? formatCurrency(wine.estimated_value) : null} />
                 <Field label="Aankoopdatum" value={wine.purchase_date ? formatDate(wine.purchase_date) : null} />
                 <Field label="Aankooplocatie" value={wine.purchase_location} />
                 <Field label="Locatie in kelder" value={wine.location} />
-              </div>
+              </dl>
               {wine.tasting_notes && (
                 <div>
-                  <p className="text-text-tertiary text-xs uppercase tracking-wide mb-1">Persoonlijke notities</p>
+                  <p className="kicker mb-1">Persoonlijke notities</p>
                   <p className="text-text-primary text-sm whitespace-pre-wrap">{wine.tasting_notes}</p>
                 </div>
               )}
 
               <div className="border-t border-border pt-5">
                 <div className="flex items-center justify-between mb-3">
-                  <h3 className="font-semibold text-text-primary flex items-center gap-2">
+                  <h3 className="font-serif font-semibold text-text-primary flex items-center gap-2">
                     <WineGlassIcon size={17} /> Ontkurken
                   </h3>
-                  <span className="text-text-secondary text-sm">{wine.quantity} op voorraad</span>
+                  <span className="byline">{wine.quantity} op voorraad</span>
                 </div>
                 {maxUncork === 0 ? (
                   <p className="text-text-tertiary text-sm">Geen voorraad meer om te ontkurken.</p>

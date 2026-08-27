@@ -307,7 +307,6 @@ function WineApp({ user, signOut }) {
             onToggleFavorite={handleToggleFavorite}
             onGoToCollection={() => setView('collection')}
             displayName={displayName}
-            heroImageUrl={cellarSettings.settings?.hero_image_url}
           />
         )}
         {view === 'collection' && (
@@ -320,6 +319,7 @@ function WineApp({ user, signOut }) {
             onOpenWine={openDetail}
             onToggleFavorite={handleToggleFavorite}
             showFavoritesToggle={false}
+            title="Favorieten"
           />
         )}
         {view === 'history' && <History userId={user.id} />}
