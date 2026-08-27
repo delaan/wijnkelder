@@ -109,11 +109,15 @@ export default function WineForm({ wine, onSave, onClose, onUploadPhoto }) {
       <div
         className="relative bg-surface w-[calc(100%-1.5rem)] md:w-full md:max-w-lg rounded-token-lg shadow-token-lg max-h-[calc(100vh-9rem)] md:max-h-[92vh] overflow-y-auto safe-bottom mb-[calc(6.5rem+env(safe-area-inset-bottom))] md:mb-0 animate-slide-up"
       >
-        <div className="sticky top-0 bg-surface/95 backdrop-blur border-b border-border px-5 py-4 flex items-center justify-between z-10">
-          <h2 id="wine-form-title" className="font-semibold text-text-primary">{wine ? 'Wijn bewerken' : 'Handmatig toevoegen'}</h2>
-          <button onClick={onClose} aria-label="Sluiten" className="w-10 h-10 rounded-token-full flex items-center justify-center text-text-tertiary hover:bg-surface-2 hover:text-text-primary transition-colors">
-            <XIcon size={16} />
-          </button>
+        <div className="sticky top-0 z-10">
+          {/* Losse achtergrondlaag voor de vervaging — zie toelichting in TopBar.jsx */}
+          <div className="absolute inset-0 bg-surface/95 backdrop-blur border-b border-border" aria-hidden="true" />
+          <div className="relative px-5 py-4 flex items-center justify-between">
+            <h2 id="wine-form-title" className="font-semibold text-text-primary">{wine ? 'Wijn bewerken' : 'Handmatig toevoegen'}</h2>
+            <button onClick={onClose} aria-label="Sluiten" className="w-10 h-10 rounded-token-full flex items-center justify-center text-text-tertiary hover:bg-surface-2 hover:text-text-primary transition-colors">
+              <XIcon size={16} />
+            </button>
+          </div>
         </div>
 
         <form onSubmit={handleSubmit} className="px-5 py-5 space-y-4">

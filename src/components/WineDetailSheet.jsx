@@ -84,29 +84,33 @@ export default function WineDetailSheet({ wine, onClose, onToggleFavorite, onUnc
         aria-labelledby="wine-detail-title"
         className="relative bg-surface w-[calc(100%-1.5rem)] md:w-full md:max-w-lg rounded-token-lg shadow-token-lg max-h-[calc(100vh-9rem)] md:max-h-[92vh] overflow-y-auto safe-bottom mb-[calc(6.5rem+env(safe-area-inset-bottom))] md:mb-0 animate-slide-up"
       >
-        <div className="sticky top-0 bg-surface/95 backdrop-blur border-b border-border px-5 py-4 flex items-center justify-between z-10">
-          <h2 id="wine-detail-title" className="font-semibold text-text-primary truncate pr-4">
-            {wine.name}
-          </h2>
-          <div className="flex items-center gap-1 shrink-0">
-            {onToggleFavorite && (
+        <div className="sticky top-0 z-10">
+          {/* Losse achtergrondlaag voor de vervaging — zie toelichting in TopBar.jsx */}
+          <div className="absolute inset-0 bg-surface/95 backdrop-blur border-b border-border" aria-hidden="true" />
+          <div className="relative px-5 py-4 flex items-center justify-between">
+            <h2 id="wine-detail-title" className="font-semibold text-text-primary truncate pr-4">
+              {wine.name}
+            </h2>
+            <div className="flex items-center gap-1 shrink-0">
+              {onToggleFavorite && (
+                <button
+                  onClick={() => onToggleFavorite(wine)}
+                  aria-label={wine.is_favorite ? 'Verwijderen uit favorieten' : 'Toevoegen aan favorieten'}
+                  aria-pressed={wine.is_favorite}
+                  className="w-10 h-10 rounded-token-full flex items-center justify-center text-accent-soft-text hover:bg-surface-2"
+                >
+                  <HeartIcon filled={wine.is_favorite} size={18} />
+                </button>
+              )}
               <button
-                onClick={() => onToggleFavorite(wine)}
-                aria-label={wine.is_favorite ? 'Verwijderen uit favorieten' : 'Toevoegen aan favorieten'}
-                aria-pressed={wine.is_favorite}
-                className="w-10 h-10 rounded-token-full flex items-center justify-center text-accent-soft-text hover:bg-surface-2"
+                ref={closeRef}
+                onClick={onClose}
+                aria-label="Sluiten"
+                className="w-10 h-10 rounded-token-full flex items-center justify-center text-text-secondary hover:bg-surface-2"
               >
-                <HeartIcon filled={wine.is_favorite} size={18} />
+                <XIcon size={18} />
               </button>
-            )}
-            <button
-              ref={closeRef}
-              onClick={onClose}
-              aria-label="Sluiten"
-              className="w-10 h-10 rounded-token-full flex items-center justify-center text-text-secondary hover:bg-surface-2"
-            >
-              <XIcon size={18} />
-            </button>
+            </div>
           </div>
         </div>
 

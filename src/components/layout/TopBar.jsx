@@ -15,7 +15,13 @@ export default function TopBar({ title, cellarName, logoType, logoUrl, onAdd, em
   const userMenuRef = useFocusTrap(userMenuOpen ? () => setUserMenuOpen(false) : null)
 
   return (
-    <header className="sticky top-0 z-nav bg-surface/90 backdrop-blur border-b border-border safe-top">
+    <header className="sticky top-0 z-nav">
+      {/* Losse achtergrondlaag voor de vervaging: Safari rendert soms de hele
+          balk (incl. tekst) wazig als de blur direct op het sticky element
+          zelf staat, i.p.v. op een aparte laag erachter — vooral zichtbaar
+          op iPad. */}
+      <div className="absolute inset-0 bg-surface/90 backdrop-blur border-b border-border" aria-hidden="true" />
+      <div className="relative safe-top">
       <div className="h-16 flex items-center gap-3">
         <div className="hidden md:flex items-center gap-2.5 w-64 shrink-0 min-w-0 pl-5">
           <span className="w-8 h-8 rounded-token-md bg-accent-soft flex items-center justify-center shrink-0 overflow-hidden">
@@ -85,6 +91,7 @@ export default function TopBar({ title, cellarName, logoType, logoUrl, onAdd, em
             </div>
           )}
         </div>
+      </div>
       </div>
     </header>
   )

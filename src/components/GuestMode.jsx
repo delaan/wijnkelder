@@ -122,21 +122,25 @@ export default function GuestMode({ wines, cellarName, logoType, logoUrl, heroIm
 
   return (
     <div className="min-h-screen bg-bg">
-      <header className="sticky top-0 z-nav bg-surface/90 backdrop-blur border-b border-border safe-top">
-        <div className="h-16 px-4 sm:px-6 flex items-center gap-3 max-w-6xl mx-auto">
-          <button
-            onClick={onExit}
-            className="flex items-center gap-2.5 shrink-0"
-            aria-label="Terug naar normale weergave (tik op het logo)"
-          >
-            <span className="w-8 h-8 rounded-token-md bg-accent-soft flex items-center justify-center overflow-hidden">
-              <LogoMark logoType={logoType} logoUrl={logoUrl} size={17} className="text-accent-soft-text" />
-            </span>
-            <span className="font-semibold text-text-primary truncate">{cellarName}</span>
-          </button>
-          <div className="ml-auto flex items-center gap-1">
-            <span className="text-xs text-text-tertiary hidden sm:inline mr-1">Gastmodus</span>
-            <ThemeToggle />
+      <header className="sticky top-0 z-nav">
+        {/* Losse achtergrondlaag voor de vervaging — zie toelichting in TopBar.jsx */}
+        <div className="absolute inset-0 bg-surface/90 backdrop-blur border-b border-border" aria-hidden="true" />
+        <div className="relative safe-top">
+          <div className="h-16 px-4 sm:px-6 flex items-center gap-3 max-w-6xl mx-auto">
+            <button
+              onClick={onExit}
+              className="flex items-center gap-2.5 shrink-0"
+              aria-label="Terug naar normale weergave (tik op het logo)"
+            >
+              <span className="w-8 h-8 rounded-token-md bg-accent-soft flex items-center justify-center overflow-hidden">
+                <LogoMark logoType={logoType} logoUrl={logoUrl} size={17} className="text-accent-soft-text" />
+              </span>
+              <span className="font-semibold text-text-primary truncate">{cellarName}</span>
+            </button>
+            <div className="ml-auto flex items-center gap-1">
+              <span className="text-xs text-text-tertiary hidden sm:inline mr-1">Gastmodus</span>
+              <ThemeToggle />
+            </div>
           </div>
         </div>
       </header>

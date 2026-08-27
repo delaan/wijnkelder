@@ -26,7 +26,7 @@ export default function Sidebar({ view, onNavigate }) {
 
   return (
     <aside className="hidden md:flex md:flex-col w-64 shrink-0 border-r border-border bg-surface h-[calc(100vh-4rem)] sticky top-16 overflow-y-auto">
-      <nav className="flex-1 flex flex-col px-3 py-4" aria-label="Hoofdnavigatie">
+      <nav className="flex-1 flex flex-col px-3 pt-4 pb-[calc(1rem+env(safe-area-inset-bottom))]" aria-label="Hoofdnavigatie">
         <div className="space-y-1">{primaryItems.map(renderItem)}</div>
         {secondaryItems.length > 0 && (
           <div className="mt-auto pt-3 border-t border-border space-y-1">{secondaryItems.map(renderItem)}</div>

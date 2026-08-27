@@ -43,7 +43,7 @@ export default function SearchBar({
         nearBottomNav
           ? 'bottom-[calc(6rem+env(safe-area-inset-bottom))]'
           : 'bottom-[calc(1.25rem+env(safe-area-inset-bottom))]'
-      } md:bottom-[calc(3rem+env(safe-area-inset-bottom))] ${
+      } md:bottom-[calc(1rem+env(safe-area-inset-bottom))] ${
         fullWidth ? 'inset-x-0' : 'inset-x-0 md:inset-x-auto md:left-64 md:right-0'
       }`}
       style={keyboardOffset > 0 ? { bottom: keyboardOffset + 12 } : undefined}
