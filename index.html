@@ -13,6 +13,9 @@
     <link rel="manifest" href="/manifest.json" />
     <!-- Font Awesome Free (iconen in de hele app) -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" referrerpolicy="no-referrer" />
+    <!-- Start het laden van de standaard dashboard-/gastmodusfoto meteen, parallel aan de app zelf,
+         zodat hij al (grotendeels) klaar is tegen de tijd dat het scherm hem nodig heeft. -->
+    <link rel="preload" as="image" href="/hero-default.jpg" fetchpriority="high" />
     <title>Wijnkast — mijn wijncollectie</title>
     <meta name="description" content="Beheer, ontdek en presenteer je persoonlijke wijncollectie — op iPhone, iPad en desktop." />
   </head>

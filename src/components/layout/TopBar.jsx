@@ -9,7 +9,7 @@ import ThemeToggle from '../ThemeToggle'
 // balk. Op mobiel (geen zijbalk) toont het middendeel de schermtitel; het
 // "Wijn toevoegen"-knopje staat op mobiel niet meer hier maar prominent in
 // de navigatiebalk onderin.
-export default function TopBar({ title, cellarName, logoType, logoUrl, onAdd, email, onSignOut }) {
+export default function TopBar({ title, cellarName, logoType, logoUrl, onAdd, email, avatarUrl, onSignOut }) {
   const [userMenuOpen, setUserMenuOpen] = useState(false)
 
   return (
@@ -48,9 +48,13 @@ export default function TopBar({ title, cellarName, logoType, logoUrl, onAdd, em
                 aria-haspopup="menu"
                 aria-expanded={userMenuOpen}
                 aria-label="Accountmenu"
-                className="w-11 h-11 rounded-token-full bg-surface-2 flex items-center justify-center text-text-secondary hover:text-text-primary transition-colors"
+                className="w-11 h-11 rounded-token-full bg-surface-2 flex items-center justify-center text-text-secondary hover:text-text-primary transition-colors overflow-hidden"
               >
-                <span className="text-sm font-semibold uppercase">{email[0]}</span>
+                {avatarUrl ? (
+                  <img src={avatarUrl} alt="" className="w-full h-full object-cover" />
+                ) : (
+                  <span className="text-sm font-semibold uppercase">{email[0]}</span>
+                )}
               </button>
               {userMenuOpen && (
                 <>

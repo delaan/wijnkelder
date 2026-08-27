@@ -21,6 +21,7 @@ import {
 import Collection from './Collection'
 import SearchBar from './SearchBar'
 import ThemeToggle from './ThemeToggle'
+import HeroBanner from './HeroBanner'
 
 // Per categorie een passend icoon en een eigen tint, zodat elke kaart er
 // herkenbaar en "beeldend" uitziet, ook zonder echte foto's.
@@ -96,7 +97,7 @@ function CategoryTile({ label, Icon, tint, onClick }) {
   )
 }
 
-export default function GuestMode({ wines, cellarName, logoType, logoUrl, onOpenWine, onExit }) {
+export default function GuestMode({ wines, cellarName, logoType, logoUrl, heroImageUrl, onOpenWine, onExit }) {
   const [filter, setFilter] = useState(null) // { kind, value, label } | 'all' | null
   const [search, setSearch] = useState('')
 
@@ -143,13 +144,12 @@ export default function GuestMode({ wines, cellarName, logoType, logoUrl, onOpen
       <main className="max-w-5xl mx-auto px-4 sm:px-6 py-8 pb-48 md:pb-32">
         {!filter ? (
           <>
-            <div className="text-center mb-8">
-              <h1 className="text-2xl sm:text-3xl font-bold text-text-primary">Welkom bij {cellarName}</h1>
-              <p className="text-text-secondary text-sm sm:text-base mt-2 max-w-md mx-auto">
-                Blader gerust door de collectie. Kies een wijntype, smaakprofiel of gerecht om inspiratie te
-                krijgen — of bekijk direct de hele voorraad.
-              </p>
-            </div>
+            <HeroBanner
+              heroImageUrl={heroImageUrl}
+              title={`Welkom bij ${cellarName}`}
+              subtitle="Blader gerust door de collectie. Kies een wijntype, smaakprofiel of gerecht om inspiratie te krijgen — of bekijk direct de hele voorraad."
+              className="mb-8"
+            />
 
             <div className="text-center mb-10">
               <button

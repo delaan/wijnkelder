@@ -129,6 +129,7 @@ function WineApp({ user, signOut }) {
   const displayName = cellarSettings.settings?.display_name
   const logoType = cellarSettings.settings?.logo_type
   const logoUrl = cellarSettings.settings?.logo_url
+  const avatarUrl = cellarSettings.settings?.avatar_url
   const needsOnboarding = !cellarSettings.loading && !cellarSettings.settings?.onboarding_completed
 
   const overlays = (
@@ -197,6 +198,7 @@ function WineApp({ user, signOut }) {
         cellarName={cellarName}
         logoType={logoType}
         logoUrl={logoUrl}
+        avatarUrl={avatarUrl}
         onDone={markWelcomed}
       />
     )
@@ -210,6 +212,7 @@ function WineApp({ user, signOut }) {
           cellarName={cellarName}
           logoType={logoType}
           logoUrl={logoUrl}
+          heroImageUrl={cellarSettings.settings?.hero_image_url}
           onOpenWine={(w) => openDetail(w, true)}
           onExit={() => setView('dashboard')}
         />
@@ -231,6 +234,7 @@ function WineApp({ user, signOut }) {
         title={VIEW_TITLES[view]}
         onAdd={() => setAddModalOpen(true)}
         email={user.email}
+        avatarUrl={avatarUrl}
         onSignOut={signOut}
       >
         {view === 'dashboard' && (
@@ -261,6 +265,7 @@ function WineApp({ user, signOut }) {
             onUpdate={cellarSettings.update}
             onUploadLogo={cellarSettings.uploadLogo}
             onUploadHeroImage={cellarSettings.uploadHeroImage}
+            onUploadAvatar={cellarSettings.uploadAvatar}
             isAdmin={isAdmin}
             onOpenAdmin={() => setView('admin')}
             onResetSuccess={() => {

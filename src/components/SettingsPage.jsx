@@ -3,7 +3,7 @@ import { useTheme } from '../context/ThemeContext'
 import { ACCENT_PRESETS, isValidHex } from '../lib/color'
 import { LOGO_PRESETS, LogoMark } from '../lib/logoPresets'
 import { setResetCode, resetCellar } from '../lib/cellarApi'
-import { SunIcon, MoonIcon, AutoIcon, CheckIcon, LockIcon, ColorWheelIcon } from './icons'
+import { SunIcon, MoonIcon, AutoIcon, CheckIcon, LockIcon, ColorWheelIcon, CameraIcon } from './icons'
 
 function SettingsSection({ title, description, children }) {
   return (
@@ -16,10 +16,20 @@ function SettingsSection({ title, description, children }) {
   )
 }
 
-export default function SettingsPage({ settings, onUpdate, onUploadLogo, onUploadHeroImage, isAdmin, onOpenAdmin, onResetSuccess }) {
+export default function SettingsPage({
+  settings,
+  onUpdate,
+  onUploadLogo,
+  onUploadHeroImage,
+  onUploadAvatar,
+  isAdmin,
+  onOpenAdmin,
+  onResetSuccess,
+}) {
   const { preference, setPreference, accent, setAccent } = useTheme()
   const logoInput = useRef(null)
   const heroInput = useRef(null)
+  const avatarInput = useRef(null)
 
   const [name, setName] = useState(settings?.cellar_name || 'Mijn wijnkelder')
   const [nameSaved, setNameSaved] = useState(false)
@@ -28,6 +38,7 @@ export default function SettingsPage({ settings, onUpdate, onUploadLogo, onUploa
   const [customColor, setCustomColor] = useState(accent)
   const [uploadingLogo, setUploadingLogo] = useState(false)
   const [uploadingHero, setUploadingHero] = useState(false)
+  const [uploadingAvatar, setUploadingAvatar] = useState(false)
 
   const [newCode, setNewCode] = useState('')
   const [codeMessage, setCodeMessage] = useState(null)
@@ -81,6 +92,23 @@ export default function SettingsPage({ settings, onUpdate, onUploadLogo, onUploa
     await onUpdate({ hero_image_url: null })
   }
 
+  const handleAvatarUpload = async (e) => {
+    const file = e.target.files?.[0]
+    if (!file) return
+    setUploadingAvatar(true)
+    try {
+      const url = await onUploadAvatar(file)
+      await onUpdate({ avatar_url: url })
+    } finally {
+      setUploadingAvatar(false)
+      if (avatarInput.current) avatarInput.current.value = ''
+    }
+  }
+
+  const handleRemoveAvatar = async () => {
+    await onUpdate({ avatar_url: null })
+  }
+
   const handleCustomColorChange = (hex) => {
     setCustomColor(hex)
     if (isValidHex(hex)) setAccent(hex)
@@ -125,9 +153,45 @@ export default function SettingsPage({ settings, onUpdate, onUploadLogo, onUploa
         <p className="text-text-secondary text-sm mt-1">Naam, logo, vormgeving en beheer van je kelder.</p>
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 items-start">
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 items-start lg:items-stretch">
       <SettingsSection title="Identiteit">
         <div className="space-y-4">
+          <div>
+            <label className="block text-sm font-medium text-text-secondary mb-2">Profielfoto</label>
+            <div className="flex items-center gap-3">
+              <button
+                type="button"
+                onClick={() => avatarInput.current?.click()}
+                disabled={uploadingAvatar}
+                aria-label={settings?.avatar_url ? 'Andere profielfoto kiezen' : 'Profielfoto uploaden'}
+                className="w-16 h-16 rounded-token-full border border-dashed border-border-strong flex items-center justify-center overflow-hidden shrink-0 text-text-tertiary disabled:opacity-50"
+              >
+                {settings?.avatar_url ? (
+                  <img src={settings.avatar_url} alt="" className="w-full h-full object-cover" />
+                ) : (
+                  <CameraIcon size={20} />
+                )}
+              </button>
+              <div className="flex flex-col items-start gap-1">
+                <button
+                  type="button"
+                  onClick={() => avatarInput.current?.click()}
+                  disabled={uploadingAvatar}
+                  className="text-sm font-medium text-accent-soft-text disabled:opacity-50"
+                >
+                  {uploadingAvatar ? 'Bezig met uploaden…' : settings?.avatar_url ? 'Andere foto kiezen' : 'Foto uploaden'}
+                </button>
+                {settings?.avatar_url && (
+                  <button type="button" onClick={handleRemoveAvatar} className="text-sm font-medium text-text-secondary">
+                    Verwijderen
+                  </button>
+                )}
+              </div>
+              <input ref={avatarInput} type="file" accept="image/*" onChange={handleAvatarUpload} className="hidden" />
+            </div>
+            <p className="text-text-tertiary text-xs mt-2">Te zien in het accountmenu en je welkomstscherm.</p>
+          </div>
+
           <div>
             <label className="block text-sm font-medium text-text-secondary mb-1">Jouw naam</label>
             <div className="flex items-center gap-2">

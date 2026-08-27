@@ -14,9 +14,11 @@ export default function AddWineModal({ onSave, onClose, onUploadPhoto }) {
 
   if (mode === 'ai') {
     return (
-      <div className="fixed inset-0 z-modal flex items-end sm:items-center justify-center" role="dialog" aria-modal="true" aria-labelledby="ai-stub-title" ref={aiDialogRef}>
+      <div className="fixed inset-0 z-modal flex items-end md:items-center justify-center" role="dialog" aria-modal="true" aria-labelledby="ai-stub-title" ref={aiDialogRef}>
         <div className="absolute inset-0 backdrop-blur-md" style={{ background: 'var(--overlay)' }} onClick={onClose} aria-hidden="true" />
-        <div className="relative bg-surface w-full sm:max-w-sm sm:rounded-token-lg rounded-t-token-lg shadow-token-lg p-6 text-center">
+        <div
+          className="relative bg-surface w-[calc(100%-1.5rem)] md:w-full md:max-w-sm rounded-token-lg shadow-token-lg p-6 text-center mb-[calc(6.5rem+env(safe-area-inset-bottom))] md:mb-0 animate-slide-up md:animate-fade-in"
+        >
           <button onClick={onClose} aria-label="Sluiten" className="absolute right-4 top-4 w-9 h-9 rounded-token-full flex items-center justify-center text-text-tertiary hover:bg-surface-2">
             <XIcon size={16} />
           </button>
@@ -40,9 +42,11 @@ export default function AddWineModal({ onSave, onClose, onUploadPhoto }) {
   }
 
   return (
-    <div className="fixed inset-0 z-modal flex items-end sm:items-center justify-center" role="dialog" aria-modal="true" aria-labelledby="add-wine-title" ref={chooseDialogRef}>
+    <div className="fixed inset-0 z-modal flex items-end md:items-center justify-center" role="dialog" aria-modal="true" aria-labelledby="add-wine-title" ref={chooseDialogRef}>
       <div className="absolute inset-0 backdrop-blur-md" style={{ background: 'var(--overlay)' }} onClick={onClose} aria-hidden="true" />
-      <div className="relative bg-surface w-full sm:max-w-sm sm:rounded-token-lg rounded-t-token-lg shadow-token-lg p-5">
+      <div
+        className="relative bg-surface w-[calc(100%-1.5rem)] md:w-full md:max-w-sm rounded-token-lg shadow-token-lg p-5 mb-[calc(6.5rem+env(safe-area-inset-bottom))] md:mb-0 animate-slide-up md:animate-fade-in"
+      >
         <div className="flex items-center justify-between mb-4">
           <h2 id="add-wine-title" className="font-semibold text-text-primary">Wijn toevoegen</h2>
           <button onClick={onClose} aria-label="Sluiten" className="w-9 h-9 rounded-token-full flex items-center justify-center text-text-tertiary hover:bg-surface-2">

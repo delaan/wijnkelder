@@ -283,6 +283,42 @@ Open je app-link met een harde refresh. Op "Mijn kelder" zie je nu bovenaan een 
 - **Favorieten verplaatst op mobiel**: niet meer als apart item in de navigatiebalk onderin, maar als knop binnen de Collectie-tab (op desktop staat Favorieten gewoon nog in de zijbalk)
 - **Navigatiebalk onderin altijd passend**: labels krimpen netjes mee zodat alle tekst altijd op het scherm past, ook op kleinere telefoons
 
+## Stap 13 — Bijwerken: profielfoto, snellere achtergrondfoto en verbeterd wijn-toevoegen-scherm op mobiel
+
+Je bestaande account, wijnen, gebruikers en instellingen blijven gewoon behouden. Volg deze stappen in deze volgorde.
+
+**13a. Code bijwerken via GitHub Desktop**
+
+1. De nieuwe bestanden staan al klaargezet in je lokale map `wijnkelder`.
+2. Open **GitHub Desktop**, vul linksonder een korte omschrijving in (bijv. "Profielfoto, snellere achtergrondfoto en verbeterd toevoegscherm").
+3. Klik op **Commit to main**, en daarna op **Push origin**.
+
+Netlify start automatisch een nieuwe deploy (1-2 minuten) — voortgang volgen kan op je Netlify-dashboard onder **Deploys**.
+
+**13b. De database bijwerken**
+
+1. Ga in Supabase naar **SQL Editor → New query**.
+2. Open `supabase/migration_v5.sql` uit het nieuwe project, kopieer de hele inhoud, en plak die in de SQL Editor.
+3. Klik op **Run**. Je zou "Success. No rows returned" moeten zien.
+
+Dit voegt een veld voor je profielfoto toe aan je wijnkast-instellingen, en maakt een beveiligde opslagplek aan waar die foto's terechtkomen (net als bij je logo en achtergrondfoto: iedereen mag de foto zien, alleen jijzelf mag hem uploaden of verwijderen).
+
+**13c. Omgevingsvariabelen**
+
+Geen actie nodig — er zijn geen nieuwe variabelen bijgekomen.
+
+**13d. Controleren**
+
+Open je app-link met een harde refresh. In **Instellingen** staan "Identiteit" en "Vormgeving" nu even hoog op een breed scherm, en bovenaan "Identiteit" kun je een profielfoto uploaden — die verschijnt voortaan in het accountbolletje rechtsboven en op je welkomstscherm (zonder eigen foto blijft dat gewoon de eerste letter van je e-mailadres). De achtergrondfoto op het dashboard komt nu merkbaar sneller en rustiger in beeld, zonder "sprong". De gastmodus opent nu met dezelfde achtergrondfoto en dezelfde grote, witte titel-/introtekst-stijl als het dashboard. Tik je op je telefoon op de ronde plusknop om een wijn toe te voegen, dan schuift het scherm nu soepel van onderaf omhoog, met ruimte rondom en stopt het net boven de navigatiebalk — in plaats van het beeld helemaal te vullen.
+
+### Wat is er nieuw in deze versie
+
+- **Instellingen: "Identiteit" en "Vormgeving" even hoog** op een breed scherm, voor een rustiger, uitgelijnd overzicht (op mobiel maakt dit niks uit, daar staan ze toch al onder elkaar)
+- **Achtergrondfoto laadt sneller en zonder sprong**: de foto is verder gecomprimeerd, wordt al meteen bij het openen van de app opgehaald, en faded rustig in zodra hij klaar is in plaats van er in één keer "in te springen"
+- **Gastmodus met dezelfde achtergrondfoto als het dashboard** (standaard of je eigen gekozen foto), met de titel en introtekst in dezelfde grote, witte stijl
+- **Profielfoto**: in Instellingen te uploaden, te zien in het accountbolletje rechtsboven en op je welkomstscherm; zonder eigen foto blijft de vertrouwde eerste letter van je e-mailadres staan
+- **Wijn-toevoegscherm op mobiel schuift soepel van onderaf omhoog**, met ruimte rondom en stopt netjes boven de navigatiebalk in plaats van het hele scherm te vullen
+
 ---
 
 ## Wat kan de app?
@@ -294,7 +330,7 @@ Open je app-link met een harde refresh. Op "Mijn kelder" zie je nu bovenaan een 
 - Collectie doorzoeken en filteren, met raster- of lijstweergave en sorteren/groeperen naar keuze
 - Favorieten markeren, en wijnen ontkurken met automatische voorraadafboeking (met ongedaan-maken)
 - Gastmodus: een vereenvoudigde weergave zonder privégegevens, handig om aan anderen te laten zien
-- Eigen wijnkast-naam, logo, accentkleur, achtergrondfoto op het dashboard en licht/donker-thema, gesynchroniseerd op al je apparaten
+- Eigen wijnkast-naam, logo, profielfoto, accentkleur, achtergrondfoto op het dashboard en licht/donker-thema, gesynchroniseerd op al je apparaten
 - Wijnkast volledig resetten met een zelf ingestelde, veilig versleutelde beveiligingscode
 - Werkt prettig op telefoon, tablet en desktop, en is te installeren als app op je beginscherm
 - Meerdere gebruikers, elk met een eigen privé wijnkast; een hoofdbeheerder kan gebruikers uitnodigen, rollen aanpassen en toegang intrekken/herstellen

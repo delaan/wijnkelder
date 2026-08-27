@@ -99,9 +99,11 @@ export default function WineForm({ wine, onSave, onClose, onUploadPhoto }) {
   }
 
   return (
-    <div className="fixed inset-0 z-modal flex items-end sm:items-center justify-center" role="dialog" aria-modal="true" aria-labelledby="wine-form-title" ref={dialogRef}>
+    <div className="fixed inset-0 z-modal flex items-end md:items-center justify-center" role="dialog" aria-modal="true" aria-labelledby="wine-form-title" ref={dialogRef}>
       <div className="absolute inset-0 backdrop-blur-md" style={{ background: 'var(--overlay)' }} onClick={onClose} aria-hidden="true" />
-      <div className="relative bg-surface w-full sm:max-w-lg sm:rounded-token-lg rounded-t-token-lg shadow-token-lg max-h-[92vh] overflow-y-auto safe-bottom">
+      <div
+        className="relative bg-surface w-[calc(100%-1.5rem)] md:w-full md:max-w-lg rounded-token-lg shadow-token-lg max-h-[calc(100vh-9rem)] md:max-h-[92vh] overflow-y-auto safe-bottom mb-[calc(6.5rem+env(safe-area-inset-bottom))] md:mb-0 animate-slide-up md:animate-fade-in"
+      >
         <div className="sticky top-0 bg-surface/95 backdrop-blur border-b border-border px-5 py-4 flex items-center justify-between z-10">
           <h2 id="wine-form-title" className="font-semibold text-text-primary">{wine ? 'Wijn bewerken' : 'Handmatig toevoegen'}</h2>
           <button onClick={onClose} aria-label="Sluiten" className="text-text-tertiary hover:text-text-primary text-xl leading-none w-10 h-10">
