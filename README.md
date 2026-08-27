@@ -353,6 +353,40 @@ Open je app-link met een harde refresh. Meldingen (gelukt/fout/let-op, bijv. bij
 
 ---
 
+## Stap 15 — Bijwerken: iPad/iPhone-fixes, vloeiendere popups en een nieuw app-icoon
+
+Deze update lost een reeks concrete meldingen op: verkeerd gepositioneerde elementen op iPad en in gastmodus, een inzoom-probleem op iPhone na inloggen, popups die op iPad/desktop niet meebewogen, en een nieuw, herkenbaar app-icoon. Ook deze keer **geen database-wijzigingen**.
+
+**15a. Code bijwerken via GitHub Desktop**
+
+1. De nieuwe bestanden staan al klaargezet in je lokale map `wijnkelder`.
+2. Open **GitHub Desktop**, vul linksonder een korte omschrijving in (bijv. "iPad/iPhone-fixes, popup-animaties, nieuw app-icoon").
+3. Klik op **Commit to main**, en daarna op **Push origin**.
+
+Netlify start automatisch een nieuwe deploy (1-2 minuten) — voortgang volgen kan op je Netlify-dashboard onder **Deploys**.
+
+**15b. Database**
+
+Geen actie nodig — alle wijzigingen zitten in het uiterlijk en de bediening van de app zelf.
+
+**15c. Controleren**
+
+Log op je iPhone een keer uit en weer in: het scherm zoomt niet meer automatisch in na het inloggen. Op iPad staan de zoekbalk en de knop "Instellingen" in het zijmenu nu weer gewoon op hun plek. Als je op "wijn toevoegen" tikt, schuift de popup nu ook op iPad en desktop rustig in beeld (in plaats van in één keer te verschijnen), en de donkerrode achtergrond erachter vervaagt zachtjes in. Op mobiel blijft de onderste menubalk zichtbaar terwijl de popup invloeit. Het weerkaartje op het dashboard staat op mobiel nu breed en gecentreerd, zonder kader. In gastmodus zweeft de zoekbalk op mobiel niet meer te hoog boven de onderkant van het scherm. In donkere modus is in de onderste menubalk nu duidelijker te zien welk tabblad actief is. Tot slot heeft de app een nieuw, verzorgd icoon met een wijnfles — te zien als favicon in je browsertab en, na het opnieuw toevoegen van de app aan je beginscherm, ook als app-icoon op je iPhone/iPad.
+
+### Wat is er nieuw in deze versie
+
+- **iPhone zoomt niet meer automatisch in na het inloggen** — invoervelden waren net iets te klein waardoor Safari zelf ging inzoomen; dat gebeurt nu niet meer
+- **iPad: zoekbalk en de knop "Instellingen" staan weer op hun juiste plek**
+- **Popups (wijn toevoegen, wijn bewerken, wijndetails) schuiven nu ook op iPad en desktop rustig in beeld**, in plaats van alleen op iPhone
+- **De achtergrond achter een popup vervaagt nu overal zachtjes in**, in plaats van in één keer te verschijnen
+- **Op mobiel blijft de onderste menubalk zichtbaar en helder terwijl een popup invloeit**, en de popup verschijnt er duidelijk bovenop
+- **Weerkaartje op het dashboard staat op mobiel nu breed en gecentreerd, zonder kader**
+- **Zoekbalk in gastmodus zweeft op mobiel niet meer te hoog** boven de onderkant van het scherm
+- **Actief tabblad in de onderste menubalk is in donkere modus nu duidelijker te herkennen**
+- **Nieuw app-icoon met een wijnfles** (favicon en iOS-beginscherm-icoon)
+
+---
+
 ## Wat kan de app?
 
 - Inloggen met je eigen account — jouw wijnen zijn alleen voor jou zichtbaar

@@ -97,7 +97,7 @@ export default function AdminPanel({ currentUserId, onBack }) {
               value={inviteEmail}
               onChange={(e) => setInviteEmail(e.target.value)}
               placeholder="naam@voorbeeld.nl"
-              className="flex-1 rounded-token-md border border-border px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-accent"
+              className="flex-1 rounded-token-md border border-border px-3 py-2 text-base focus:outline-none focus:ring-2 focus:ring-accent"
             />
             <button
               type="submit"
@@ -166,7 +166,7 @@ export default function AdminPanel({ currentUserId, onBack }) {
                         value={user.role}
                         disabled={busy || (isSelf && user.role === 'admin')}
                         onChange={(e) => handleRoleChange(user, e.target.value)}
-                        className="text-sm rounded-token-md border border-border px-2 py-1.5 disabled:opacity-60 focus:outline-none focus:ring-2 focus:ring-accent"
+                        className="text-base rounded-token-md border border-border px-2 py-1.5 disabled:opacity-60 focus:outline-none focus:ring-2 focus:ring-accent"
                       >
                         <option value="user">Gebruiker</option>
                         <option value="admin">Beheerder</option>

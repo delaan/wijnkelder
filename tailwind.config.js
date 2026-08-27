@@ -10,6 +10,7 @@ export default {
         'accent-soft': 'var(--accent-soft)',
         'accent-contrast': 'var(--accent-contrast)',
         'accent-soft-text': 'var(--accent-soft-text)',
+        'nav-active': 'var(--nav-active-bg)',
         bg: 'var(--bg)',
         surface: 'var(--surface)',
         'surface-2': 'var(--surface-2)',

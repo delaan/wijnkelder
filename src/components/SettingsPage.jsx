@@ -200,7 +200,7 @@ export default function SettingsPage({
                 onChange={(e) => setDisplayName(e.target.value)}
                 onBlur={handleDisplayNameBlur}
                 placeholder="Bijv. Delano"
-                className="flex-1 h-11 rounded-token-md border border-border bg-surface px-3 text-sm text-text-primary focus:outline-none focus:ring-2 focus:ring-accent"
+                className="flex-1 h-11 rounded-token-md border border-border bg-surface px-3 text-base text-text-primary focus:outline-none focus:ring-2 focus:ring-accent"
               />
               {displayNameSaved && <CheckIcon size={18} className="text-success shrink-0" />}
             </div>
@@ -214,7 +214,7 @@ export default function SettingsPage({
                 value={name}
                 onChange={(e) => setName(e.target.value)}
                 onBlur={handleNameBlur}
-                className="flex-1 h-11 rounded-token-md border border-border bg-surface px-3 text-sm text-text-primary focus:outline-none focus:ring-2 focus:ring-accent"
+                className="flex-1 h-11 rounded-token-md border border-border bg-surface px-3 text-base text-text-primary focus:outline-none focus:ring-2 focus:ring-accent"
               />
               {nameSaved && <CheckIcon size={18} className="text-success shrink-0" />}
             </div>
@@ -376,7 +376,7 @@ export default function SettingsPage({
                 onChange={(e) => setNewCode(e.target.value)}
                 minLength={4}
                 placeholder="Minstens 4 tekens"
-                className="w-full h-11 rounded-token-md border border-border bg-surface px-3 text-sm text-text-primary focus:outline-none focus:ring-2 focus:ring-accent"
+                className="w-full h-11 rounded-token-md border border-border bg-surface px-3 text-base text-text-primary focus:outline-none focus:ring-2 focus:ring-accent"
               />
             </div>
             <button type="submit" disabled={savingCode} className="h-11 px-4 rounded-token-md border border-border text-sm font-medium text-text-primary">
@@ -431,7 +431,7 @@ export default function SettingsPage({
                     required
                     value={resetCode2}
                     onChange={(e) => setResetCode2(e.target.value)}
-                    className="w-full h-11 rounded-token-md border border-border bg-surface px-3 text-sm text-text-primary focus:outline-none focus:ring-2 focus:ring-accent"
+                    className="w-full h-11 rounded-token-md border border-border bg-surface px-3 text-base text-text-primary focus:outline-none focus:ring-2 focus:ring-accent"
                   />
                 </label>
                 <div className="flex gap-3">

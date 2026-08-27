@@ -73,7 +73,7 @@ export default function Onboarding({ settings, onComplete }) {
                 value={displayName}
                 onChange={(e) => setDisplayName(e.target.value)}
                 placeholder="Bijv. Delano"
-                className="w-full h-11 rounded-token-md border border-border bg-surface px-3 text-sm text-text-primary focus:outline-none focus:ring-2 focus:ring-accent"
+                className="w-full h-11 rounded-token-md border border-border bg-surface px-3 text-base text-text-primary focus:outline-none focus:ring-2 focus:ring-accent"
               />
               <p className="text-text-tertiary text-xs mt-2">Dit gebruiken we voor je welkomstscherm.</p>
             </div>
@@ -87,7 +87,7 @@ export default function Onboarding({ settings, onComplete }) {
                 value={cellarName}
                 onChange={(e) => setCellarName(e.target.value)}
                 placeholder="Mijn wijnkelder"
-                className="w-full h-11 rounded-token-md border border-border bg-surface px-3 text-sm text-text-primary focus:outline-none focus:ring-2 focus:ring-accent"
+                className="w-full h-11 rounded-token-md border border-border bg-surface px-3 text-base text-text-primary focus:outline-none focus:ring-2 focus:ring-accent"
               />
               <p className="text-text-tertiary text-xs mt-2">Dit pas je later altijd aan in Instellingen.</p>
             </div>

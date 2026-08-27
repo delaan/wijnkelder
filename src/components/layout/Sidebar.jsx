@@ -25,7 +25,7 @@ export default function Sidebar({ view, onNavigate }) {
   }
 
   return (
-    <aside className="hidden md:flex md:flex-col w-64 shrink-0 border-r border-border bg-surface h-[calc(100vh-4rem)] sticky top-16">
+    <aside className="hidden md:flex md:flex-col w-64 shrink-0 border-r border-border bg-surface h-[calc(100vh-4rem)] sticky top-16 overflow-y-auto">
       <nav className="flex-1 flex flex-col px-3 py-4" aria-label="Hoofdnavigatie">
         <div className="space-y-1">{primaryItems.map(renderItem)}</div>
         {secondaryItems.length > 0 && (

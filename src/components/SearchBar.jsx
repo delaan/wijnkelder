@@ -5,7 +5,16 @@ import { SearchIcon } from './icons'
 // schaduw zodat hij los van de pagina lijkt te zweven. Blijft op iOS/Android
 // boven een opkomend schermtoetsenbord staan door de visualViewport-hoogte
 // te volgen, in plaats van erachter te verdwijnen.
-export default function SearchBar({ value, onChange, placeholder = 'Zoek op naam, producent, regio, druif…', fullWidth = false }) {
+export default function SearchBar({
+  value,
+  onChange,
+  placeholder = 'Zoek op naam, producent, regio, druif…',
+  fullWidth = false,
+  // Wanneer er geen zwevende BottomNav is om boven te zweven (bv.
+  // Gastmodus), hoeft de zoekbalk niet zo hoog te zweven — dan mag hij
+  // dicht bij de onderkant van het scherm blijven, net als op desktop.
+  nearBottomNav = true,
+}) {
   const [keyboardOffset, setKeyboardOffset] = useState(0)
 
   useEffect(() => {
@@ -30,7 +39,11 @@ export default function SearchBar({ value, onChange, placeholder = 'Zoek op naam
 
   return (
     <div
-      className={`fixed z-nav flex justify-center px-4 pointer-events-none bottom-[calc(6rem+env(safe-area-inset-bottom))] md:bottom-[calc(3rem+env(safe-area-inset-bottom))] ${
+      className={`fixed z-nav flex justify-center px-4 pointer-events-none ${
+        nearBottomNav
+          ? 'bottom-[calc(6rem+env(safe-area-inset-bottom))]'
+          : 'bottom-[calc(1.25rem+env(safe-area-inset-bottom))]'
+      } md:bottom-[calc(3rem+env(safe-area-inset-bottom))] ${
         fullWidth ? 'inset-x-0' : 'inset-x-0 md:inset-x-auto md:left-64 md:right-0'
       }`}
       style={keyboardOffset > 0 ? { bottom: keyboardOffset + 12 } : undefined}

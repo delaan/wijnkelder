@@ -106,7 +106,7 @@ export default function WeatherWidget() {
 
   if (state.status === 'loading') {
     return (
-      <div className="flex items-center gap-2.5 h-14 px-4 rounded-token-lg bg-surface border border-border text-text-tertiary text-sm shrink-0">
+      <div className="flex items-center justify-center md:justify-start gap-2.5 h-14 px-4 w-full md:w-auto rounded-token-lg bg-transparent md:bg-surface border-0 md:border md:border-border text-text-tertiary text-sm md:shrink-0">
         <Spinner size={14} muted />
         Weer laden…
       </div>
@@ -115,7 +115,7 @@ export default function WeatherWidget() {
 
   if (state.status === 'denied' || state.status === 'unavailable') {
     return (
-      <div className="flex items-center gap-2.5 h-14 px-4 rounded-token-lg bg-surface border border-border text-text-tertiary text-sm shrink-0 max-w-[15rem]">
+      <div className="flex items-center justify-center md:justify-start gap-2.5 h-14 px-4 w-full md:w-auto md:max-w-[15rem] rounded-token-lg bg-transparent md:bg-surface border-0 md:border md:border-border text-text-tertiary text-sm md:shrink-0">
         <LocationIcon size={16} className="shrink-0" />
         <span>{state.status === 'denied' ? 'Zet locatietoegang aan voor het weer' : 'Weer nu niet beschikbaar'}</span>
       </div>
@@ -125,9 +125,9 @@ export default function WeatherWidget() {
   const { Icon, label } = weatherInfo(state.code)
 
   return (
-    <div className="flex items-center gap-3 h-14 px-4 rounded-token-lg bg-surface border border-border shrink-0">
+    <div className="flex items-center justify-center md:justify-start gap-3 h-14 px-4 w-full md:w-auto rounded-token-lg bg-transparent md:bg-surface border-0 md:border md:border-border md:shrink-0">
       <Icon size={26} className="text-accent-soft-text shrink-0" />
-      <div className="leading-tight">
+      <div className="leading-tight text-center md:text-left">
         <p className="font-semibold text-text-primary text-lg">
           {state.temp}°<span className="text-text-tertiary text-xs font-normal ml-1.5">{label}</span>
         </p>

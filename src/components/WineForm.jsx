@@ -32,7 +32,7 @@ const emptyWine = {
 }
 
 const inputClass =
-  'w-full h-11 rounded-token-md border border-border bg-surface px-3 text-sm text-text-primary focus:outline-none focus:ring-2 focus:ring-accent'
+  'w-full h-11 rounded-token-md border border-border bg-surface px-3 text-base text-text-primary focus:outline-none focus:ring-2 focus:ring-accent'
 const labelClass = 'block text-sm font-medium text-text-secondary mb-1'
 
 export default function WineForm({ wine, onSave, onClose, onUploadPhoto }) {
@@ -100,9 +100,14 @@ export default function WineForm({ wine, onSave, onClose, onUploadPhoto }) {
 
   return (
     <div className="fixed inset-0 z-modal flex items-end md:items-center justify-center" role="dialog" aria-modal="true" aria-labelledby="wine-form-title" ref={dialogRef}>
-      <div className="absolute inset-0 backdrop-blur-md" style={{ background: 'var(--overlay)' }} onClick={onClose} aria-hidden="true" />
       <div
-        className="relative bg-surface w-[calc(100%-1.5rem)] md:w-full md:max-w-lg rounded-token-lg shadow-token-lg max-h-[calc(100vh-9rem)] md:max-h-[92vh] overflow-y-auto safe-bottom mb-[calc(6.5rem+env(safe-area-inset-bottom))] md:mb-0 animate-slide-up md:animate-fade-in"
+        className="absolute inset-x-0 top-0 bottom-[calc(6.5rem+env(safe-area-inset-bottom))] md:inset-0 backdrop-blur-md animate-fade-in"
+        style={{ background: 'var(--overlay)' }}
+        onClick={onClose}
+        aria-hidden="true"
+      />
+      <div
+        className="relative bg-surface w-[calc(100%-1.5rem)] md:w-full md:max-w-lg rounded-token-lg shadow-token-lg max-h-[calc(100vh-9rem)] md:max-h-[92vh] overflow-y-auto safe-bottom mb-[calc(6.5rem+env(safe-area-inset-bottom))] md:mb-0 animate-slide-up"
       >
         <div className="sticky top-0 bg-surface/95 backdrop-blur border-b border-border px-5 py-4 flex items-center justify-between z-10">
           <h2 id="wine-form-title" className="font-semibold text-text-primary">{wine ? 'Wijn bewerken' : 'Handmatig toevoegen'}</h2>
@@ -277,7 +282,7 @@ export default function WineForm({ wine, onSave, onClose, onUploadPhoto }) {
             </div>
             <div>
               <label className={labelClass}>Persoonlijke notities</label>
-              <textarea value={form.tasting_notes} onChange={set('tasting_notes')} rows={3} className="w-full rounded-token-md border border-border bg-surface px-3 py-2 text-sm text-text-primary focus:outline-none focus:ring-2 focus:ring-accent" />
+              <textarea value={form.tasting_notes} onChange={set('tasting_notes')} rows={3} className="w-full rounded-token-md border border-border bg-surface px-3 py-2 text-base text-text-primary focus:outline-none focus:ring-2 focus:ring-accent" />
             </div>
           </FormSection>
 

@@ -25,12 +25,16 @@ export default function BottomNav({ view, onNavigate, onAdd }) {
       >
         <span
           className={`w-9 h-9 flex items-center justify-center rounded-full transition-colors duration-fast ${
-            active ? 'bg-accent-soft text-accent-soft-text' : 'text-text-tertiary'
+            active ? 'bg-nav-active text-accent-soft-text' : 'text-text-tertiary'
           }`}
         >
           <Icon size={18} />
         </span>
-        <span className={`w-full truncate text-center leading-tight ${active ? 'text-accent-soft-text' : 'text-text-tertiary'}`}>
+        <span
+          className={`w-full truncate text-center leading-tight ${
+            active ? 'text-accent-soft-text font-semibold' : 'text-text-tertiary'
+          }`}
+        >
           {item.label}
         </span>
       </button>

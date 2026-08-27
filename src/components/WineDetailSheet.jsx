@@ -72,7 +72,7 @@ export default function WineDetailSheet({ wine, onClose, onToggleFavorite, onUnc
   return (
     <div className="fixed inset-0 z-modal flex items-end md:items-center justify-center">
       <div
-        className="absolute inset-0 backdrop-blur-md"
+        className="absolute inset-x-0 top-0 bottom-[calc(6.5rem+env(safe-area-inset-bottom))] md:inset-0 backdrop-blur-md animate-fade-in"
         style={{ background: 'var(--overlay)' }}
         onClick={onClose}
         aria-hidden="true"
@@ -82,7 +82,7 @@ export default function WineDetailSheet({ wine, onClose, onToggleFavorite, onUnc
         role="dialog"
         aria-modal="true"
         aria-labelledby="wine-detail-title"
-        className="relative bg-surface w-[calc(100%-1.5rem)] md:w-full md:max-w-lg rounded-token-lg shadow-token-lg max-h-[calc(100vh-9rem)] md:max-h-[92vh] overflow-y-auto safe-bottom mb-[calc(6.5rem+env(safe-area-inset-bottom))] md:mb-0 animate-slide-up md:animate-fade-in"
+        className="relative bg-surface w-[calc(100%-1.5rem)] md:w-full md:max-w-lg rounded-token-lg shadow-token-lg max-h-[calc(100vh-9rem)] md:max-h-[92vh] overflow-y-auto safe-bottom mb-[calc(6.5rem+env(safe-area-inset-bottom))] md:mb-0 animate-slide-up"
       >
         <div className="sticky top-0 bg-surface/95 backdrop-blur border-b border-border px-5 py-4 flex items-center justify-between z-10">
           <h2 id="wine-detail-title" className="font-semibold text-text-primary truncate pr-4">

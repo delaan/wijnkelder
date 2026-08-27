@@ -141,7 +141,7 @@ export default function GuestMode({ wines, cellarName, logoType, logoUrl, heroIm
         </div>
       </header>
 
-      <main className="max-w-6xl mx-auto px-4 sm:px-6 py-8 pb-48 md:pb-32">
+      <main className="max-w-6xl mx-auto px-4 sm:px-6 py-8 pb-28 md:pb-32">
         {!filter ? (
           <>
             <HeroBanner
@@ -219,7 +219,7 @@ export default function GuestMode({ wines, cellarName, logoType, logoUrl, heroIm
         )}
       </main>
 
-      <SearchBar value={search} onChange={handleSearch} fullWidth />
+      <SearchBar value={search} onChange={handleSearch} fullWidth nearBottomNav={false} />
     </div>
   )
 }

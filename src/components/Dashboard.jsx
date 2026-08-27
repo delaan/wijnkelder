@@ -35,7 +35,7 @@ export default function Dashboard({ wines, onOpenWine, onToggleFavorite, onGoToC
         subtitle="Een overzicht van je hele collectie."
       />
 
-      <div className="flex justify-end -mt-4">
+      <div className="flex justify-center md:justify-end -mt-4">
         <WeatherWidget />
       </div>
 
