@@ -2,8 +2,8 @@ import { useMemo, useState } from 'react'
 import { WINE_COLORS, TASTE_PROFILES, FOOD_PAIRINGS } from '../lib/wineHelpers'
 import { LogoMark } from '../lib/logoPresets'
 import {
-  SearchIcon,
   ChevronRightIcon,
+  XIcon,
   WineGlassIcon,
   CheersIcon,
   WineBottleIcon,
@@ -19,6 +19,8 @@ import {
   IceCreamIcon,
 } from './icons'
 import Collection from './Collection'
+import SearchBar from './SearchBar'
+import ThemeToggle from './ThemeToggle'
 
 // Per categorie een passend icoon en een eigen tint, zodat elke kaart er
 // herkenbaar en "beeldend" uitziet, ook zonder echte foto's.
@@ -95,17 +97,27 @@ function CategoryTile({ label, Icon, tint, onClick }) {
 }
 
 export default function GuestMode({ wines, cellarName, logoType, logoUrl, onOpenWine, onExit }) {
-  const [filter, setFilter] = useState(null) // { kind, value } | 'all' | null
+  const [filter, setFilter] = useState(null) // { kind, value, label } | 'all' | null
   const [search, setSearch] = useState('')
 
-  const filteredWines = useMemo(() => {
+  // Voor "kleur" laten we Collection zélf filteren (met dezelfde
+  // kleurenknoppen als in het hoofdmenu), zodat de knoppen daar altijd
+  // precies de actieve keuze tonen en de gast die vrij kan aanpassen.
+  // Voor smaakprofiel/etenswaar (waar Collection geen eigen knoppen voor
+  // heeft) filteren we hier alvast voor.
+  const collectionWines = useMemo(() => {
     if (!filter) return []
-    if (filter === 'all') return wines
+    if (filter === 'all' || filter.kind === 'color') return wines
     if (filter.kind === 'food_pairing') {
       return wines.filter((w) => Array.isArray(w.food_pairing) && w.food_pairing.includes(filter.value))
     }
     return wines.filter((w) => w[filter.kind] === filter.value)
   }, [wines, filter])
+
+  const handleSearch = (value) => {
+    setSearch(value)
+    if (!filter && value) setFilter('all')
+  }
 
   return (
     <div className="min-h-screen bg-bg">
@@ -121,19 +133,32 @@ export default function GuestMode({ wines, cellarName, logoType, logoUrl, onOpen
             </span>
             <span className="font-semibold text-text-primary truncate">{cellarName}</span>
           </button>
-          <span className="ml-auto text-xs text-text-tertiary hidden sm:inline">Gastmodus</span>
+          <div className="ml-auto flex items-center gap-1">
+            <span className="text-xs text-text-tertiary hidden sm:inline mr-1">Gastmodus</span>
+            <ThemeToggle />
+          </div>
         </div>
       </header>
 
-      <main className="max-w-5xl mx-auto px-4 sm:px-6 py-8">
+      <main className="max-w-5xl mx-auto px-4 sm:px-6 py-8 pb-48 md:pb-32">
         {!filter ? (
           <>
-            <div className="text-center mb-10">
+            <div className="text-center mb-8">
               <h1 className="text-2xl sm:text-3xl font-bold text-text-primary">Welkom bij {cellarName}</h1>
               <p className="text-text-secondary text-sm sm:text-base mt-2 max-w-md mx-auto">
                 Blader gerust door de collectie. Kies een wijntype, smaakprofiel of gerecht om inspiratie te
                 krijgen — of bekijk direct de hele voorraad.
               </p>
+            </div>
+
+            <div className="text-center mb-10">
+              <button
+                onClick={() => setFilter('all')}
+                className="inline-flex items-center gap-1.5 h-11 px-5 rounded-token-md bg-accent hover:bg-accent-hover text-accent-contrast text-sm font-semibold"
+              >
+                Bekijk de hele collectie
+                <ChevronRightIcon size={16} />
+              </button>
             </div>
 
             <div className="space-y-10">
@@ -161,40 +186,39 @@ export default function GuestMode({ wines, cellarName, logoType, logoUrl, onOpen
                 </section>
               ))}
             </div>
-
-            <div className="text-center mt-10">
-              <button
-                onClick={() => setFilter('all')}
-                className="inline-flex items-center gap-1.5 h-11 px-5 rounded-token-md bg-accent hover:bg-accent-hover text-accent-contrast text-sm font-semibold"
-              >
-                Bekijk de hele collectie
-                <ChevronRightIcon size={16} />
-              </button>
-            </div>
           </>
         ) : (
           <div className="space-y-5">
-            <div className="flex items-center justify-between">
-              <button onClick={() => setFilter(null)} className="text-sm font-medium text-accent-soft-text">
+            <div className="flex items-center justify-between gap-3">
+              <button onClick={() => setFilter(null)} className="text-sm font-medium text-accent-soft-text shrink-0">
                 ← Andere keuze
               </button>
-              <p className="text-sm text-text-secondary" aria-live="polite">
-                {filter === 'all' ? 'Hele collectie' : `Filter: ${filter.label}`}
-              </p>
+              {filter === 'all' ? (
+                <p className="text-sm text-text-secondary">Hele collectie</p>
+              ) : filter.kind !== 'color' ? (
+                <button
+                  onClick={() => setFilter('all')}
+                  className="inline-flex items-center gap-1.5 h-8 pl-3 pr-2.5 rounded-token-full bg-accent-soft text-accent-soft-text text-sm font-medium"
+                  aria-label={`Filter "${filter.label}" verwijderen`}
+                >
+                  {filter.label}
+                  <XIcon size={12} />
+                </button>
+              ) : null}
             </div>
-            <div className="relative">
-              <SearchIcon size={17} className="absolute left-3 top-1/2 -translate-y-1/2 text-text-tertiary" />
-              <input
-                value={search}
-                onChange={(e) => setSearch(e.target.value)}
-                placeholder="Zoeken binnen deze selectie…"
-                className="w-full h-11 pl-10 pr-3 rounded-token-md bg-surface-2 text-sm text-text-primary focus:outline-none focus:ring-2 focus:ring-accent"
-              />
-            </div>
-            <Collection wines={filteredWines} search={search} onOpenWine={onOpenWine} hidePrivate />
+            <Collection
+              wines={collectionWines}
+              search={search}
+              onOpenWine={onOpenWine}
+              hidePrivate
+              persist={false}
+              initialColorFilter={filter.kind === 'color' ? filter.value : ''}
+            />
           </div>
         )}
       </main>
+
+      <SearchBar value={search} onChange={handleSearch} fullWidth />
     </div>
   )
 }

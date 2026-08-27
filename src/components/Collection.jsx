@@ -114,20 +114,32 @@ function groupLabel(groupBy, value) {
   return value || 'Onbekend'
 }
 
-export default function Collection({ wines, search, onOpenWine, onToggleFavorite, hidePrivate }) {
-  const persisted = readPersisted()
+export default function Collection({
+  wines,
+  search,
+  onOpenWine,
+  onToggleFavorite,
+  hidePrivate,
+  initialColorFilter = '',
+  persist = true,
+}) {
+  const persisted = persist ? readPersisted() : {}
   const [viewMode, setViewMode] = useState(persisted.viewMode || 'grid')
   const [sortBy, setSortBy] = useState(persisted.sortBy || 'recent')
   const [groupBy, setGroupBy] = useState(persisted.groupBy || 'none')
-  const [colorFilter, setColorFilter] = useState(persisted.colorFilter || '')
+  // In Gastmodus (persist=false) start het kleurfilter op de categorie die
+  // de gast heeft aangetikt, en blijft dat filter — net als in het
+  // hoofdmenu — hier volledig aan/uit te zetten via de knoppen hieronder.
+  const [colorFilter, setColorFilter] = useState(persisted.colorFilter || initialColorFilter)
 
   useEffect(() => {
+    if (!persist) return
     try {
       localStorage.setItem(STORAGE_KEY, JSON.stringify({ viewMode, sortBy, groupBy, colorFilter }))
     } catch {
       // negeer opslagfouten stilletjes
     }
-  }, [viewMode, sortBy, groupBy, colorFilter])
+  }, [persist, viewMode, sortBy, groupBy, colorFilter])
 
   const filtered = useMemo(() => {
     let result = wines
