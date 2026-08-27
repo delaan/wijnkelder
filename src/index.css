@@ -2,12 +2,121 @@
 @tailwind components;
 @tailwind utilities;
 
+/* ============================================================
+   Design tokens — centrale bron voor kleur, thema, typografie.
+   Componenten gebruiken deze variabelen i.p.v. losse kleuren, zodat
+   thema en accentkleur overal consistent en live aanpasbaar zijn.
+   ============================================================ */
+:root {
+  --font-sans: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'SF Pro Text', 'Inter', system-ui, sans-serif;
+
+  /* Accent — standaard bordeaux, live overschrijfbaar via JS (Instellingen) */
+  --accent: #641027;
+  --accent-hover: #48091a;
+  --accent-soft: #64102714;
+  --accent-contrast: #ffffff;
+
+  /* Oppervlakken */
+  --bg: #faf8f6;
+  --surface: #ffffff;
+  --surface-2: #f4f1ee;
+  --overlay: #641027cc;
+
+  /* Tekst */
+  --text-primary: #1c1917;
+  --text-secondary: #6b6461;
+  --text-tertiary: #a39c98;
+
+  /* Randen & schaduw */
+  --border: #e7e2de;
+  --border-strong: #d6cfc9;
+  --shadow-sm: 0 1px 2px rgba(28, 25, 23, 0.04);
+  --shadow-md: 0 4px 16px rgba(28, 25, 23, 0.08);
+  --shadow-lg: 0 12px 40px rgba(28, 25, 23, 0.16);
+
+  /* Categoriekleuren (wijntype) — bewust onderscheidend, altijd met tekst/aantal erbij */
+  --type-rood: #a4243b;
+  --type-wit: #cf9d3f;
+  --type-rose: #d98098;
+  --type-mousserend: #b8a04a;
+  --type-dessert: #7a4a1e;
+
+  --radius-sm: 8px;
+  --radius-md: 14px;
+  --radius-lg: 20px;
+  --radius-full: 999px;
+
+  --motion-fast: 120ms;
+  --motion-base: 200ms;
+  --motion-slow: 320ms;
+  --ease-standard: cubic-bezier(0.2, 0, 0, 1);
+
+  --z-nav: 30;
+  --z-overlay: 40;
+  --z-modal: 50;
+  --z-toast: 60;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme='light']) {
+    --accent: #942744;
+    --accent-hover: #b23456;
+    --accent-soft: #94274426;
+    --bg: #16130f;
+    --surface: #201c18;
+    --surface-2: #2a2521;
+    --overlay: #200a10cc;
+    --text-primary: #f5f1ed;
+    --text-secondary: #b3aaa4;
+    --text-tertiary: #837a75;
+    --border: #35302b;
+    --border-strong: #453f38;
+    --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.3);
+    --shadow-md: 0 4px 16px rgba(0, 0, 0, 0.4);
+    --shadow-lg: 0 12px 40px rgba(0, 0, 0, 0.55);
+  }
+}
+
+:root[data-theme='dark'] {
+  --accent: #942744;
+  --accent-hover: #b23456;
+  --accent-soft: #94274426;
+  --bg: #16130f;
+  --surface: #201c18;
+  --surface-2: #2a2521;
+  --overlay: #200a10cc;
+  --text-primary: #f5f1ed;
+  --text-secondary: #b3aaa4;
+  --text-tertiary: #837a75;
+  --border: #35302b;
+  --border-strong: #453f38;
+  --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.3);
+  --shadow-md: 0 4px 16px rgba(0, 0, 0, 0.4);
+  --shadow-lg: 0 12px 40px rgba(0, 0, 0, 0.55);
+}
+
+/* "Dinerweergave" — donkerder, rustiger, minder beweging; te combineren met elk thema */
+:root[data-dining='true'] {
+  --bg: #0f0d0b;
+  --surface: #191613;
+  --surface-2: #221e1a;
+}
+
 @layer base {
   html {
     -webkit-tap-highlight-color: transparent;
+    color-scheme: light dark;
   }
   body {
-    @apply bg-stone-50 text-stone-900 antialiased;
+    background: var(--bg);
+    color: var(--text-primary);
+    font-family: var(--font-sans);
+    -webkit-font-smoothing: antialiased;
+  }
+  :focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: 2px;
+    border-radius: var(--radius-sm);
   }
 }
 
@@ -17,6 +126,23 @@
   }
   .safe-bottom {
     padding-bottom: env(safe-area-inset-bottom);
+  }
+  .safe-left {
+    padding-left: env(safe-area-inset-left);
+  }
+  .safe-right {
+    padding-right: env(safe-area-inset-right);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+    scroll-behavior: auto !important;
   }
 }
 

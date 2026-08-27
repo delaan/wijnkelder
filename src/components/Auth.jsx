@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import { useAuth } from '../hooks/useAuth'
+import { CellarIcon } from './icons'
 
 export default function Auth() {
   const { signIn, signUp } = useAuth()
@@ -32,23 +33,23 @@ export default function Auth() {
   }
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-stone-50 px-6 safe-top safe-bottom">
+    <div className="min-h-screen flex items-center justify-center bg-bg px-6 safe-top safe-bottom">
       <div className="max-w-sm w-full">
         <div className="text-center mb-8">
-          <div className="mx-auto w-14 h-14 rounded-full bg-wine-800 flex items-center justify-center mb-4 shadow-sm">
-            <span className="text-2xl">🍷</span>
+          <div className="mx-auto w-14 h-14 rounded-token-full bg-accent flex items-center justify-center mb-4 shadow-token-sm">
+            <CellarIcon size={24} className="text-accent-contrast" />
           </div>
-          <h1 className="font-serif text-2xl font-semibold text-stone-900">Wijnkelder</h1>
-          <p className="text-stone-500 text-sm mt-1">Jouw persoonlijke wijnvoorraad</p>
+          <h1 className="text-2xl font-bold text-text-primary">Wijnkast</h1>
+          <p className="text-text-secondary text-sm mt-1">Jouw persoonlijke wijncollectie</p>
         </div>
 
-        <div className="bg-white border border-stone-200 rounded-xl shadow-sm p-6">
-          <div className="flex mb-6 bg-stone-100 rounded-lg p-1 text-sm font-medium">
+        <div className="bg-surface border border-border rounded-token-lg shadow-token-sm p-6">
+          <div className="flex mb-6 bg-surface-2 rounded-token-md p-1 text-sm font-medium">
             <button
               type="button"
               onClick={() => setMode('signin')}
-              className={`flex-1 py-2 rounded-md transition-colors ${
-                mode === 'signin' ? 'bg-white text-stone-900 shadow-sm' : 'text-stone-500'
+              className={`flex-1 py-2 rounded-token-sm transition-colors ${
+                mode === 'signin' ? 'bg-surface text-text-primary shadow-token-sm' : 'text-text-tertiary'
               }`}
             >
               Inloggen
@@ -56,8 +57,8 @@ export default function Auth() {
             <button
               type="button"
               onClick={() => setMode('signup')}
-              className={`flex-1 py-2 rounded-md transition-colors ${
-                mode === 'signup' ? 'bg-white text-stone-900 shadow-sm' : 'text-stone-500'
+              className={`flex-1 py-2 rounded-token-sm transition-colors ${
+                mode === 'signup' ? 'bg-surface text-text-primary shadow-token-sm' : 'text-text-tertiary'
               }`}
             >
               Account maken
@@ -66,36 +67,36 @@ export default function Auth() {
 
           <form onSubmit={handleSubmit} className="space-y-4">
             <div>
-              <label className="block text-sm font-medium text-stone-700 mb-1">E-mailadres</label>
+              <label className="block text-sm font-medium text-text-secondary mb-1">E-mailadres</label>
               <input
                 type="email"
                 required
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                className="w-full rounded-lg border border-stone-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-wine-700 focus:border-transparent"
+                className="w-full h-11 rounded-token-md border border-border bg-surface px-3 text-sm text-text-primary focus:outline-none focus:ring-2 focus:ring-accent"
                 placeholder="jij@voorbeeld.nl"
               />
             </div>
             <div>
-              <label className="block text-sm font-medium text-stone-700 mb-1">Wachtwoord</label>
+              <label className="block text-sm font-medium text-text-secondary mb-1">Wachtwoord</label>
               <input
                 type="password"
                 required
                 minLength={6}
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
-                className="w-full rounded-lg border border-stone-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-wine-700 focus:border-transparent"
+                className="w-full h-11 rounded-token-md border border-border bg-surface px-3 text-sm text-text-primary focus:outline-none focus:ring-2 focus:ring-accent"
                 placeholder="Minimaal 6 tekens"
               />
             </div>
 
-            {error && <p className="text-sm text-red-600 bg-red-50 rounded-lg px-3 py-2">{error}</p>}
-            {info && <p className="text-sm text-green-700 bg-green-50 rounded-lg px-3 py-2">{info}</p>}
+            {error && <p className="text-sm text-red-600 bg-red-50 rounded-token-md px-3 py-2">{error}</p>}
+            {info && <p className="text-sm text-green-700 bg-green-50 rounded-token-md px-3 py-2">{info}</p>}
 
             <button
               type="submit"
               disabled={busy}
-              className="w-full bg-wine-800 hover:bg-wine-700 disabled:opacity-60 text-white text-sm font-medium py-2.5 rounded-lg transition-colors"
+              className="w-full h-11 bg-accent hover:bg-accent-hover disabled:opacity-60 text-accent-contrast text-sm font-semibold rounded-token-md transition-colors"
             >
               {busy ? 'Even geduld…' : mode === 'signin' ? 'Inloggen' : 'Account maken'}
             </button>

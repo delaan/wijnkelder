@@ -1,6 +1,8 @@
-# Wijnkelder
+# Wijnkast
 
-Een persoonlijke wijnvoorraad-app: bijhouden welke wijnen je hebt, waar ze liggen, wat je ervoor betaald hebt, wanneer je ze het beste kunt drinken en hoe je ze beoordeelt. Werkt op iPhone, iPad en desktop, met je eigen inlog en je data veilig in de cloud.
+Een persoonlijke wijnkelder-app: bijhouden welke wijnen je hebt, waar ze liggen, wat je ervoor betaald hebt, wanneer je ze het beste kunt drinken en hoe je ze beoordeelt. Werkt op iPhone, iPad en desktop, met je eigen inlog en je data veilig in de cloud, en is te installeren als app (PWA) op je beginscherm.
+
+> De app heette eerder "Wijnkelder" — de code, database en instructies hieronder zijn dezelfde, alleen de naam en het uiterlijk zijn vernieuwd naar **Wijnkast**.
 
 Gebouwd met React + Vite + Tailwind CSS, met Supabase als database/login, gehost op Netlify.
 
@@ -30,14 +32,14 @@ Dit maakt de tabel `wines` aan, beveiligt hem zodat iedereen alleen zijn eigen w
 
 ## Stap 3 — Je API-sleutels ophalen
 
-1. Klik in het linkermenu op het tandwiel-icoon **Project Settings**.
-2. Ga naar **API** (of **API Keys**).
-3. Je hebt twee dingen nodig:
+1. Klik bovenaan je projectpagina op de knop **Connect**.
+2. Kies bovenaan het tabblad **Framework**, en selecteer **Vite** in de lijst (niet Next.js of een ander framework — de variabelenamen die je dan te zien krijgt, `VITE_SUPABASE_URL` en `VITE_SUPABASE_ANON_KEY`, zijn precies wat deze app nodig heeft).
+3. Kopieer de twee waarden die daar staan:
    - **Project URL** — ziet er ongeveer uit als `https://abcdefgh.supabase.co`
-   - **anon public key** — een lange tekenreeks die begint met `eyJ...`
+   - **anon / publishable key** — een lange tekenreeks (begint met `sb_publ...` of `eyJ...`, beide werken)
 4. Bewaar deze twee waarden, je hebt ze zo nodig.
 
-> Deze "anon public key" is bedoeld om openbaar in de app te staan — dat is veilig, omdat de database zelf (stap 2) alleen toegang geeft aan ingelogde gebruikers tot hún eigen wijnen.
+> Deze sleutel is bedoeld om openbaar in de app te staan — dat is veilig, omdat de database zelf (stap 2) alleen toegang geeft aan ingelogde gebruikers tot hún eigen wijnen.
 
 ## Stap 4 — Code naar GitHub zetten
 
@@ -63,12 +65,14 @@ GitHub is waar de broncode van de app komt te staan; Netlify bouwt en publiceert
 Voordat je op deployen klikt, moet Netlify weten hoe hij met jouw Supabase-project moet praten.
 
 1. Klik op **Add environment variables** (of ga later naar **Site configuration → Environment variables**).
-2. Voeg twee variabelen toe:
-   - `VITE_SUPABASE_URL` → je Project URL uit stap 3
-   - `VITE_SUPABASE_ANON_KEY` → je anon public key uit stap 3
+2. Voeg twee variabelen toe. Let op: het **Key**-veld bevat alleen de naam, de waarde zelf hoort in het aparte **Value**-veld eronder:
+   - Key `VITE_SUPABASE_URL` → Value: je Project URL uit stap 3
+   - Key `VITE_SUPABASE_ANON_KEY` → Value: je anon/publishable key uit stap 3
 3. Klik op **Deploy wijnkelder** (of **Deploy site**).
 
 Netlify bouwt nu de app — dit duurt ongeveer 1-2 minuten. Daarna krijg je een live link zoals `https://jouw-app-naam.netlify.app`.
+
+Staat je site na het deployen op **"Private"**? Klik dan op **Make public**, anders is de link niet bereikbaar buiten je eigen Netlify-account (bijvoorbeeld niet op je iPhone).
 
 ## Stap 7 — Klaar!
 
@@ -78,17 +82,106 @@ Open de link, maak een account aan (e-mail + wachtwoord), en begin met het toevo
 
 Wil je later een eigen domeinnaam (bijvoorbeeld `wijnkelder.nl`)? Dat regel je in Netlify onder **Domain management**.
 
+## Stap 8 — Jezelf hoofdbeheerder maken en anderen uitnodigen
+
+Deze app ondersteunt meerdere gebruikers, elk met hun eigen, persoonlijke wijnkast. Als hoofdbeheerder kun je zien wie een wijnkast heeft (met aantal wijnen/flessen, niet de inhoud zelf — dat blijft privé), nieuwe mensen uitnodigen, rollen aanpassen en toegang intrekken of herstellen.
+
+**8a. Extra database-onderdelen toevoegen**
+
+1. Ga in Supabase naar **SQL Editor → New query**.
+2. Open `supabase/migration_admin.sql` uit dit project. Vervang op de laatste regel het e-mailadres door het adres waarmee jij bent ingelogd in de app.
+3. Plak het hele bestand in de SQL Editor en klik op **Run**.
+
+Dit maakt jouw account hoofdbeheerder. Iedereen die zich later aanmeldt of wordt uitgenodigd, krijgt automatisch de rol "gebruiker" met een eigen wijnkast.
+
+**8b. Een geheime sleutel toevoegen (alleen voor de server, nooit voor de browser)**
+
+Het beheerpaneel (gebruikers uitnodigen, rollen wijzigen, toegang intrekken) draait via kleine serverfuncties op Netlify, die daarvoor een speciale, geheime sleutel nodig hebben — niet dezelfde als in stap 3.
+
+1. Ga in Supabase naar **Project Settings → API Keys**.
+2. Zoek de **service_role secret** (of `sb_secret_...`) sleutel. **Deel deze sleutel met niemand** — hij geeft volledige toegang tot je hele database, zonder enige beveiliging.
+3. Ga in Netlify naar **Site configuration → Environment variables** en voeg twee nieuwe variabelen toe (zonder `VITE_` ervoor — dat is expres, zo komt de waarde nooit in de browser terecht):
+   - Key `SUPABASE_URL` → Value: dezelfde Project URL als in stap 3
+   - Key `SUPABASE_SERVICE_ROLE_KEY` → Value: de zojuist gekopieerde service_role/secret sleutel
+4. Ga naar **Deploys → Trigger deploy → Clear cache and deploy site**.
+
+**8c. Het juiste adres instellen voor uitnodigingsmails**
+
+1. Ga in Supabase naar **Authentication → URL Configuration**.
+2. Zet **Site URL** op je live Netlify-adres, bijvoorbeeld `https://wijnkast.netlify.app`.
+
+Zonder deze stap kan de link in uitnodigingsmails naar het verkeerde adres wijzen.
+
+**8d. Gebruikers beheren**
+
+Log in als hoofdbeheerder en klik rechtsboven op **Beheer**. Daar kun je:
+
+- Een nieuwe gebruiker uitnodigen per e-mail — die persoon krijgt een mail van Supabase om zelf een wachtwoord in te stellen, en krijgt automatisch zijn eigen wijnkast.
+- De rol van iemand wijzigen tussen "Gebruiker" en "Beheerder".
+- Iemands toegang intrekken (ze kunnen dan niet meer inloggen, maar hun wijnen blijven bewaard) of weer herstellen.
+
+## Stap 9 — Bijwerken naar de nieuwe versie (Wijnkast v2)
+
+Deze versie is een complete vernieuwing van het uiterlijk en veel nieuwe functies (zie "Wat is er nieuw" hieronder). Je bestaande account, wijnen en gebruikers blijven gewoon behouden — je hoeft niets opnieuw te doen wat je al had ingesteld. Volg wel onderstaande stappen, in deze volgorde.
+
+**9a. Code opnieuw naar GitHub uploaden — dit is de belangrijkste stap**
+
+⚠️ Dit is precies de stap die de vorige keer per ongeluk oversloeg, waardoor de nieuwe functies niet verschenen. Sla hem niet over.
+
+1. Ga naar je repository op [github.com](https://github.com).
+2. Pak het nieuwe zip-bestand uit dat je van mij hebt gekregen.
+3. Sleep **alle** bestanden en mappen uit de uitgepakte map (dus ook de mappen `src`, `public`, `supabase` en `netlify` in hun geheel) naar de bestandenlijst van je repository op GitHub — je kunt gewoon los boven op de bestaande bestanden slepen, GitHub vraagt of je ze wilt vervangen.
+4. Klik onderaan op **Commit changes**.
+5. Netlify start automatisch een nieuwe deploy zodra GitHub de wijziging ziet (dit duurt 1-2 minuten). Je kunt de voortgang volgen op je Netlify-dashboard onder **Deploys**.
+
+**9b. De database bijwerken**
+
+1. Ga in Supabase naar **SQL Editor → New query**.
+2. Open `supabase/migration_v2.sql` uit het nieuwe project, kopieer de hele inhoud, en plak die in de SQL Editor.
+3. Klik op **Run**. Je zou "Success. No rows returned" moeten zien.
+
+Dit voegt de nieuwe velden toe aan je wijnen (appellatie, classificatie, smaakprofiel, food pairing, serveertemperatuur, karaffeertijd, aankooplocatie, geschatte waarde, favoriet), maakt de tabellen voor de ontkurk-/ongedaan-maken-geschiedenis en je wijnkast-instellingen (naam, logo, kleur, thema) aan, en maakt een opslagplek voor een eigen logo. Niets van je bestaande wijnen gaat verloren — de nieuwe velden zijn gewoon leeg totdat je ze invult.
+
+**9c. Omgevingsvariabelen**
+
+Geen actie nodig — deze versie gebruikt dezelfde vier variabelen die al in Netlify staan (`VITE_SUPABASE_URL`, `VITE_SUPABASE_ANON_KEY`, `SUPABASE_URL`, `SUPABASE_SERVICE_ROLE_KEY`). Er hoeft niets bijgevoegd of gewijzigd te worden.
+
+**9d. Controleren**
+
+Open je app-link. Log in en je zou het nieuwe ontwerp moeten zien: een zijbalk (op iPad/desktop) of onderbalk (op telefoon) met "Mijn kelder", "Collectie", "Favorieten", "Gastmodus" en "Instellingen". Zie je het oude ontwerp nog? Doe dan in Netlify **Deploys → Trigger deploy → Clear cache and deploy site**, en ververs de pagina met een harde refresh (op iPhone/iPad: sluit het tabblad helemaal en open de link opnieuw).
+
+### Wat is er nieuw in deze versie
+
+- Volledig vernieuwd, rustig en overzichtelijk ontwerp met een eigen accentkleur naar keuze, en automatisch licht/donker thema (of zelf instellen) dat meegaat op al je apparaten
+- "Mijn kelder"-dashboard met een overzicht van je voorraad, wat er bijna op is, en een interactieve balk die laat zien hoe je collectie is verdeeld over kleuren
+- Collectie-scherm met raster- en lijstweergave, sorteren en groeperen — je voorkeur wordt onthouden
+- Uitgebreider invulformulier: appellatie, classificatie, smaakprofiel, food pairing, serveertemperatuur, karaffeertijd, aankooplocatie en geschatte waarde, naast de bestaande velden
+- Favorieten: markeer je favoriete wijnen met een hartje en vind ze snel terug
+- "Ontkurken"-knop op elke wijn die de voorraad netjes afboekt, met een "ongedaan maken"-melding als je je vergist
+- Gastmodus: een schermvullende, vereenvoudigde weergave zonder privégegevens (prijzen, aantallen, notities) om aan gasten te laten zien — bijvoorbeeld op een tablet aan tafel
+- Instellingen-pagina: naam en logo van je wijnkast aanpassen, accentkleur en thema kiezen, en je hele wijnkast resetten met een zelf ingestelde beveiligingscode (deze code wordt nooit leesbaar opgeslagen, alleen versleuteld)
+- Te installeren als app op je beginscherm (iPhone/iPad/desktop), met eigen icoon, en werkt na de eerste keer laden ook nog kort door zonder internet
+
+**Bewust nog niet gebouwd (komt later):**
+
+- **AI-herkenning van etiketten** — in het "Wijn toevoegen"-scherm staat deze optie al, maar toont voorlopig "komt binnenkort" en verwijst naar handmatig invoeren. Dit vraagt een eigen (betaalde) AI-sleutel die je nog niet had ingesteld; kunnen we later alsnog toevoegen.
+- **Native deelvenster en opstartschermen (splash screens)** — de app is al installeerbaar met eigen icoon, maar het gebruiken van het systeemeigen deelvenster van je telefoon en aangepaste opstartafbeeldingen zijn bewust overgeslagen om de kern van de vernieuwing eerst goed af te maken.
+
 ---
 
 ## Wat kan de app?
 
 - Inloggen met je eigen account — jouw wijnen zijn alleen voor jou zichtbaar
-- Wijnen toevoegen met naam, wijnmaker, jaargang, druif, regio, land, kleur, aantal flessen, locatie in de kelder
-- Aankoopprijs, aankoopdatum, drinkvenster en een sterrenbeoordeling bijhouden
-- Proefnotities en een foto van het etiket toevoegen
-- Zoeken en filteren op kleur, sorteren op naam/jaargang/beoordeling
-- Overzicht van totaal aantal flessen, aantal verschillende wijnen, regio's en geschatte totale waarde
-- Werkt prettig op telefoon, tablet en desktop
+- Wijnen toevoegen met naam, wijnmaker, jaargang, druif, regio, land, appellatie, classificatie, kleur, smaakprofiel, food pairing, aantal flessen en locatie in de kelder
+- Aankoopprijs, aankoopdatum, aankooplocatie, geschatte waarde, drinkvenster, serveertemperatuur, karaffeertijd en proefnotities bijhouden, plus een foto van het etiket
+- "Mijn kelder"-dashboard met voorraadoverzicht, bijna-op-lijst en een interactieve verdelingsbalk per wijnkleur
+- Collectie doorzoeken en filteren, met raster- of lijstweergave en sorteren/groeperen naar keuze
+- Favorieten markeren, en wijnen ontkurken met automatische voorraadafboeking (met ongedaan-maken)
+- Gastmodus: een vereenvoudigde weergave zonder privégegevens, handig om aan anderen te laten zien
+- Eigen wijnkast-naam, logo, accentkleur en licht/donker-thema, gesynchroniseerd op al je apparaten
+- Wijnkast volledig resetten met een zelf ingestelde, veilig versleutelde beveiligingscode
+- Werkt prettig op telefoon, tablet en desktop, en is te installeren als app op je beginscherm
+- Meerdere gebruikers, elk met een eigen privé wijnkast; een hoofdbeheerder kan gebruikers uitnodigen, rollen aanpassen en toegang intrekken/herstellen
 
 ## Zelf iets aanpassen (optioneel)
 
@@ -107,3 +200,10 @@ Elke wijziging die je naar GitHub pusht, wordt automatisch opnieuw gedeployed do
 - **"Nog niet gekoppeld" scherm bij het openen van de app** → De omgevingsvariabelen in Netlify staan niet goed. Controleer stap 6, en klik daarna in Netlify op **Deploys → Trigger deploy → Clear cache and deploy site**.
 - **Ik kan niet inloggen na het aanmaken van een account** → Supabase kan e-mailbevestiging vereisen. Kijk in je inbox (en spam) naar een bevestigingsmail, of zet dit uit via Supabase: **Authentication → Providers → Email → Confirm email** uitschakelen (handig voor persoonlijk gebruik).
 - **Foto uploaden lukt niet** → Controleer of stap 2 (het SQL-script) volledig zonder foutmelding is uitgevoerd — dat maakt ook de foto-opslag aan.
+- **"Invalid supabaseUrl" of een wit scherm** → De waarde van `VITE_SUPABASE_URL` in Netlify is geen geldige URL. Open de variabele in **Site configuration → Environment variables** en controleer dat de Value-tekst puur begint met `https://` en verder niets bevat (geen variabelenaam ervoor, geen aanhalingstekens).
+- **"Invalid API key" bij inloggen/account maken** → Dezelfde controle, maar dan voor `VITE_SUPABASE_ANON_KEY`. Kopieer de sleutel opnieuw uit het Connect-paneel in Supabase (stap 3) en plak hem volledig, zonder spaties ervoor of erna.
+- **Ik zie geen "Beheer"-knop** → Controleer of je stap 8a hebt uitgevoerd mét jouw eigen e-mailadres op de laatste regel, en dat je bent uitgelogd en weer ingelogd na het draaien van dat script.
+- **Uitnodigen van een gebruiker geeft een foutmelding** → Controleer stap 8b: `SUPABASE_URL` en `SUPABASE_SERVICE_ROLE_KEY` moeten allebei correct in Netlify staan (zonder `VITE_` ervoor), gevolgd door een nieuwe deploy met "Clear cache and deploy site".
+- **Ik zie na het bijwerken nog steeds het oude ontwerp** → Meestal is stap 9a (opnieuw naar GitHub uploaden) overgeslagen, of de browser toont een oude cache. Controleer op GitHub of de map `src/components/layout` bestaat in je repository; zo niet, upload de bestanden opnieuw. Doe daarna in Netlify **Deploys → Trigger deploy → Clear cache and deploy site**.
+- **Instellingen of Gastmodus geven een foutmelding, of je logo/accentkleur wordt niet bewaard** → Controleer of je stap 9b (`migration_v2.sql`) hebt uitgevoerd; zonder die tabellen kan de app deze instellingen niet opslaan.
+- **Ik ben mijn resetcode voor de wijnkast vergeten** → Er is geen "wachtwoord vergeten" voor deze code, omdat hij nergens leesbaar wordt opgeslagen (ook niet door mij). Stel in **Instellingen → Wijnkelder resetten** eerst een nieuwe code in — dat overschrijft de oude.

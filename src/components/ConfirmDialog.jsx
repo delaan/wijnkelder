@@ -1,20 +1,27 @@
+import { useFocusTrap } from '../hooks/useFocusTrap'
+
 export default function ConfirmDialog({ title, message, onConfirm, onCancel, busy }) {
+  const dialogRef = useFocusTrap(busy ? null : onCancel)
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 px-4">
-      <div className="bg-white rounded-xl shadow-lg max-w-sm w-full p-6">
-        <h2 className="font-serif text-lg font-semibold text-stone-900 mb-1">{title}</h2>
-        <p className="text-stone-600 text-sm mb-6">{message}</p>
+    <div
+      className="fixed inset-0 z-modal flex items-center justify-center px-4"
+      style={{ background: 'var(--overlay)' }}
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="confirm-dialog-title"
+      ref={dialogRef}
+    >
+      <div className="bg-surface rounded-token-lg shadow-token-lg max-w-sm w-full p-6">
+        <h2 id="confirm-dialog-title" className="text-lg font-semibold text-text-primary mb-1">{title}</h2>
+        <p className="text-text-secondary text-sm mb-6">{message}</p>
         <div className="flex justify-end gap-3">
-          <button
-            onClick={onCancel}
-            className="text-sm font-medium text-stone-600 hover:text-stone-900 px-3 py-2"
-          >
+          <button onClick={onCancel} className="text-sm font-medium text-text-secondary hover:text-text-primary px-3 h-10">
             Annuleren
           </button>
           <button
             onClick={onConfirm}
             disabled={busy}
-            className="text-sm font-medium text-white bg-red-600 hover:bg-red-700 disabled:opacity-60 px-4 py-2 rounded-lg"
+            className="text-sm font-medium text-white bg-red-600 hover:bg-red-700 disabled:opacity-60 px-4 h-10 rounded-token-md"
           >
             {busy ? 'Bezig…' : 'Verwijderen'}
           </button>

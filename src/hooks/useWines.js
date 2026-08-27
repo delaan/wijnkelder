@@ -62,5 +62,72 @@ export function useWines(userId) {
     return data.publicUrl
   }
 
-  return { wines, loading, error, addWine, updateWine, deleteWine, uploadLabelPhoto, refetch: fetchWines }
+  const toggleFavorite = async (wine) => {
+    const { data, error: updateError } = await supabase
+      .from('wines')
+      .update({ is_favorite: !wine.is_favorite })
+      .eq('id', wine.id)
+      .select()
+    if (updateError) throw updateError
+    setWines((prev) => prev.map((w) => (w.id === wine.id ? data[0] : w)))
+    return data[0]
+  }
+
+  // Ontkurkt `count` flessen: verlaagt de voorraad en logt een gebeurtenis,
+  // zodat dit betrouwbaar ongedaan te maken is via undoEvent().
+  const uncork = async (wine, count) => {
+    const amount = Math.min(count, wine.quantity)
+    if (amount <= 0) return null
+    const newQuantity = wine.quantity - amount
+    const { data, error: updateError } = await supabase
+      .from('wines')
+      .update({ quantity: newQuantity })
+      .eq('id', wine.id)
+      .select()
+    if (updateError) throw updateError
+
+    const { data: eventData, error: eventError } = await supabase
+      .from('wine_events')
+      .insert([{ wine_id: wine.id, user_id: userId, type: 'uncork', quantity_delta: -amount }])
+      .select()
+    if (eventError) throw eventError
+
+    setWines((prev) => prev.map((w) => (w.id === wine.id ? data[0] : w)))
+    return { wine: data[0], event: eventData[0] }
+  }
+
+  const undoEvent = async (event) => {
+    const wine = wines.find((w) => w.id === event.wine_id)
+    if (!wine) return null
+    // event.quantity_delta was negative (bv. -2 bij het ontkurken van 2 flessen);
+    // ongedaan maken betekent die verandering terugdraaien.
+    const restoredQuantity = wine.quantity - event.quantity_delta
+    const { data, error: updateError } = await supabase
+      .from('wines')
+      .update({ quantity: restoredQuantity })
+      .eq('id', wine.id)
+      .select()
+    if (updateError) throw updateError
+
+    await supabase
+      .from('wine_events')
+      .insert([{ wine_id: wine.id, user_id: userId, type: 'undo', quantity_delta: -event.quantity_delta }])
+
+    setWines((prev) => prev.map((w) => (w.id === wine.id ? data[0] : w)))
+    return data[0]
+  }
+
+  return {
+    wines,
+    loading,
+    error,
+    addWine,
+    updateWine,
+    deleteWine,
+    uploadLabelPhoto,
+    toggleFavorite,
+    uncork,
+    undoEvent,
+    refetch: fetchWines,
+  }
 }

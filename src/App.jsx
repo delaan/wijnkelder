@@ -1,129 +1,136 @@
-import { useMemo, useState } from 'react'
+import { useState } from 'react'
 import { supabaseConfigured } from './lib/supabaseClient'
 import { useAuth } from './hooks/useAuth'
 import { useWines } from './hooks/useWines'
+import { useProfile } from './hooks/useProfile'
+import { useCellarSettings } from './hooks/useCellarSettings'
+import { ThemeProvider } from './context/ThemeContext'
 import SetupNotice from './components/SetupNotice'
 import Auth from './components/Auth'
-import Header from './components/Header'
-import StatsBar from './components/StatsBar'
-import Filters from './components/Filters'
-import WineCard from './components/WineCard'
+import AppShell from './components/layout/AppShell'
+import Dashboard from './components/Dashboard'
+import Collection from './components/Collection'
+import GuestMode from './components/GuestMode'
+import SettingsPage from './components/SettingsPage'
+import AdminPanel from './components/AdminPanel'
+import AddWineModal from './components/AddWineModal'
 import WineForm from './components/WineForm'
+import WineDetailSheet from './components/WineDetailSheet'
 import ConfirmDialog from './components/ConfirmDialog'
-import EmptyState from './components/EmptyState'
+import Toast from './components/Toast'
 
 export default function App() {
   if (!supabaseConfigured) return <SetupNotice />
-  return <AuthenticatedApp />
+  return <Root />
 }
 
-function AuthenticatedApp() {
+function Root() {
   const { user, loading: authLoading, signOut } = useAuth()
-
-  if (authLoading) return <FullPageLoader />
-  if (!user) return <Auth />
-
-  return <WineApp user={user} signOut={signOut} />
+  return (
+    <ThemeProvider userId={user?.id}>
+      {authLoading ? <FullPageLoader /> : !user ? <Auth /> : <WineApp user={user} signOut={signOut} />}
+    </ThemeProvider>
+  )
 }
 
 function WineApp({ user, signOut }) {
-  const { wines, loading, addWine, updateWine, deleteWine, uploadLabelPhoto } = useWines(user.id)
+  const wines = useWines(user.id)
+  const { isAdmin } = useProfile(user.id)
+  const cellarSettings = useCellarSettings(user.id)
 
+  const [view, setView] = useState('dashboard')
   const [search, setSearch] = useState('')
-  const [color, setColor] = useState('')
-  const [sort, setSort] = useState('recent')
-  const [formOpen, setFormOpen] = useState(false)
+
+  const [addModalOpen, setAddModalOpen] = useState(false)
   const [editingWine, setEditingWine] = useState(null)
+  const [viewingWine, setViewingWine] = useState(null)
+  const [viewingIsGuest, setViewingIsGuest] = useState(false)
   const [deletingWine, setDeletingWine] = useState(null)
   const [deleteBusy, setDeleteBusy] = useState(false)
+  const [toast, setToast] = useState(null)
 
-  const filteredWines = useMemo(() => {
-    let result = wines
-    if (search.trim()) {
-      const q = search.trim().toLowerCase()
-      result = result.filter((w) =>
-        [w.name, w.producer, w.grape_varieties, w.region, w.country]
-          .filter(Boolean)
-          .some((f) => f.toLowerCase().includes(q))
-      )
-    }
-    if (color) result = result.filter((w) => w.color === color)
-
-    const sorted = [...result]
-    switch (sort) {
-      case 'name':
-        sorted.sort((a, b) => a.name.localeCompare(b.name))
-        break
-      case 'vintage_desc':
-        sorted.sort((a, b) => (b.vintage || 0) - (a.vintage || 0))
-        break
-      case 'vintage_asc':
-        sorted.sort((a, b) => (a.vintage || 0) - (b.vintage || 0))
-        break
-      case 'rating':
-        sorted.sort((a, b) => (b.rating || 0) - (a.rating || 0))
-        break
-      default:
-        break
-    }
-    return sorted
-  }, [wines, search, color, sort])
-
-  const openAdd = () => {
-    setEditingWine(null)
-    setFormOpen(true)
+  const openDetail = (wine, isGuest = false) => {
+    setViewingWine(wine)
+    setViewingIsGuest(isGuest)
   }
-  const openEdit = (wine) => {
-    setEditingWine(wine)
-    setFormOpen(true)
-  }
-  const closeForm = () => {
-    setFormOpen(false)
+
+  const handleSaveWine = async (payload) => {
+    if (editingWine) await wines.updateWine(editingWine.id, payload)
+    else await wines.addWine(payload)
     setEditingWine(null)
   }
 
-  const handleSave = async (payload) => {
-    if (editingWine) {
-      await updateWine(editingWine.id, payload)
-    } else {
-      await addWine(payload)
+  const handleToggleFavorite = async (wine) => {
+    const updated = await wines.toggleFavorite(wine)
+    if (viewingWine?.id === updated.id) setViewingWine(updated)
+  }
+
+  const handleUncork = async (wine, count) => {
+    const result = await wines.uncork(wine, count)
+    if (result) {
+      setViewingWine(result.wine)
+      setToast({
+        message: `${count} fles${count > 1 ? 'sen' : ''} van "${wine.name}" ontkurkt.`,
+        undo: () => handleUndo(result.event),
+      })
     }
+  }
+
+  const handleUndo = async (event) => {
+    const updated = await wines.undoEvent(event)
+    if (updated && viewingWine?.id === updated.id) setViewingWine(updated)
   }
 
   const confirmDelete = async () => {
     setDeleteBusy(true)
     try {
-      await deleteWine(deletingWine.id)
+      await wines.deleteWine(deletingWine.id)
       setDeletingWine(null)
+      setViewingWine(null)
     } finally {
       setDeleteBusy(false)
     }
   }
 
-  return (
-    <div className="min-h-screen bg-stone-50">
-      <Header email={user.email} onSignOut={signOut} onAdd={openAdd} />
+  const cellarName = cellarSettings.settings?.cellar_name || 'Mijn wijnkelder'
+  const logoType = cellarSettings.settings?.logo_type
+  const logoUrl = cellarSettings.settings?.logo_url
 
-      <main className="max-w-6xl mx-auto px-4 sm:px-6 py-6 space-y-6">
-        <StatsBar wines={wines} />
+  const overlays = (
+    <>
+      {viewingWine && (
+        <WineDetailSheet
+          wine={viewingWine}
+          onClose={() => setViewingWine(null)}
+          onToggleFavorite={viewingIsGuest ? null : handleToggleFavorite}
+          onUncork={handleUncork}
+          hidePrivate={viewingIsGuest}
+          onEdit={(w) => {
+            setViewingWine(null)
+            setEditingWine(w)
+          }}
+          onDelete={(w) => {
+            setViewingWine(null)
+            setDeletingWine(w)
+          }}
+        />
+      )}
 
-        <Filters search={search} onSearch={setSearch} color={color} onColor={setColor} sort={sort} onSort={setSort} />
+      {addModalOpen && (
+        <AddWineModal
+          onSave={handleSaveWine}
+          onClose={() => setAddModalOpen(false)}
+          onUploadPhoto={wines.uploadLabelPhoto}
+        />
+      )}
 
-        {loading ? (
-          <FullPageLoader inline />
-        ) : filteredWines.length === 0 ? (
-          <EmptyState hasFilters={Boolean(search || color)} onAdd={openAdd} />
-        ) : (
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
-            {filteredWines.map((wine) => (
-              <WineCard key={wine.id} wine={wine} onEdit={openEdit} onDelete={setDeletingWine} />
-            ))}
-          </div>
-        )}
-      </main>
-
-      {formOpen && (
-        <WineForm wine={editingWine} onSave={handleSave} onClose={closeForm} onUploadPhoto={uploadLabelPhoto} />
+      {editingWine && (
+        <WineForm
+          wine={editingWine}
+          onSave={handleSaveWine}
+          onClose={() => setEditingWine(null)}
+          onUploadPhoto={wines.uploadLabelPhoto}
+        />
       )}
 
       {deletingWine && (
@@ -135,17 +142,93 @@ function WineApp({ user, signOut }) {
           busy={deleteBusy}
         />
       )}
-    </div>
+
+      {toast && <Toast message={toast.message} onUndo={toast.undo} onDismiss={() => setToast(null)} />}
+    </>
+  )
+
+  if (view === 'guest') {
+    return (
+      <>
+        <GuestMode
+          wines={wines.wines}
+          cellarName={cellarName}
+          logoType={logoType}
+          logoUrl={logoUrl}
+          onOpenWine={(w) => openDetail(w, true)}
+          onExit={() => setView('dashboard')}
+        />
+        {overlays}
+      </>
+    )
+  }
+
+  if (view === 'admin') {
+    return (
+      <>
+        <AdminPanel currentUserId={user.id} onBack={() => setView('settings')} />
+        {overlays}
+      </>
+    )
+  }
+
+  return (
+    <>
+      <AppShell
+        view={view}
+        onNavigate={setView}
+        cellarName={cellarName}
+        logoType={logoType}
+        logoUrl={logoUrl}
+        search={search}
+        onSearch={setSearch}
+        showSearch={view === 'collection' || view === 'favorites'}
+        onAdd={() => setAddModalOpen(true)}
+        email={user.email}
+        onSignOut={signOut}
+      >
+        {view === 'dashboard' && (
+          <Dashboard
+            wines={wines.wines}
+            onOpenWine={openDetail}
+            onToggleFavorite={handleToggleFavorite}
+            onGoToCollection={() => setView('collection')}
+          />
+        )}
+        {view === 'collection' && (
+          <Collection wines={wines.wines} search={search} onOpenWine={openDetail} onToggleFavorite={handleToggleFavorite} />
+        )}
+        {view === 'favorites' && (
+          <Collection
+            wines={wines.wines.filter((w) => w.is_favorite)}
+            search={search}
+            onOpenWine={openDetail}
+            onToggleFavorite={handleToggleFavorite}
+          />
+        )}
+        {view === 'settings' && (
+          <SettingsPage
+            settings={cellarSettings.settings}
+            onUpdate={cellarSettings.update}
+            onUploadLogo={cellarSettings.uploadLogo}
+            isAdmin={isAdmin}
+            onOpenAdmin={() => setView('admin')}
+            onResetSuccess={() => {
+              wines.refetch()
+              cellarSettings.refetch()
+            }}
+          />
+        )}
+      </AppShell>
+      {overlays}
+    </>
   )
 }
 
-function FullPageLoader({ inline }) {
-  const content = (
-    <div className="flex items-center gap-2 text-stone-400 text-sm">
-      <span className="w-4 h-4 border-2 border-wine-700 border-t-transparent rounded-full animate-spin" />
-      Laden…
+function FullPageLoader() {
+  return (
+    <div className="min-h-screen flex items-center justify-center bg-bg">
+      <span className="w-5 h-5 border-2 border-accent border-t-transparent rounded-token-full animate-spin" />
     </div>
   )
-  if (inline) return <div className="py-16 flex justify-center">{content}</div>
-  return <div className="min-h-screen flex items-center justify-center bg-stone-50">{content}</div>
 }
