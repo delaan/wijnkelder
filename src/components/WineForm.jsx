@@ -123,7 +123,7 @@ export default function WineForm({ wine, onSave, onClose, onUploadPhoto }) {
             </div>
             <input ref={fileInput} type="file" accept="image/*" capture="environment" onChange={handlePhotoChange} className="hidden" />
             <div className="flex flex-col gap-1">
-              <button type="button" onClick={() => fileInput.current?.click()} disabled={uploading} className="text-sm font-medium text-accent">
+              <button type="button" onClick={() => fileInput.current?.click()} disabled={uploading} className="text-sm font-medium text-accent-soft-text">
                 {uploading ? 'Bezig met uploaden…' : form.label_photo_url ? 'Andere foto kiezen' : 'Flesfoto toevoegen'}
               </button>
               <button
@@ -131,7 +131,7 @@ export default function WineForm({ wine, onSave, onClose, onUploadPhoto }) {
                 onClick={() => setForm((f) => ({ ...f, is_favorite: !f.is_favorite }))}
                 className="flex items-center gap-1.5 text-sm text-text-secondary"
               >
-                <HeartIcon filled={form.is_favorite} size={15} className="text-accent" />
+                <HeartIcon filled={form.is_favorite} size={15} className="text-accent-soft-text" />
                 Favoriet
               </button>
             </div>
@@ -212,7 +212,7 @@ export default function WineForm({ wine, onSave, onClose, onUploadPhoto }) {
                     aria-pressed={form.food_pairing.includes(f.value)}
                     className={`h-9 px-3 rounded-token-full text-sm border ${
                       form.food_pairing.includes(f.value)
-                        ? 'bg-accent-soft border-accent text-accent'
+                        ? 'bg-accent-soft border-accent-soft-text text-accent-soft-text'
                         : 'border-border text-text-secondary'
                     }`}
                   >

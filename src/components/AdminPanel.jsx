@@ -79,7 +79,7 @@ export default function AdminPanel({ currentUserId, onBack }) {
     <div className="space-y-6">
       <div className="flex items-center justify-between gap-4">
         <div>
-          <button onClick={onBack} className="text-accent text-sm font-medium mb-1">
+          <button onClick={onBack} className="text-accent-soft-text text-sm font-medium mb-1">
             ← Terug naar instellingen
           </button>
           <h1 className="text-2xl font-bold text-text-primary">Beheer gebruikers</h1>

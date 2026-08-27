@@ -16,11 +16,14 @@ alter table public.cellar_settings add column if not exists onboarding_completed
 update public.cellar_settings set onboarding_completed = true where onboarding_completed = false;
 
 -- De publieke view (zonder reset_code_hash) moet de nieuwe kolommen
--- ook doorgeven aan de app.
+-- ook doorgeven aan de app. Let op: Postgres staat het niet toe om bij een
+-- "create or replace view" bestaande kolommen van plek te laten wisselen of
+-- van naam te veranderen — daarom komen de twee nieuwe kolommen hier
+-- achteraan, in plaats van tussen de bestaande kolommen in.
 create or replace view public.cellar_settings_public as
-  select user_id, cellar_name, display_name, onboarding_completed, logo_type, logo_url, accent_color,
-         theme_preference, dining_view, updated_at,
-         (reset_code_hash is not null) as has_reset_code
+  select user_id, cellar_name, logo_type, logo_url, accent_color, theme_preference, dining_view, updated_at,
+         (reset_code_hash is not null) as has_reset_code,
+         display_name, onboarding_completed
   from public.cellar_settings;
 
 alter view public.cellar_settings_public set (security_invoker = on);

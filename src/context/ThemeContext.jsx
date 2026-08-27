@@ -44,6 +44,7 @@ function applyToDocument({ preference, accent, dining }) {
   root.style.setProperty('--accent-hover', tokens.accentHover)
   root.style.setProperty('--accent-soft', tokens.accentSoft)
   root.style.setProperty('--accent-contrast', tokens.accentContrast)
+  root.style.setProperty('--accent-soft-text', tokens.accentSoftText)
 
   const meta = document.querySelector('meta[name="theme-color"]')
   if (meta) meta.setAttribute('content', isDark ? '#16130f' : tokens.accent)

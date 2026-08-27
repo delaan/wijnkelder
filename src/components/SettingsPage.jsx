@@ -149,7 +149,7 @@ export default function SettingsPage({ settings, onUpdate, onUploadLogo, isAdmin
                   aria-pressed={settings?.logo_type === 'default' && settings?.logo_url === preset.key}
                   className={`w-11 h-11 rounded-token-md border flex items-center justify-center ${
                     settings?.logo_type === 'default' && settings?.logo_url === preset.key
-                      ? 'border-accent bg-accent-soft text-accent'
+                      ? 'border-accent-soft-text bg-accent-soft text-accent-soft-text'
                       : 'border-border text-text-secondary'
                   }`}
                 >
@@ -192,7 +192,9 @@ export default function SettingsPage({ settings, onUpdate, onUploadLogo, isAdmin
                   onClick={() => setPreference(opt.value)}
                   aria-pressed={preference === opt.value}
                   className={`h-16 rounded-token-md border flex flex-col items-center justify-center gap-1 text-xs font-medium ${
-                    preference === opt.value ? 'border-accent bg-accent-soft text-accent' : 'border-border text-text-secondary'
+                    preference === opt.value
+                      ? 'border-accent-soft-text bg-accent-soft text-accent-soft-text'
+                      : 'border-border text-text-secondary'
                   }`}
                 >
                   <opt.icon size={17} />
@@ -238,7 +240,7 @@ export default function SettingsPage({ settings, onUpdate, onUploadLogo, isAdmin
 
       {isAdmin && (
         <SettingsSection title="Gebruikers" description="Wie heeft een wijnkast, rollen en toegang beheren.">
-          <button onClick={onOpenAdmin} className="text-sm font-semibold text-accent">
+          <button onClick={onOpenAdmin} className="text-sm font-semibold text-accent-soft-text">
             Open gebruikersbeheer →
           </button>
         </SettingsSection>

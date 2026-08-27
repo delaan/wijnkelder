@@ -2,6 +2,7 @@ import { useMemo } from 'react'
 import { totalBottles, totalValue, colorDistribution, formatCurrency, isInDrinkWindow } from '../lib/wineHelpers'
 import DistributionBar from './DistributionBar'
 import WineListRow from './WineListRow'
+import WeatherWidget from './WeatherWidget'
 
 function StatCard({ label, value, sub }) {
   return (
@@ -13,7 +14,7 @@ function StatCard({ label, value, sub }) {
   )
 }
 
-export default function Dashboard({ wines, onOpenWine, onToggleFavorite, onGoToCollection }) {
+export default function Dashboard({ wines, onOpenWine, onToggleFavorite, onGoToCollection, displayName }) {
   const stats = useMemo(() => {
     const bottles = totalBottles(wines)
     const distinct = wines.length
@@ -27,9 +28,15 @@ export default function Dashboard({ wines, onOpenWine, onToggleFavorite, onGoToC
 
   return (
     <div className="space-y-8">
-      <div>
-        <h1 className="text-2xl font-bold text-text-primary">Mijn kelder</h1>
-        <p className="text-text-secondary text-sm mt-1">Een overzicht van je hele collectie.</p>
+      <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-4">
+        <div>
+          <p className="text-text-tertiary text-sm font-medium">Mijn kelder</p>
+          <h1 className="text-2xl font-bold text-text-primary mt-0.5">
+            Welkom{displayName ? `, ${displayName}` : ''}
+          </h1>
+          <p className="text-text-secondary text-sm mt-1">Een overzicht van je hele collectie.</p>
+        </div>
+        <WeatherWidget />
       </div>
 
       <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
@@ -48,7 +55,7 @@ export default function Dashboard({ wines, onOpenWine, onToggleFavorite, onGoToC
         <section className="bg-surface border border-border rounded-token-lg p-5">
           <div className="flex items-center justify-between mb-2">
             <h2 className="font-semibold text-text-primary">Recent toegevoegd</h2>
-            <button onClick={onGoToCollection} className="text-accent text-sm font-medium">
+            <button onClick={onGoToCollection} className="text-accent-soft-text text-sm font-medium">
               Alles bekijken
             </button>
           </div>

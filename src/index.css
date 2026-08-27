@@ -15,6 +15,10 @@
   --accent-hover: #48091a;
   --accent-soft: #64102714;
   --accent-contrast: #ffffff;
+  /* Alleen voor accentkleurige TEKST/iconen (niet knop-vullingen) — in
+     donkere modus lichter dan --accent zelf, anders is bijv. een
+     geselecteerd menu-item niet goed leesbaar op een donkere ondergrond. */
+  --accent-soft-text: var(--accent);
 
   /* Oppervlakken */
   --bg: #faf8f6;
@@ -62,6 +66,7 @@
     --accent: #942744;
     --accent-hover: #b23456;
     --accent-soft: #94274426;
+    --accent-soft-text: #ea6a8c;
     --bg: #16130f;
     --surface: #201c18;
     --surface-2: #2a2521;
@@ -81,6 +86,7 @@
   --accent: #942744;
   --accent-hover: #b23456;
   --accent-soft: #94274426;
+  --accent-soft-text: #ea6a8c;
   --bg: #16130f;
   --surface: #201c18;
   --surface-2: #2a2521;

@@ -215,6 +215,36 @@ Open je app-link met een harde refresh (sluit het tabblad/de app helemaal en ope
 
 - **AI-herkenning van etiketten** — staat al als optie in "Wijn toevoegen", toont voorlopig "komt binnenkort".
 
+## Stap 11 — Bijwerken: uitgebreider dashboard, zoekbalk, navigatie en gastmodus
+
+Je bestaande account, wijnen, gebruikers en instellingen blijven gewoon behouden. Er zijn deze keer geen database-wijzigingen.
+
+**11a. Code bijwerken via GitHub Desktop**
+
+1. De nieuwe bestanden staan al klaargezet in je lokale map `wijnkelder`.
+2. Open **GitHub Desktop**, vul linksonder een korte omschrijving in (bijv. "Dashboard, navigatie en gastmodus vernieuwd").
+3. Klik op **Commit to main**, en daarna op **Push origin**.
+
+Netlify start automatisch een nieuwe deploy (1-2 minuten) — voortgang volgen kan op je Netlify-dashboard onder **Deploys**.
+
+**11b. Database**
+
+Geen actie nodig — deze update wijzigt alleen het uiterlijk.
+
+**11c. Controleren**
+
+Open je app-link met een harde refresh. Op "Mijn kelder" zie je nu "Welkom, [je naam]" met daarnaast een weerkaartje — je browser vraagt eenmalig om locatietoegang; sta dit toe om het lokale weer te zien (weiger je dit, dan blijft de rest van de app gewoon werken, alleen zonder weer). De zoekbalk staat nu wat hoger, groter, en op desktop precies in het midden tussen de zijbalk en de rechterrand. In de zijbalk staan Gastmodus en Instellingen nu onderaan, met een streepje erboven. Bovenin loopt de balk met je wijnkast-naam nu door in één geheel met de balk met de knoppen. Op je telefoon zweeft de navigatiebalk onderin nu los van de rand, met afgeronde hoeken. In donkere modus zijn geselecteerde items nu overal goed leesbaar. En de Gastmodus opent nu met een welkomsttekst en drie duidelijke, beeldende categorieën.
+
+### Wat is er nieuw in deze versie
+
+- **Uitgebreider "Mijn kelder"-dashboard**: een persoonlijke "Welkom, [naam]"-begroeting en een weerkaartje met de actuele temperatuur en dagverwachting op basis van je locatie
+- **Zoekbalk hoger, groter en beter gecentreerd**: op desktop staat hij nu precies in het midden tussen de zijbalk en de rechterkant van het scherm
+- **Gastmodus en Instellingen onderaan de zijbalk**, met een streepje erboven, gescheiden van de hoofdnavigatie
+- **Eén doorlopende balk bovenin**: de naam van je wijnkast en de knoppen (thema, wijn toevoegen, account) staan nu in dezelfde balk in plaats van twee losse blokken
+- **Losse, zwevende navigatiebalk op je telefoon**: afgeronde hoeken en een glazig, doorschijnend effect, in plaats van een balk die plat tegen de onderrand zit
+- **Donkere modus: geselecteerde/actieve elementen nu overal goed leesbaar** (navigatie, filters, instellingen) — de accentkleur wordt in donkere modus automatisch lichter gemaakt waar hij als tekst dient, ook bij een zelfgekozen accentkleur
+- **Gastmodus vernieuwd**: opent met "Welkom bij [naam wijnkast]" en een korte uitleg, en toont de keuzes overzichtelijk verdeeld in drie secties — soorten wijn, smaakprofielen en etenswaren — elk met een passend icoon in een eigen kleur
+
 ---
 
 ## Wat kan de app?

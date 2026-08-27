@@ -239,6 +239,7 @@ function WineApp({ user, signOut }) {
             onOpenWine={openDetail}
             onToggleFavorite={handleToggleFavorite}
             onGoToCollection={() => setView('collection')}
+            displayName={displayName}
           />
         )}
         {view === 'collection' && (

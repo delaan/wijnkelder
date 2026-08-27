@@ -37,13 +37,30 @@ export function isValidHex(hex) {
   return /^#([0-9a-f]{3}|[0-9a-f]{6})$/i.test(hex)
 }
 
+// Maakt (indien nodig) een lichtere versie van de accentkleur, specifiek om
+// als TEKST/icoonkleur te gebruiken in donkere modus — de kleur zelf is vaak
+// te donker om leesbaar te zijn op een donkere ondergrond (bijv. een
+// geselecteerd menu-item), ook al werkt diezelfde kleur prima als vulling
+// van een knop (met witte tekst erop). Mikt ruim boven de WCAG AA-drempel
+// (4,5:1) voor kleine tekst.
+function lightenForDarkText(hex) {
+  let amount = 0
+  let result = hex
+  while (relativeLuminance(result) < 0.32 && amount < 0.9) {
+    amount += 0.04
+    result = mix(hex, '#ffffff', amount)
+  }
+  return result
+}
+
 // Berekent afgeleide tinten voor licht/donker thema vanuit één basiskleur.
 export function deriveAccentTokens(hex, isDark) {
   const base = isValidHex(hex) ? hex : '#641027'
   const hover = mix(base, isDark ? '#ffffff' : '#000000', isDark ? 0.16 : 0.2)
   const soft = `${base}${isDark ? '26' : '14'}` // hex alpha suffix
   const contrast = relativeLuminance(base) > 0.4 ? '#1c1917' : '#ffffff'
-  return { accent: base, accentHover: hover, accentSoft: soft, accentContrast: contrast }
+  const softText = isDark ? lightenForDarkText(base) : base
+  return { accent: base, accentHover: hover, accentSoft: soft, accentContrast: contrast, accentSoftText: softText }
 }
 
 export const ACCENT_PRESETS = [

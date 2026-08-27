@@ -50,7 +50,7 @@ export default function WineListRow({ wine, onOpen, onToggleFavorite, hidePrivat
           }}
           aria-label={wine.is_favorite ? 'Verwijderen uit favorieten' : 'Toevoegen aan favorieten'}
           aria-pressed={wine.is_favorite}
-          className="w-9 h-9 rounded-token-full flex items-center justify-center text-accent shrink-0"
+          className="w-9 h-9 rounded-token-full flex items-center justify-center text-accent-soft-text shrink-0"
         >
           <HeartIcon filled={wine.is_favorite} size={16} />
         </span>

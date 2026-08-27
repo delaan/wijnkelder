@@ -40,6 +40,26 @@ export const ImageIcon = (p) => <Icon name="image" {...p} />
 export const LockIcon = (p) => <Icon name="lock" {...p} />
 export const LogoutIcon = (p) => <Icon name="arrow-right-from-bracket" {...p} />
 
+// Weer-iconen voor het "Mijn kelder"-dashboard.
+export const CloudIcon = (p) => <Icon name="cloud" {...p} />
+export const CloudRainIcon = (p) => <Icon name="cloud-rain" {...p} />
+export const CloudBoltIcon = (p) => <Icon name="cloud-bolt" {...p} />
+export const SnowflakeIcon = (p) => <Icon name="snowflake" {...p} />
+export const SmogIcon = (p) => <Icon name="smog" {...p} />
+export const LocationIcon = (p) => <Icon name="location-dot" {...p} />
+
+// Iconen voor de gastmodus: smaakprofielen en etenswaren.
+export const DropletIcon = (p) => <Icon name="droplet" {...p} />
+export const GemIcon = (p) => <Icon name="gem" {...p} />
+export const AppleIcon = (p) => <Icon name="apple-whole" {...p} />
+export const FireIcon = (p) => <Icon name="fire" {...p} />
+export const FishIcon = (p) => <Icon name="fish" {...p} />
+export const DrumstickIcon = (p) => <Icon name="drumstick-bite" {...p} />
+export const BowlFoodIcon = (p) => <Icon name="bowl-food" {...p} />
+export const CheeseIcon = (p) => <Icon name="cheese" {...p} />
+export const CocktailIcon = (p) => <Icon name="martini-glass-citrus" {...p} />
+export const IceCreamIcon = (p) => <Icon name="ice-cream" {...p} />
+
 // Decoratief kleureniconennstje voor "eigen accentkleur kiezen" — bewust géén
 // Font Awesome-icoon (dat is altijd één kleur): een ring van kleine bolletjes,
 // elk een andere regenboogkleur, als vriendelijke visuele hint bij de

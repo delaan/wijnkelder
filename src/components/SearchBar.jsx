@@ -26,18 +26,18 @@ export default function SearchBar({ value, onChange, placeholder = 'Zoek op naam
 
   return (
     <div
-      className="fixed inset-x-0 z-nav flex justify-center px-4 pointer-events-none bottom-[calc(5.25rem+env(safe-area-inset-bottom))] md:bottom-[calc(1.5rem+env(safe-area-inset-bottom))]"
+      className="fixed inset-x-0 md:inset-x-auto md:left-64 md:right-0 z-nav flex justify-center px-4 pointer-events-none bottom-[calc(6rem+env(safe-area-inset-bottom))] md:bottom-[calc(3rem+env(safe-area-inset-bottom))]"
       style={keyboardOffset > 12 ? { bottom: keyboardOffset + 12 } : undefined}
     >
-      <div className="w-full max-w-xl pointer-events-auto relative">
-        <SearchIcon size={17} className="absolute left-4 top-1/2 -translate-y-1/2 text-text-tertiary" />
+      <div className="w-full max-w-2xl pointer-events-auto relative">
+        <SearchIcon size={19} className="absolute left-5 top-1/2 -translate-y-1/2 text-text-tertiary" />
         <input
           type="text"
           value={value}
           onChange={(e) => onChange(e.target.value)}
           placeholder={placeholder}
           aria-label="Zoek in je collectie"
-          className="w-full h-12 pl-11 pr-4 rounded-token-full bg-surface border border-border text-sm text-text-primary placeholder:text-text-tertiary shadow-token-lg focus:outline-none focus:ring-2 focus:ring-accent transition-shadow"
+          className="w-full h-14 pl-14 pr-5 rounded-token-full bg-surface border border-border text-base text-text-primary placeholder:text-text-tertiary shadow-token-lg focus:outline-none focus:ring-2 focus:ring-accent transition-shadow"
         />
       </div>
     </div>

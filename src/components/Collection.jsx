@@ -39,7 +39,7 @@ function FilterDropdown({ label, value, options, onChange }) {
                   setOpen(false)
                 }}
                 className={`w-full flex items-center justify-between gap-2 px-3 h-10 text-sm text-left ${
-                  value === opt.value ? 'text-accent bg-accent-soft font-medium' : 'text-text-primary hover:bg-surface-2'
+                  value === opt.value ? 'text-accent-soft-text bg-accent-soft font-medium' : 'text-text-primary hover:bg-surface-2'
                 }`}
               >
                 {opt.label}
@@ -194,7 +194,7 @@ export default function Collection({ wines, search, onOpenWine, onToggleFavorite
             aria-pressed={viewMode === 'grid'}
             aria-label="Rasterweergave"
             className={`w-9 h-9 rounded-token-sm flex items-center justify-center ${
-              viewMode === 'grid' ? 'bg-surface shadow-token-sm text-accent' : 'text-text-tertiary'
+              viewMode === 'grid' ? 'bg-surface shadow-token-sm text-accent-soft-text' : 'text-text-tertiary'
             }`}
           >
             <GridIcon size={17} />
@@ -204,7 +204,7 @@ export default function Collection({ wines, search, onOpenWine, onToggleFavorite
             aria-pressed={viewMode === 'list'}
             aria-label="Lijstweergave"
             className={`w-9 h-9 rounded-token-sm flex items-center justify-center ${
-              viewMode === 'list' ? 'bg-surface shadow-token-sm text-accent' : 'text-text-tertiary'
+              viewMode === 'list' ? 'bg-surface shadow-token-sm text-accent-soft-text' : 'text-text-tertiary'
             }`}
           >
             <ListIcon size={17} />

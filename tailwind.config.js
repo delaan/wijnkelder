@@ -9,6 +9,7 @@ export default {
         'accent-hover': 'var(--accent-hover)',
         'accent-soft': 'var(--accent-soft)',
         'accent-contrast': 'var(--accent-contrast)',
+        'accent-soft-text': 'var(--accent-soft-text)',
         bg: 'var(--bg)',
         surface: 'var(--surface)',
         'surface-2': 'var(--surface-2)',

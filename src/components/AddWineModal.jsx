@@ -21,7 +21,7 @@ export default function AddWineModal({ onSave, onClose, onUploadPhoto }) {
             <XIcon size={16} />
           </button>
           <div className="w-14 h-14 rounded-token-full bg-accent-soft flex items-center justify-center mx-auto mb-4">
-            <CameraIcon size={24} className="text-accent" />
+            <CameraIcon size={24} className="text-accent-soft-text" />
           </div>
           <h2 id="ai-stub-title" className="font-semibold text-text-primary mb-1.5">AI-herkenning komt binnenkort</h2>
           <p className="text-text-secondary text-sm mb-5">
@@ -56,7 +56,7 @@ export default function AddWineModal({ onSave, onClose, onUploadPhoto }) {
             className="w-full flex items-center gap-3 p-4 rounded-token-md border border-border hover:border-accent hover:bg-accent-soft transition-colors text-left"
           >
             <span className="w-11 h-11 rounded-token-md bg-accent-soft flex items-center justify-center shrink-0">
-              <CameraIcon size={20} className="text-accent" />
+              <CameraIcon size={20} className="text-accent-soft-text" />
             </span>
             <span className="flex-1 min-w-0">
               <span className="block text-sm font-semibold text-text-primary">Scannen en herkennen met AI</span>

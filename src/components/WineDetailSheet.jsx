@@ -94,7 +94,7 @@ export default function WineDetailSheet({ wine, onClose, onToggleFavorite, onUnc
                 onClick={() => onToggleFavorite(wine)}
                 aria-label={wine.is_favorite ? 'Verwijderen uit favorieten' : 'Toevoegen aan favorieten'}
                 aria-pressed={wine.is_favorite}
-                className="w-10 h-10 rounded-token-full flex items-center justify-center text-accent hover:bg-surface-2"
+                className="w-10 h-10 rounded-token-full flex items-center justify-center text-accent-soft-text hover:bg-surface-2"
               >
                 <HeartIcon filled={wine.is_favorite} size={18} />
               </button>
@@ -226,7 +226,7 @@ export default function WineDetailSheet({ wine, onClose, onToggleFavorite, onUnc
               </div>
 
               <div className="border-t border-border pt-5 flex justify-between">
-                <button onClick={() => onEdit(wine)} className="text-sm font-medium text-accent">
+                <button onClick={() => onEdit(wine)} className="text-sm font-medium text-accent-soft-text">
                   Bewerken
                 </button>
                 <button onClick={() => onDelete(wine)} className="text-sm font-medium text-text-tertiary hover:text-red-600">

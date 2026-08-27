@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { SunIcon, MoonIcon, AutoIcon, PlusIcon, ChevronDownIcon, LogoutIcon } from '../icons'
 import { useTheme } from '../../context/ThemeContext'
+import { LogoMark } from '../../lib/logoPresets'
 
 const THEME_OPTIONS = [
   { value: 'auto', label: 'Automatisch', icon: AutoIcon },
@@ -8,7 +9,11 @@ const THEME_OPTIONS = [
   { value: 'dark', label: 'Donker', icon: MoonIcon },
 ]
 
-export default function TopBar({ title, onAdd, email, onSignOut }) {
+// Eén doorlopende balk bovenin: op desktop bevat hij zowel het logo + de
+// titel van de wijnkast (links, boven de zijbalk) als de acties (rechts) —
+// zo oogt het als één balk in plaats van een apart blokje naast een tweede
+// balk. Op mobiel (geen zijbalk) toont het middendeel de schermtitel.
+export default function TopBar({ title, cellarName, logoType, logoUrl, onAdd, email, onSignOut }) {
   const { preference, setPreference } = useTheme()
   const [themeMenuOpen, setThemeMenuOpen] = useState(false)
   const [userMenuOpen, setUserMenuOpen] = useState(false)
@@ -16,12 +21,21 @@ export default function TopBar({ title, onAdd, email, onSignOut }) {
 
   return (
     <header className="sticky top-0 z-nav bg-surface/90 backdrop-blur border-b border-border safe-top">
-      <div className="h-16 px-4 sm:px-6 flex items-center gap-3">
-        <div className="flex-1 min-w-0">
+      <div className="h-16 flex items-center gap-3">
+        <div className="hidden md:flex items-center gap-2.5 w-64 shrink-0 min-w-0 pl-5">
+          <span className="w-8 h-8 rounded-token-md bg-accent-soft flex items-center justify-center shrink-0 overflow-hidden">
+            <LogoMark logoType={logoType} logoUrl={logoUrl} size={18} className="text-accent-soft-text" />
+          </span>
+          <span className="font-semibold text-text-primary truncate min-w-0" title={cellarName}>
+            {cellarName}
+          </span>
+        </div>
+
+        <div className="flex-1 min-w-0 pl-4 sm:pl-6 md:pl-0">
           {title && <span className="font-semibold text-text-primary truncate md:hidden">{title}</span>}
         </div>
 
-        <div className="flex items-center gap-2 shrink-0">
+        <div className="flex items-center gap-2 shrink-0 pr-4 sm:pr-6">
           <div className="relative">
             <button
               onClick={() => setThemeMenuOpen((v) => !v)}
@@ -54,7 +68,7 @@ export default function TopBar({ title, onAdd, email, onSignOut }) {
                           setThemeMenuOpen(false)
                         }}
                         className={`w-full flex items-center gap-2.5 px-3 h-10 text-sm ${
-                          preference === opt.value ? 'text-accent bg-accent-soft' : 'text-text-primary hover:bg-surface-2'
+                          preference === opt.value ? 'text-accent-soft-text bg-accent-soft' : 'text-text-primary hover:bg-surface-2'
                         }`}
                       >
                         <Icon size={16} />
