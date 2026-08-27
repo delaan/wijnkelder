@@ -21,7 +21,7 @@ export default function ConfirmDialog({ title, message, onConfirm, onCancel, bus
           <button
             onClick={onConfirm}
             disabled={busy}
-            className="text-sm font-medium text-white bg-red-600 hover:bg-red-700 disabled:opacity-60 px-4 h-10 rounded-token-md"
+            className="text-sm font-medium text-white bg-danger hover:bg-danger-hover disabled:opacity-60 px-4 h-10 rounded-token-md"
           >
             {busy ? 'Bezig…' : 'Verwijderen'}
           </button>

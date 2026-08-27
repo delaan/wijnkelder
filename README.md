@@ -319,6 +319,38 @@ Open je app-link met een harde refresh. In **Instellingen** staan "Identiteit" e
 - **Profielfoto**: in Instellingen te uploaden, te zien in het accountbolletje rechtsboven en op je welkomstscherm; zonder eigen foto blijft de vertrouwde eerste letter van je e-mailadres staan
 - **Wijn-toevoegscherm op mobiel schuift soepel van onderaf omhoog**, met ruimte rondom en stopt netjes boven de navigatiebalk in plaats van het hele scherm te vullen
 
+## Stap 14 — Bijwerken: algehele UX- en ontwerpcontrole (sneller, toegankelijker, overal netjes uitgelijnd)
+
+Dit is een grote opschoonronde over de hele app: geen nieuwe functies, maar overal betere afwerking. Je bestaande account, wijnen, gebruikers en instellingen blijven gewoon behouden, en er zijn deze keer **geen database-wijzigingen** — je hoeft dus niets in Supabase te draaien.
+
+**14a. Code bijwerken via GitHub Desktop**
+
+1. De nieuwe bestanden staan al klaargezet in je lokale map `wijnkelder`.
+2. Open **GitHub Desktop**, vul linksonder een korte omschrijving in (bijv. "UX- en ontwerpcontrole: kleuren, snelheid, toegankelijkheid").
+3. Klik op **Commit to main**, en daarna op **Push origin**.
+
+Netlify start automatisch een nieuwe deploy (1-2 minuten) — voortgang volgen kan op je Netlify-dashboard onder **Deploys**.
+
+**14b. Database**
+
+Geen actie nodig — deze update wijzigt alleen het uiterlijk, de snelheid en de bediening.
+
+**14c. Controleren**
+
+Open je app-link met een harde refresh. Meldingen (gelukt/fout/let-op, bijv. bij het opslaan van een resetcode of het intrekken van toegang) zien er in donkere modus nu net zo verzorgd uit als in lichte modus, in plaats van een te lichte, moeilijk leesbare kleur. Instellingen opslaan of een foto uploaden ververst nu rustig op de achtergrond in plaats van het hele scherm even leeg te laten knipperen. De app opent iets sneller doordat zelden gebruikte schermen (onboarding, gebruikersbeheer) pas worden opgehaald zodra je ze echt opent. Knopjes zoals favoriet-markeren en raster/lijst-wisselen zijn iets groter en makkelijker te raken op een telefoon. Menu's (thema, account, sorteren/groeperen) sluiten nu ook met de Escape-toets. Gaat het ophalen van je wijnen een keer mis, dan zie je nu een duidelijke melding met een "Opnieuw proberen"-knop in plaats van een stille lege lijst.
+
+### Wat is er nieuw in deze versie
+
+- **Meldingen en gevaar-knoppen werken nu correct in donkere modus**: gelukt/fout/let-op-meldingen, statuslabels en "verwijderen/resetten"-knoppen gebruiken nu kleuren die in beide thema's goed leesbaar zijn, in plaats van vaste lichte kleuren die op een donkere achtergrond vaag aandeden
+- **Beter leesbare secundaire tekst in lichte modus** (bijv. kleine bijschriften onder wijnnamen en velden) — het contrast was te laag om prettig te lezen te zijn
+- **Instellingen wijzigen of een foto uploaden ververst nu rustig op de achtergrond**, zonder dat het hele scherm even terugvalt naar een lege laadindicator
+- **Gaat het ophalen van je wijnen een keer mis, dan zie je dat nu ook**, met een knop om het opnieuw te proberen — voorheen bleef de lijst dan stil leeg
+- **App opent iets sneller**: schermen die je zelden bezoekt (eenmalige onboarding, gebruikersbeheer) worden nu pas gedownload op het moment dat je ze opent, in plaats van standaard mee te komen bij elk bezoek
+- **Iets grotere, makkelijker te raken knopjes op mobiel** (favoriet markeren, raster/lijst wisselen)
+- **Menu's sluiten nu ook met de Escape-toets** (thema, account, sorteren/groeperen in Collectie), voor wie liever met het toetsenbord werkt
+- **Wijndetailscherm nu in dezelfde stijl als de andere schermen** (schuift soepel van onderaf omhoog op mobiel, met ruimte rondom)
+- **Gastmodus en hoofdmenu even breed** op een groot scherm, voor een consistentere indeling
+
 ---
 
 ## Wat kan de app?

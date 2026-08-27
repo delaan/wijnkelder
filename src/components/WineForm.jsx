@@ -1,7 +1,7 @@
 import { useRef, useState } from 'react'
 import { WINE_COLORS, TASTE_PROFILES, FOOD_PAIRINGS } from '../lib/wineHelpers'
 import FormSection from './FormSection'
-import { CameraIcon, HeartIcon } from './icons'
+import { CameraIcon, HeartIcon, XIcon } from './icons'
 import { useFocusTrap } from '../hooks/useFocusTrap'
 
 const emptyWine = {
@@ -106,8 +106,8 @@ export default function WineForm({ wine, onSave, onClose, onUploadPhoto }) {
       >
         <div className="sticky top-0 bg-surface/95 backdrop-blur border-b border-border px-5 py-4 flex items-center justify-between z-10">
           <h2 id="wine-form-title" className="font-semibold text-text-primary">{wine ? 'Wijn bewerken' : 'Handmatig toevoegen'}</h2>
-          <button onClick={onClose} aria-label="Sluiten" className="text-text-tertiary hover:text-text-primary text-xl leading-none w-10 h-10">
-            ×
+          <button onClick={onClose} aria-label="Sluiten" className="w-10 h-10 rounded-token-full flex items-center justify-center text-text-tertiary hover:bg-surface-2 hover:text-text-primary transition-colors">
+            <XIcon size={16} />
           </button>
         </div>
 
@@ -281,7 +281,7 @@ export default function WineForm({ wine, onSave, onClose, onUploadPhoto }) {
             </div>
           </FormSection>
 
-          {error && <p className="text-sm text-red-600 bg-red-50 rounded-token-md px-3 py-2">{error}</p>}
+          {error && <p className="text-sm text-danger-text bg-danger-bg rounded-token-md px-3 py-2">{error}</p>}
 
           <div className="flex justify-end gap-3 pt-1">
             <button type="button" onClick={onClose} className="text-sm font-medium text-text-secondary px-3 h-11">

@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { SunIcon, MoonIcon, AutoIcon } from './icons'
 import { useTheme } from '../context/ThemeContext'
+import { useFocusTrap } from '../hooks/useFocusTrap'
 
 const THEME_OPTIONS = [
   { value: 'auto', label: 'Automatisch', icon: AutoIcon },
@@ -14,6 +15,7 @@ const THEME_OPTIONS = [
 export default function ThemeToggle({ className = '' }) {
   const { preference, setPreference } = useTheme()
   const [open, setOpen] = useState(false)
+  const menuRef = useFocusTrap(open ? () => setOpen(false) : null)
   const ActiveIcon = THEME_OPTIONS.find((t) => t.value === preference)?.icon || AutoIcon
 
   return (
@@ -31,6 +33,7 @@ export default function ThemeToggle({ className = '' }) {
         <>
           <button className="fixed inset-0 z-modal cursor-default" aria-hidden="true" onClick={() => setOpen(false)} />
           <div
+            ref={menuRef}
             role="menu"
             className="absolute right-0 mt-2 w-44 bg-surface border border-border rounded-token-md shadow-token-lg z-modal py-1"
           >

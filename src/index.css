@@ -29,7 +29,7 @@
   /* Tekst */
   --text-primary: #1c1917;
   --text-secondary: #6b6461;
-  --text-tertiary: #a39c98;
+  --text-tertiary: #766d68;
 
   /* Randen & schaduw */
   --border: #e7e2de;
@@ -37,6 +37,18 @@
   --shadow-sm: 0 1px 2px rgba(28, 25, 23, 0.04);
   --shadow-md: 0 4px 16px rgba(28, 25, 23, 0.08);
   --shadow-lg: 0 12px 40px rgba(28, 25, 23, 0.16);
+
+  /* Statuskleuren (gelukt/fout/let-op) — gebruikt i.p.v. losse rode/groene
+     Tailwind-kleuren, zodat meldingen, badges en gevaarlijke knoppen in
+     donkere modus net zo goed leesbaar zijn als in lichte modus. */
+  --success-bg: #e8f5ec;
+  --success-text: #1e7d42;
+  --danger-bg: #fbe9ea;
+  --danger-text: #b3261e;
+  --danger: #c0392b;
+  --danger-hover: #a52f22;
+  --warning-bg: #fdf3e0;
+  --warning-text: #8a5a05;
 
   /* Categoriekleuren (wijntype) — bewust onderscheidend, altijd met tekst/aantal erbij */
   --type-rood: #a4243b;
@@ -79,6 +91,14 @@
     --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.3);
     --shadow-md: 0 4px 16px rgba(0, 0, 0, 0.4);
     --shadow-lg: 0 12px 40px rgba(0, 0, 0, 0.55);
+    --success-bg: #16321f;
+    --success-text: #6fcf8e;
+    --danger-bg: #3a1614;
+    --danger-text: #ff9d94;
+    --danger: #c73e3e;
+    --danger-hover: #a83232;
+    --warning-bg: #3a2c10;
+    --warning-text: #e0b34d;
   }
 }
 
@@ -99,6 +119,14 @@
   --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.3);
   --shadow-md: 0 4px 16px rgba(0, 0, 0, 0.4);
   --shadow-lg: 0 12px 40px rgba(0, 0, 0, 0.55);
+  --success-bg: #16321f;
+  --success-text: #6fcf8e;
+  --danger-bg: #3a1614;
+  --danger-text: #ff9d94;
+  --danger: #c73e3e;
+  --danger-hover: #a83232;
+  --warning-bg: #3a2c10;
+  --warning-text: #e0b34d;
 }
 
 /* "Dinerweergave" — donkerder, rustiger, minder beweging; te combineren met elk thema */

@@ -5,12 +5,15 @@ export function useCellarSettings(userId) {
   const [settings, setSettings] = useState(null)
   const [loading, setLoading] = useState(true)
 
-  const refetch = useCallback(async () => {
+  // `silent: true` ververst de instellingen op de achtergrond zonder de
+  // hele app terug te zetten naar het volledige-paginaspinner-scherm —
+  // alleen de allereerste keer laden (bij het openen van de app) mag dat.
+  const refetch = useCallback(async ({ silent = false } = {}) => {
     if (!userId) return
-    setLoading(true)
+    if (!silent) setLoading(true)
     const { data } = await supabase.from('cellar_settings_public').select('*').eq('user_id', userId).single()
     setSettings(data || null)
-    setLoading(false)
+    if (!silent) setLoading(false)
   }, [userId])
 
   useEffect(() => {
@@ -50,7 +53,7 @@ export function useCellarSettings(userId) {
       .upsert({ user_id: userId, ...patch }, { onConflict: 'user_id' })
       .select()
     if (error) throw error
-    await refetch()
+    await refetch({ silent: true })
     return data?.[0]
   }
 

@@ -123,7 +123,7 @@ export default function GuestMode({ wines, cellarName, logoType, logoUrl, heroIm
   return (
     <div className="min-h-screen bg-bg">
       <header className="sticky top-0 z-nav bg-surface/90 backdrop-blur border-b border-border safe-top">
-        <div className="h-16 px-4 sm:px-6 flex items-center gap-3 max-w-5xl mx-auto">
+        <div className="h-16 px-4 sm:px-6 flex items-center gap-3 max-w-6xl mx-auto">
           <button
             onClick={onExit}
             className="flex items-center gap-2.5 shrink-0"
@@ -141,7 +141,7 @@ export default function GuestMode({ wines, cellarName, logoType, logoUrl, heroIm
         </div>
       </header>
 
-      <main className="max-w-5xl mx-auto px-4 sm:px-6 py-8 pb-48 md:pb-32">
+      <main className="max-w-6xl mx-auto px-4 sm:px-6 py-8 pb-48 md:pb-32">
         {!filter ? (
           <>
             <HeroBanner

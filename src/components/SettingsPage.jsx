@@ -202,7 +202,7 @@ export default function SettingsPage({
                 placeholder="Bijv. Delano"
                 className="flex-1 h-11 rounded-token-md border border-border bg-surface px-3 text-sm text-text-primary focus:outline-none focus:ring-2 focus:ring-accent"
               />
-              {displayNameSaved && <CheckIcon size={18} className="text-green-600 shrink-0" />}
+              {displayNameSaved && <CheckIcon size={18} className="text-success shrink-0" />}
             </div>
             <p className="text-text-tertiary text-xs mt-1">Wordt gebruikt in je welkomstscherm.</p>
           </div>
@@ -216,7 +216,7 @@ export default function SettingsPage({
                 onBlur={handleNameBlur}
                 className="flex-1 h-11 rounded-token-md border border-border bg-surface px-3 text-sm text-text-primary focus:outline-none focus:ring-2 focus:ring-accent"
               />
-              {nameSaved && <CheckIcon size={18} className="text-green-600 shrink-0" />}
+              {nameSaved && <CheckIcon size={18} className="text-success shrink-0" />}
             </div>
           </div>
 
@@ -384,7 +384,7 @@ export default function SettingsPage({
             </button>
           </form>
           {codeMessage && (
-            <p className={`text-sm rounded-token-md px-3 py-2 ${codeMessage.type === 'success' ? 'text-green-700 bg-green-50' : 'text-red-600 bg-red-50'}`}>
+            <p className={`text-sm rounded-token-md px-3 py-2 ${codeMessage.type === 'success' ? 'text-success bg-success-bg' : 'text-danger-text bg-danger-bg'}`}>
               {codeMessage.text}
             </p>
           )}
@@ -394,7 +394,7 @@ export default function SettingsPage({
               <button
                 onClick={() => setResetStep(1)}
                 disabled={!settings?.has_reset_code}
-                className="text-sm font-semibold text-red-600 disabled:opacity-40"
+                className="text-sm font-semibold text-danger-text disabled:opacity-40"
               >
                 Wijnkelder resetten…
               </button>
@@ -404,8 +404,8 @@ export default function SettingsPage({
             )}
 
             {resetStep === 1 && (
-              <div className="bg-red-50 rounded-token-md p-4">
-                <p className="text-sm text-red-800">
+              <div className="bg-danger-bg rounded-token-md p-4">
+                <p className="text-sm text-danger-text">
                   Dit verwijdert <strong>al je wijnen en hun geschiedenis</strong> permanent. Je kelderinstellingen
                   (naam, logo, thema) blijven staan. Weet je het zeker?
                 </p>
@@ -413,7 +413,7 @@ export default function SettingsPage({
                   <button onClick={() => setResetStep(0)} className="text-sm font-medium text-text-secondary">
                     Annuleren
                   </button>
-                  <button onClick={() => setResetStep(2)} className="text-sm font-semibold text-red-600">
+                  <button onClick={() => setResetStep(2)} className="text-sm font-semibold text-danger-text">
                     Ja, ga door
                   </button>
                 </div>
@@ -438,7 +438,7 @@ export default function SettingsPage({
                   <button type="button" onClick={() => setResetStep(0)} className="text-sm font-medium text-text-secondary">
                     Annuleren
                   </button>
-                  <button type="submit" disabled={resetting} className="text-sm font-semibold text-white bg-red-600 hover:bg-red-700 px-4 h-10 rounded-token-md">
+                  <button type="submit" disabled={resetting} className="text-sm font-semibold text-white bg-danger hover:bg-danger-hover px-4 h-10 rounded-token-md">
                     {resetting ? 'Bezig…' : 'Definitief resetten'}
                   </button>
                 </div>
@@ -446,7 +446,7 @@ export default function SettingsPage({
             )}
 
             {resetMessage && (
-              <p className={`text-sm rounded-token-md px-3 py-2 mt-3 ${resetMessage.type === 'success' ? 'text-green-700 bg-green-50' : 'text-red-600 bg-red-50'}`}>
+              <p className={`text-sm rounded-token-md px-3 py-2 mt-3 ${resetMessage.type === 'success' ? 'text-success bg-success-bg' : 'text-danger-text bg-danger-bg'}`}>
                 {resetMessage.text}
               </p>
             )}

@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react'
 import { SunIcon, CloudIcon, CloudRainIcon, CloudBoltIcon, SnowflakeIcon, SmogIcon, LocationIcon } from './icons'
+import Spinner from './Spinner'
 
 // Klein weerkaartje op het dashboard, gebaseerd op de locatie van het
 // apparaat (via de browser) en Open-Meteo (geen account/sleutel nodig).
@@ -106,7 +107,7 @@ export default function WeatherWidget() {
   if (state.status === 'loading') {
     return (
       <div className="flex items-center gap-2.5 h-14 px-4 rounded-token-lg bg-surface border border-border text-text-tertiary text-sm shrink-0">
-        <span className="w-3.5 h-3.5 border-2 border-text-tertiary border-t-transparent rounded-token-full animate-spin shrink-0" />
+        <Spinner size={14} muted />
         Weer laden…
       </div>
     )

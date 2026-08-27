@@ -6,9 +6,12 @@ export function useWines(userId) {
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState(null)
 
-  const fetchWines = useCallback(async () => {
+  // `silent: true` ververst de data op de achtergrond zonder de hele app
+  // terug te zetten naar het volledige-paginaspinner-scherm — alleen de
+  // allereerste keer laden (bij het openen van de app) mag dat.
+  const fetchWines = useCallback(async ({ silent = false } = {}) => {
     if (!userId) return
-    setLoading(true)
+    if (!silent) setLoading(true)
     const { data, error: fetchError } = await supabase
       .from('wines')
       .select('*')
@@ -19,7 +22,7 @@ export function useWines(userId) {
       setWines(data)
       setError(null)
     }
-    setLoading(false)
+    if (!silent) setLoading(false)
   }, [userId])
 
   useEffect(() => {

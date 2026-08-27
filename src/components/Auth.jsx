@@ -90,8 +90,8 @@ export default function Auth() {
               />
             </div>
 
-            {error && <p className="text-sm text-red-600 bg-red-50 rounded-token-md px-3 py-2">{error}</p>}
-            {info && <p className="text-sm text-green-700 bg-green-50 rounded-token-md px-3 py-2">{info}</p>}
+            {error && <p className="text-sm text-danger-text bg-danger-bg rounded-token-md px-3 py-2">{error}</p>}
+            {info && <p className="text-sm text-success bg-success-bg rounded-token-md px-3 py-2">{info}</p>}
 
             <button
               type="submit"

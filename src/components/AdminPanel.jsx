@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useState } from 'react'
 import { listUsers, inviteUser, updateUserRole, toggleUserAccess } from '../lib/adminApi'
 import { formatDate } from '../lib/wineHelpers'
+import Spinner from './Spinner'
 
 export default function AdminPanel({ currentUserId, onBack }) {
   const [users, setUsers] = useState([])
@@ -101,7 +102,7 @@ export default function AdminPanel({ currentUserId, onBack }) {
             <button
               type="submit"
               disabled={inviting}
-              className="bg-accent hover:bg-accent-hover disabled:opacity-60 text-white text-sm font-medium px-4 py-2.5 rounded-token-md whitespace-nowrap"
+              className="bg-accent hover:bg-accent-hover disabled:opacity-60 text-accent-contrast text-sm font-medium px-4 py-2.5 rounded-token-md whitespace-nowrap"
             >
               {inviting ? 'Bezig…' : 'Uitnodiging versturen'}
             </button>
@@ -109,7 +110,7 @@ export default function AdminPanel({ currentUserId, onBack }) {
           {inviteMessage && (
             <p
               className={`text-sm mt-3 rounded-token-md px-3 py-2 ${
-                inviteMessage.type === 'success' ? 'text-green-700 bg-green-50' : 'text-red-600 bg-red-50'
+                inviteMessage.type === 'success' ? 'text-success bg-success-bg' : 'text-danger-text bg-danger-bg'
               }`}
             >
               {inviteMessage.text}
@@ -121,7 +122,7 @@ export default function AdminPanel({ currentUserId, onBack }) {
           </p>
         </div>
 
-        {error && <p className="text-sm text-red-600 bg-red-50 rounded-token-md px-3 py-2">{error}</p>}
+        {error && <p className="text-sm text-danger-text bg-danger-bg rounded-token-md px-3 py-2">{error}</p>}
 
         <div className="bg-surface border border-border rounded-token-lg overflow-hidden">
           <div className="px-5 py-4 border-b border-border">
@@ -130,7 +131,7 @@ export default function AdminPanel({ currentUserId, onBack }) {
 
           {loading ? (
             <div className="py-16 flex justify-center">
-              <span className="w-4 h-4 border-2 border-accent border-t-transparent rounded-token-full animate-spin" />
+              <Spinner size={16} />
             </div>
           ) : users.length === 0 ? (
             <p className="text-text-tertiary text-sm px-5 py-6">Nog geen gebruikers gevonden.</p>
@@ -155,7 +156,7 @@ export default function AdminPanel({ currentUserId, onBack }) {
                     <div className="flex items-center gap-2 flex-wrap">
                       <span
                         className={`text-xs px-2 py-1 rounded-token-full font-medium ${
-                          user.status === 'active' ? 'bg-green-50 text-green-700' : 'bg-red-50 text-red-700'
+                          user.status === 'active' ? 'bg-success-bg text-success' : 'bg-danger-bg text-danger-text'
                         }`}
                       >
                         {user.status === 'active' ? 'Actief' : 'Ingetrokken'}
@@ -176,8 +177,8 @@ export default function AdminPanel({ currentUserId, onBack }) {
                         disabled={busy || isSelf}
                         className={`text-xs font-medium px-3 py-1.5 rounded-token-md disabled:opacity-40 ${
                           user.status === 'active'
-                            ? 'text-red-600 hover:bg-red-50'
-                            : 'text-green-700 hover:bg-green-50'
+                            ? 'text-danger-text hover:bg-danger-bg'
+                            : 'text-success hover:bg-success-bg'
                         }`}
                       >
                         {user.status === 'active' ? 'Toegang intrekken' : 'Toegang herstellen'}

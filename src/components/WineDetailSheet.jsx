@@ -70,7 +70,7 @@ export default function WineDetailSheet({ wine, onClose, onToggleFavorite, onUnc
   }
 
   return (
-    <div className="fixed inset-0 z-modal flex items-end sm:items-center justify-center">
+    <div className="fixed inset-0 z-modal flex items-end md:items-center justify-center">
       <div
         className="absolute inset-0 backdrop-blur-md"
         style={{ background: 'var(--overlay)' }}
@@ -82,7 +82,7 @@ export default function WineDetailSheet({ wine, onClose, onToggleFavorite, onUnc
         role="dialog"
         aria-modal="true"
         aria-labelledby="wine-detail-title"
-        className="relative bg-surface w-full sm:max-w-lg sm:rounded-token-lg rounded-t-token-lg shadow-token-lg max-h-[92vh] overflow-y-auto safe-bottom"
+        className="relative bg-surface w-[calc(100%-1.5rem)] md:w-full md:max-w-lg rounded-token-lg shadow-token-lg max-h-[calc(100vh-9rem)] md:max-h-[92vh] overflow-y-auto safe-bottom mb-[calc(6.5rem+env(safe-area-inset-bottom))] md:mb-0 animate-slide-up md:animate-fade-in"
       >
         <div className="sticky top-0 bg-surface/95 backdrop-blur border-b border-border px-5 py-4 flex items-center justify-between z-10">
           <h2 id="wine-detail-title" className="font-semibold text-text-primary truncate pr-4">
@@ -229,7 +229,7 @@ export default function WineDetailSheet({ wine, onClose, onToggleFavorite, onUnc
                 <button onClick={() => onEdit(wine)} className="text-sm font-medium text-accent-soft-text">
                   Bewerken
                 </button>
-                <button onClick={() => onDelete(wine)} className="text-sm font-medium text-text-tertiary hover:text-red-600">
+                <button onClick={() => onDelete(wine)} className="text-sm font-medium text-text-tertiary hover:text-danger-text">
                   Verwijderen
                 </button>
               </div>

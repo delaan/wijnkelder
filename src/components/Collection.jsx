@@ -4,12 +4,14 @@ import { WINE_COLORS, colorLabel, tasteLabel } from '../lib/wineHelpers'
 import WineGridCard from './WineGridCard'
 import WineListRow from './WineListRow'
 import EmptyState from './EmptyState'
+import { useFocusTrap } from '../hooks/useFocusTrap'
 
 // Compacte, aantikbare dropdown voor keuzes met veel opties (sorteren,
 // groeperen) — alle opties direct zichtbaar zodra hij open staat, in
 // plaats van een systeem-<select>.
 function FilterDropdown({ label, value, options, onChange }) {
   const [open, setOpen] = useState(false)
+  const menuRef = useFocusTrap(open ? () => setOpen(false) : null)
   const current = options.find((o) => o.value === value)
   return (
     <div className="relative shrink-0">
@@ -27,6 +29,7 @@ function FilterDropdown({ label, value, options, onChange }) {
         <>
           <button className="fixed inset-0 z-modal cursor-default" aria-hidden="true" onClick={() => setOpen(false)} />
           <div
+            ref={menuRef}
             role="menu"
             className="absolute left-0 mt-2 w-60 max-h-80 overflow-y-auto bg-surface border border-border rounded-token-md shadow-token-lg z-modal py-1"
           >
@@ -226,7 +229,7 @@ export default function Collection({
             onClick={() => setViewMode('grid')}
             aria-pressed={viewMode === 'grid'}
             aria-label="Rasterweergave"
-            className={`w-9 h-9 rounded-token-sm flex items-center justify-center ${
+            className={`w-10 h-10 rounded-token-sm flex items-center justify-center ${
               viewMode === 'grid' ? 'bg-surface shadow-token-sm text-accent-soft-text' : 'text-text-tertiary'
             }`}
           >
@@ -236,7 +239,7 @@ export default function Collection({
             onClick={() => setViewMode('list')}
             aria-pressed={viewMode === 'list'}
             aria-label="Lijstweergave"
-            className={`w-9 h-9 rounded-token-sm flex items-center justify-center ${
+            className={`w-10 h-10 rounded-token-sm flex items-center justify-center ${
               viewMode === 'list' ? 'bg-surface shadow-token-sm text-accent-soft-text' : 'text-text-tertiary'
             }`}
           >

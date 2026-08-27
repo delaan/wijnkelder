@@ -2,6 +2,7 @@ import { useState } from 'react'
 import { PlusIcon, LogoutIcon } from '../icons'
 import { LogoMark } from '../../lib/logoPresets'
 import ThemeToggle from '../ThemeToggle'
+import { useFocusTrap } from '../../hooks/useFocusTrap'
 
 // Eén doorlopende balk bovenin: op desktop bevat hij zowel het logo + de
 // titel van de wijnkast (links, boven de zijbalk) als de acties (rechts) —
@@ -11,6 +12,7 @@ import ThemeToggle from '../ThemeToggle'
 // de navigatiebalk onderin.
 export default function TopBar({ title, cellarName, logoType, logoUrl, onAdd, email, avatarUrl, onSignOut }) {
   const [userMenuOpen, setUserMenuOpen] = useState(false)
+  const userMenuRef = useFocusTrap(userMenuOpen ? () => setUserMenuOpen(false) : null)
 
   return (
     <header className="sticky top-0 z-nav bg-surface/90 backdrop-blur border-b border-border safe-top">
@@ -64,6 +66,7 @@ export default function TopBar({ title, cellarName, logoType, logoUrl, onAdd, em
                     onClick={() => setUserMenuOpen(false)}
                   />
                   <div
+                    ref={userMenuRef}
                     role="menu"
                     className="absolute right-0 mt-2 w-56 bg-surface border border-border rounded-token-md shadow-token-lg z-modal py-1"
                   >

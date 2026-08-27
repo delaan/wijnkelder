@@ -44,9 +44,9 @@ export const formatDate = (value) => {
 export const drinkWindowStatus = (from, until) => {
   const year = new Date().getFullYear()
   if (!from && !until) return null
-  if (until && year > until) return { label: 'Over de top', tone: 'text-red-700 bg-red-50' }
-  if (from && year < from) return { label: 'Nog te vroeg', tone: 'text-amber-700 bg-amber-50' }
-  return { label: 'Op zijn best', tone: 'text-green-700 bg-green-50' }
+  if (until && year > until) return { label: 'Over de top', tone: 'text-danger-text bg-danger-bg' }
+  if (from && year < from) return { label: 'Nog te vroeg', tone: 'text-warning bg-warning-bg' }
+  return { label: 'Op zijn best', tone: 'text-success bg-success-bg' }
 }
 
 export const isInDrinkWindow = (from, until) => {

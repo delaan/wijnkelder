@@ -34,7 +34,7 @@ export default function WineGridCard({ wine, onOpen, onToggleFavorite, hidePriva
               }}
               aria-label={wine.is_favorite ? 'Verwijderen uit favorieten' : 'Toevoegen aan favorieten'}
               aria-pressed={wine.is_favorite}
-              className="absolute top-2.5 right-2.5 w-9 h-9 rounded-token-full bg-surface/90 backdrop-blur flex items-center justify-center text-accent-soft-text shadow-token-sm"
+              className="absolute top-2 right-2 w-10 h-10 rounded-token-full bg-surface/90 backdrop-blur flex items-center justify-center text-accent-soft-text shadow-token-sm"
             >
               <HeartIcon filled={wine.is_favorite} size={17} />
             </button>

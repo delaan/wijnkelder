@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { lazy, Suspense, useState } from 'react'
 import { supabaseConfigured } from './lib/supabaseClient'
 import { useAuth } from './hooks/useAuth'
 import { useWines } from './hooks/useWines'
@@ -12,15 +12,21 @@ import Dashboard from './components/Dashboard'
 import Collection from './components/Collection'
 import GuestMode from './components/GuestMode'
 import SettingsPage from './components/SettingsPage'
-import AdminPanel from './components/AdminPanel'
 import AddWineModal from './components/AddWineModal'
 import WineForm from './components/WineForm'
 import WineDetailSheet from './components/WineDetailSheet'
 import ConfirmDialog from './components/ConfirmDialog'
 import Toast from './components/Toast'
-import Onboarding from './components/Onboarding'
 import WelcomeScreen from './components/WelcomeScreen'
 import SearchBar from './components/SearchBar'
+import Spinner from './components/Spinner'
+
+// Zelden bezochte schermen (eenmalige onboarding, alleen-voor-beheerders
+// gebruikersbeheer) worden pas opgehaald zodra ze echt nodig zijn, in
+// plaats van standaard in de hoofdbundel te zitten die iedereen bij elk
+// bezoek moet downloaden.
+const Onboarding = lazy(() => import('./components/Onboarding'))
+const AdminPanel = lazy(() => import('./components/AdminPanel'))
 
 const WELCOME_KEY = 'wijnkast-welcomed'
 const VIEW_TITLES = {
@@ -183,12 +189,16 @@ function WineApp({ user, signOut }) {
     </>
   )
 
-  if (cellarSettings.loading) {
+  if (cellarSettings.loading || wines.loading) {
     return <FullPageLoader />
   }
 
   if (needsOnboarding) {
-    return <Onboarding settings={cellarSettings.settings} onComplete={cellarSettings.update} />
+    return (
+      <Suspense fallback={<FullPageLoader />}>
+        <Onboarding settings={cellarSettings.settings} onComplete={cellarSettings.update} />
+      </Suspense>
+    )
   }
 
   if (!welcomed) {
@@ -237,6 +247,14 @@ function WineApp({ user, signOut }) {
         avatarUrl={avatarUrl}
         onSignOut={signOut}
       >
+        {wines.error && showSearchBar && (
+          <div className="mb-5 flex items-center justify-between gap-3 rounded-token-md bg-danger-bg text-danger-text text-sm px-4 py-3">
+            <span>Je wijnen konden niet worden opgehaald: {wines.error}</span>
+            <button onClick={() => wines.refetch()} className="font-semibold shrink-0">
+              Opnieuw proberen
+            </button>
+          </div>
+        )}
         {view === 'dashboard' && (
           <Dashboard
             wines={wines.wines}
@@ -269,12 +287,16 @@ function WineApp({ user, signOut }) {
             isAdmin={isAdmin}
             onOpenAdmin={() => setView('admin')}
             onResetSuccess={() => {
-              wines.refetch()
-              cellarSettings.refetch()
+              wines.refetch({ silent: true })
+              cellarSettings.refetch({ silent: true })
             }}
           />
         )}
-        {view === 'admin' && <AdminPanel currentUserId={user.id} onBack={() => setView('settings')} />}
+        {view === 'admin' && (
+          <Suspense fallback={<div className="flex justify-center py-16"><Spinner /></div>}>
+            <AdminPanel currentUserId={user.id} onBack={() => setView('settings')} />
+          </Suspense>
+        )}
       </AppShell>
       {showSearchBar && <SearchBar value={search} onChange={handleSearch} />}
       {overlays}
@@ -285,7 +307,7 @@ function WineApp({ user, signOut }) {
 function FullPageLoader() {
   return (
     <div className="min-h-screen flex items-center justify-center bg-bg">
-      <span className="w-5 h-5 border-2 border-accent border-t-transparent rounded-token-full animate-spin" />
+      <Spinner size={22} />
     </div>
   )
 }
