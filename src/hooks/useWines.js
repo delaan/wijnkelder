@@ -77,8 +77,10 @@ export function useWines(userId) {
   }
 
   // Ontkurkt `count` flessen: verlaagt de voorraad en logt een gebeurtenis,
-  // zodat dit betrouwbaar ongedaan te maken is via undoEvent().
-  const uncork = async (wine, count) => {
+  // zodat dit betrouwbaar ongedaan te maken is via undoEvent(). Een
+  // notitie en/of beoordeling voor dít moment zijn optioneel — dat is iets
+  // anders dan wine.rating, dat is de algehele beoordeling van de wijn.
+  const uncork = async (wine, count, { note, occasionRating } = {}) => {
     const amount = Math.min(count, wine.quantity)
     if (amount <= 0) return null
     const newQuantity = wine.quantity - amount
@@ -91,7 +93,16 @@ export function useWines(userId) {
 
     const { data: eventData, error: eventError } = await supabase
       .from('wine_events')
-      .insert([{ wine_id: wine.id, user_id: userId, type: 'uncork', quantity_delta: -amount }])
+      .insert([
+        {
+          wine_id: wine.id,
+          user_id: userId,
+          type: 'uncork',
+          quantity_delta: -amount,
+          note: note?.trim() || null,
+          occasion_rating: occasionRating || null,
+        },
+      ])
       .select()
     if (eventError) throw eventError
 

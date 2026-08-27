@@ -1,5 +1,5 @@
 import { colorLabel, colorSwatch, tasteLabel } from '../lib/wineHelpers'
-import { HeartIcon } from './icons'
+import { HeartIcon, StarIcon } from './icons'
 
 export default function WineListRow({ wine, onOpen, onToggleFavorite, hidePrivate }) {
   return (
@@ -25,7 +25,15 @@ export default function WineListRow({ wine, onOpen, onToggleFavorite, hidePrivat
         </span>
 
         <div className="flex-1 min-w-0">
-          <p className="font-medium text-text-primary truncate">{wine.name}</p>
+          <p className="font-medium text-text-primary truncate flex items-center gap-1.5">
+            {wine.name}
+            {wine.rating > 0 && (
+              <span className="inline-flex items-center gap-0.5 text-warning text-xs font-normal shrink-0">
+                <StarIcon filled size={11} />
+                {wine.rating}
+              </span>
+            )}
+          </p>
           <p className="text-text-secondary text-xs truncate">
             {wine.producer || '—'} {wine.vintage ? `· ${wine.vintage}` : ''} {wine.region ? `· ${wine.region}` : ''}
           </p>

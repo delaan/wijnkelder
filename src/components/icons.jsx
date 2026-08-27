@@ -39,6 +39,14 @@ export const UndoIcon = (p) => <Icon name="arrow-rotate-left" {...p} />
 export const ImageIcon = (p) => <Icon name="image" {...p} />
 export const LockIcon = (p) => <Icon name="lock" {...p} />
 export const LogoutIcon = (p) => <Icon name="arrow-right-from-bracket" {...p} />
+export const StarIcon = ({ filled, ...p }) => <Icon name="star" weight={filled ? 'solid' : 'regular'} {...p} />
+export const HistoryIcon = (p) => <Icon name="clock-rotate-left" {...p} />
+export const BookmarkIcon = ({ filled, ...p }) => <Icon name="bookmark" weight={filled ? 'solid' : 'regular'} {...p} />
+export const MapIcon = (p) => <Icon name="border-all" {...p} />
+export const DownloadIcon = (p) => <Icon name="download" {...p} />
+export const PrinterIcon = (p) => <Icon name="print" {...p} />
+export const SparklesIcon = (p) => <Icon name="wand-magic-sparkles" {...p} />
+export const ArrowRightIcon = (p) => <Icon name="arrow-right" {...p} />
 
 // Weer-iconen voor het "Mijn kelder"-dashboard.
 export const CloudIcon = (p) => <Icon name="cloud" {...p} />

@@ -190,3 +190,22 @@
 input[type='date']::-webkit-calendar-picker-indicator {
   opacity: 0.6;
 }
+
+/* Printweergave (export naar PDF via het browser-printdialoogvenster):
+   #print-root krijgt zijn inhoud pas op het moment van printen (zie
+   ExportReport.jsx) en is verder altijd verborgen; #root verdwijnt juist
+   tijdens het printen, zodat alleen het printrapport zichtbaar is. */
+#print-root {
+  display: none;
+}
+@media print {
+  #root {
+    display: none !important;
+  }
+  #print-root {
+    display: block !important;
+  }
+  @page {
+    margin: 14mm;
+  }
+}

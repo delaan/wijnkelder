@@ -3,7 +3,22 @@ import { useTheme } from '../context/ThemeContext'
 import { ACCENT_PRESETS, isValidHex } from '../lib/color'
 import { LOGO_PRESETS, LogoMark } from '../lib/logoPresets'
 import { setResetCode, resetCellar } from '../lib/cellarApi'
-import { SunIcon, MoonIcon, AutoIcon, CheckIcon, LockIcon, ColorWheelIcon, CameraIcon } from './icons'
+import { downloadWinesCsv } from '../lib/exportUtils'
+import ExportReport from './ExportReport'
+import {
+  SunIcon,
+  MoonIcon,
+  AutoIcon,
+  CheckIcon,
+  LockIcon,
+  ColorWheelIcon,
+  CameraIcon,
+  DownloadIcon,
+  PrinterIcon,
+  HistoryIcon,
+  BookmarkIcon,
+  MapIcon,
+} from './icons'
 
 function SettingsSection({ title, description, children }) {
   return (
@@ -25,6 +40,10 @@ export default function SettingsPage({
   isAdmin,
   onOpenAdmin,
   onResetSuccess,
+  wines = [],
+  onOpenHistory,
+  onOpenWishlist,
+  onOpenCellarMap,
 }) {
   const { preference, setPreference, accent, setAccent } = useTheme()
   const logoInput = useRef(null)
@@ -352,6 +371,62 @@ export default function SettingsPage({
             </div>
           </div>
         </SettingsSection>
+      </div>
+
+      {(onOpenHistory || onOpenWishlist || onOpenCellarMap) && (
+        <div className="lg:col-span-2">
+          <SettingsSection title="Meer" description="Ook op kleinere schermen te bereiken — op groter scherm staan deze al in de zijbalk.">
+            <div className="grid grid-cols-3 gap-2">
+              {onOpenHistory && (
+                <button
+                  onClick={onOpenHistory}
+                  className="h-20 rounded-token-md border border-border flex flex-col items-center justify-center gap-1.5 text-xs font-medium text-text-secondary"
+                >
+                  <HistoryIcon size={18} />
+                  Geschiedenis
+                </button>
+              )}
+              {onOpenWishlist && (
+                <button
+                  onClick={onOpenWishlist}
+                  className="h-20 rounded-token-md border border-border flex flex-col items-center justify-center gap-1.5 text-xs font-medium text-text-secondary"
+                >
+                  <BookmarkIcon size={18} />
+                  Verlanglijst
+                </button>
+              )}
+              {onOpenCellarMap && (
+                <button
+                  onClick={onOpenCellarMap}
+                  className="h-20 rounded-token-md border border-border flex flex-col items-center justify-center gap-1.5 text-xs font-medium text-text-secondary"
+                >
+                  <MapIcon size={18} />
+                  Kelderkaart
+                </button>
+              )}
+            </div>
+          </SettingsSection>
+        </div>
+      )}
+
+      <div className="lg:col-span-2">
+        <SettingsSection title="Exporteren" description="Een kopie van je collectie, voor eigen administratie of back-up.">
+          <div className="flex flex-wrap gap-3">
+            <button
+              onClick={() => downloadWinesCsv(wines, `${(settings?.cellar_name || 'wijnkelder').toLowerCase().replace(/\s+/g, '-')}.csv`)}
+              className="h-11 px-4 rounded-token-md border border-border text-sm font-medium text-text-primary flex items-center gap-2"
+            >
+              <DownloadIcon size={15} /> CSV downloaden
+            </button>
+            <button
+              onClick={() => window.print()}
+              className="h-11 px-4 rounded-token-md border border-border text-sm font-medium text-text-primary flex items-center gap-2"
+            >
+              <PrinterIcon size={15} /> Printen / PDF
+            </button>
+          </div>
+        </SettingsSection>
+        <ExportReport wines={wines} cellarName={settings?.cellar_name || 'Mijn wijnkelder'} />
       </div>
 
       {isAdmin && (

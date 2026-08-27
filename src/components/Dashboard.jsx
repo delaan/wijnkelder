@@ -4,6 +4,7 @@ import DistributionBar from './DistributionBar'
 import WineListRow from './WineListRow'
 import WeatherWidget from './WeatherWidget'
 import HeroBanner from './HeroBanner'
+import PairingFinder from './PairingFinder'
 
 function StatCard({ label, value, sub }) {
   return (
@@ -50,6 +51,8 @@ export default function Dashboard({ wines, onOpenWine, onToggleFavorite, onGoToC
         <h2 className="font-semibold text-text-primary mb-4">Collectie in balans</h2>
         <DistributionBar segments={stats.distribution} />
       </section>
+
+      <PairingFinder wines={wines} onOpenWine={onOpenWine} onToggleFavorite={onToggleFavorite} />
 
       <div className="grid md:grid-cols-2 gap-5">
         <section className="bg-surface border border-border rounded-token-lg p-5">

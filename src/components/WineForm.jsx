@@ -1,8 +1,10 @@
 import { useRef, useState } from 'react'
 import { WINE_COLORS, TASTE_PROFILES, FOOD_PAIRINGS } from '../lib/wineHelpers'
 import FormSection from './FormSection'
+import StarRating from './StarRating'
 import { CameraIcon, HeartIcon, XIcon } from './icons'
 import { useFocusTrap } from '../hooks/useFocusTrap'
+import { useCellarZones } from '../hooks/useCellarZones'
 
 const emptyWine = {
   name: '',
@@ -29,19 +31,26 @@ const emptyWine = {
   tasting_notes: '',
   label_photo_url: '',
   is_favorite: false,
+  rating: null,
+  zone_id: '',
+  zone_row: '',
+  zone_col: '',
 }
 
 const inputClass =
   'w-full h-11 rounded-token-md border border-border bg-surface px-3 text-base text-text-primary focus:outline-none focus:ring-2 focus:ring-accent'
 const labelClass = 'block text-sm font-medium text-text-secondary mb-1'
 
-export default function WineForm({ wine, onSave, onClose, onUploadPhoto }) {
+export default function WineForm({ wine, onSave, onClose, onUploadPhoto, userId, title }) {
   const [form, setForm] = useState(wine ? { ...emptyWine, ...wine, food_pairing: wine.food_pairing || [] } : emptyWine)
   const [saving, setSaving] = useState(false)
   const [uploading, setUploading] = useState(false)
   const [error, setError] = useState(null)
   const fileInput = useRef(null)
   const dialogRef = useFocusTrap(onClose)
+  const { zones } = useCellarZones(userId)
+  const selectedZone = zones.find((z) => z.id === form.zone_id)
+  const isEditing = Boolean(wine?.id)
 
   const set = (field) => (e) => setForm((f) => ({ ...f, [field]: e.target.value }))
 
@@ -84,6 +93,10 @@ export default function WineForm({ wine, onSave, onClose, onUploadPhoto }) {
         drink_from: form.drink_from ? Number(form.drink_from) : null,
         drink_until: form.drink_until ? Number(form.drink_until) : null,
         tasting_profile: form.tasting_profile || null,
+        rating: form.rating || null,
+        zone_id: form.zone_id || null,
+        zone_row: form.zone_id && form.zone_row !== '' ? Number(form.zone_row) : null,
+        zone_col: form.zone_id && form.zone_col !== '' ? Number(form.zone_col) : null,
       }
       delete payload.id
       delete payload.user_id
@@ -113,7 +126,9 @@ export default function WineForm({ wine, onSave, onClose, onUploadPhoto }) {
           {/* Losse achtergrondlaag voor de vervaging — zie toelichting in TopBar.jsx */}
           <div className="absolute inset-0 bg-surface/95 backdrop-blur border-b border-border" aria-hidden="true" />
           <div className="relative px-5 py-4 flex items-center justify-between">
-            <h2 id="wine-form-title" className="font-semibold text-text-primary">{wine ? 'Wijn bewerken' : 'Handmatig toevoegen'}</h2>
+            <h2 id="wine-form-title" className="font-semibold text-text-primary">
+              {title || (isEditing ? 'Wijn bewerken' : 'Nieuwe wijn')}
+            </h2>
             <button onClick={onClose} aria-label="Sluiten" className="w-10 h-10 rounded-token-full flex items-center justify-center text-text-tertiary hover:bg-surface-2 hover:text-text-primary transition-colors">
               <XIcon size={16} />
             </button>
@@ -145,6 +160,7 @@ export default function WineForm({ wine, onSave, onClose, onUploadPhoto }) {
                 <HeartIcon filled={form.is_favorite} size={15} className="text-accent-soft-text" />
                 Favoriet
               </button>
+              <StarRating value={form.rating || 0} onChange={(v) => setForm((f) => ({ ...f, rating: v }))} />
             </div>
           </div>
 
@@ -272,6 +288,52 @@ export default function WineForm({ wine, onSave, onClose, onUploadPhoto }) {
               </div>
             </div>
           </FormSection>
+
+          {zones.length > 0 && (
+            <FormSection title="Plek in de kelderkaart">
+              <div>
+                <label className={labelClass}>Zone/rek</label>
+                <select
+                  value={form.zone_id}
+                  onChange={(e) => setForm((f) => ({ ...f, zone_id: e.target.value, zone_row: '', zone_col: '' }))}
+                  className={inputClass}
+                >
+                  <option value="">Niet ingedeeld</option>
+                  {zones.map((z) => (
+                    <option key={z.id} value={z.id}>
+                      {z.name}
+                    </option>
+                  ))}
+                </select>
+              </div>
+              {selectedZone && (
+                <div className="grid grid-cols-2 gap-4">
+                  <div>
+                    <label className={labelClass}>Rij (1–{selectedZone.rows})</label>
+                    <input
+                      type="number"
+                      min={1}
+                      max={selectedZone.rows}
+                      value={form.zone_row}
+                      onChange={set('zone_row')}
+                      className={inputClass}
+                    />
+                  </div>
+                  <div>
+                    <label className={labelClass}>Kolom (1–{selectedZone.cols})</label>
+                    <input
+                      type="number"
+                      min={1}
+                      max={selectedZone.cols}
+                      value={form.zone_col}
+                      onChange={set('zone_col')}
+                      className={inputClass}
+                    />
+                  </div>
+                </div>
+              )}
+            </FormSection>
+          )}
 
           <FormSection title="Drinkvenster & notities">
             <div className="grid grid-cols-2 gap-4">

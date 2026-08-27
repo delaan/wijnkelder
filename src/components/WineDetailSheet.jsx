@@ -9,6 +9,7 @@ import {
   drinkWindowStatus,
 } from '../lib/wineHelpers'
 import { HeartIcon, XIcon, WineGlassIcon } from './icons'
+import StarRating from './StarRating'
 
 function Field({ label, value }) {
   if (!value) return null
@@ -26,6 +27,9 @@ export default function WineDetailSheet({ wine, onClose, onToggleFavorite, onUnc
   const previouslyFocused = useRef(null)
   const [uncorkCount, setUncorkCount] = useState(1)
   const [uncorking, setUncorking] = useState(false)
+  const [uncorkNoteOpen, setUncorkNoteOpen] = useState(false)
+  const [uncorkNote, setUncorkNote] = useState('')
+  const [uncorkRating, setUncorkRating] = useState(0)
 
   useEffect(() => {
     previouslyFocused.current = document.activeElement
@@ -62,8 +66,11 @@ export default function WineDetailSheet({ wine, onClose, onToggleFavorite, onUnc
   const handleUncork = async () => {
     setUncorking(true)
     try {
-      await onUncork(wine, uncorkCount)
+      await onUncork(wine, uncorkCount, { note: uncorkNote, occasionRating: uncorkRating })
       setUncorkCount(1)
+      setUncorkNote('')
+      setUncorkRating(0)
+      setUncorkNoteOpen(false)
     } finally {
       setUncorking(false)
     }
@@ -142,6 +149,7 @@ export default function WineDetailSheet({ wine, onClose, onToggleFavorite, onUnc
               {status && (
                 <span className={`text-xs px-2.5 py-1 rounded-token-full ${status.tone}`}>{status.label}</span>
               )}
+              <StarRating value={wine.rating || 0} size={14} />
             </div>
           </div>
 
@@ -225,6 +233,30 @@ export default function WineDetailSheet({ wine, onClose, onToggleFavorite, onUnc
                     >
                       {uncorking ? 'Bezig…' : `Ontkurk ${uncorkCount} fles${uncorkCount > 1 ? 'sen' : ''}`}
                     </button>
+                  </div>
+                )}
+                {maxUncork > 0 && (
+                  <div className="mt-3">
+                    {!uncorkNoteOpen ? (
+                      <button
+                        type="button"
+                        onClick={() => setUncorkNoteOpen(true)}
+                        className="text-xs font-medium text-accent-soft-text"
+                      >
+                        + Notitie of beoordeling voor dit moment
+                      </button>
+                    ) : (
+                      <div className="space-y-2">
+                        <StarRating value={uncorkRating} onChange={setUncorkRating} size={18} />
+                        <textarea
+                          value={uncorkNote}
+                          onChange={(e) => setUncorkNote(e.target.value)}
+                          rows={2}
+                          placeholder="Hoe smaakte hij? Bij welke gelegenheid?"
+                          className="w-full rounded-token-md border border-border bg-surface px-3 py-2 text-sm text-text-primary focus:outline-none focus:ring-2 focus:ring-accent"
+                        />
+                      </div>
+                    )}
                   </div>
                 )}
               </div>

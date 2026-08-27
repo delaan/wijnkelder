@@ -385,6 +385,51 @@ Log op je iPhone een keer uit en weer in: het scherm zoomt niet meer automatisch
 - **Actief tabblad in de onderste menubalk is in donkere modus nu duidelijker te herkennen**
 - **Nieuw app-icoon met een wijnfles** (favicon en iOS-beginscherm-icoon)
 
+## Stap 16 — Bijwerken: eigen score, drinkgeschiedenis, verlanglijst, kelderkaart, pairing-hulp, AI-etiketherkenning en export
+
+Dit is een grote update met zes nieuwe functies tegelijk (zie "Wat is er nieuw" hieronder). Je bestaande wijnen, gebruikers en instellingen blijven gewoon behouden. Volg wel **alle** onderstaande stappen, in deze volgorde — voor deze update is zowel een database-wijziging als een nieuwe sleutel nodig.
+
+**16a. Code bijwerken via GitHub Desktop**
+
+1. De nieuwe bestanden staan al klaargezet in je lokale map `wijnkelder`.
+2. Open **GitHub Desktop**, vul linksonder een korte omschrijving in (bijv. "score, geschiedenis, verlanglijst, kelderkaart, AI-herkenning, export").
+3. Klik op **Commit to main**, en daarna op **Push origin**.
+
+Netlify start automatisch een nieuwe deploy (1-2 minuten) — voortgang volgen kan op je Netlify-dashboard onder **Deploys**.
+
+**16b. De database bijwerken — dit is nodig voor drinkgeschiedenis, kelderkaart en verlanglijst**
+
+1. Ga in Supabase naar **SQL Editor → New query**.
+2. Open `supabase/migration_v6.sql` uit het nieuwe project, kopieer de hele inhoud, en plak die in de SQL Editor.
+3. Klik op **Run**. Je zou "Success. No rows returned" moeten zien.
+
+Dit voegt een notitie/beoordelingsveld toe aan je ontkurk-geschiedenis, maakt de tabellen voor de kelderkaart (zones/rekken) en de verlanglijst aan, en geeft elke wijn een plek-in-de-kelderkaart-veld. Niets van je bestaande wijnen gaat verloren.
+
+**16c. Een Anthropic API-sleutel instellen — dit is nodig voor AI-etiketherkenning**
+
+Deze functie (foto van een etiket maken en automatisch laten invullen) gebruikt hetzelfde AI-model als Claude, via een apart, betaald account — los van deze samenwerking. Zonder deze stap werkt de rest van de app gewoon, alleen geeft "Scannen en herkennen met AI" een foutmelding en kun je in dat scherm nog steeds op "Liever handmatig invoeren" klikken.
+
+1. Ga naar [console.anthropic.com](https://console.anthropic.com) en maak een account aan (of log in).
+2. Stel daar betaalgegevens in — de kosten zijn erg laag (in de orde van fracties van een cent per gescand etiket), maar zonder tegoed werkt de API niet.
+3. Ga naar **API Keys** en maak een nieuwe sleutel aan. Kopieer de sleutel meteen (die zie je daarna niet nog een keer).
+4. Ga in Netlify naar **Site configuration → Environment variables → Add a variable**.
+5. Key: `ANTHROPIC_API_KEY` → Value: de sleutel die je net hebt gekopieerd. Laat "Scopes" op alle scopes staan.
+6. Klik op **Create variable**, en doe daarna in Netlify **Deploys → Trigger deploy → Deploy site** zodat de nieuwe sleutel wordt meegenomen (een environment variable toevoegen bouwt de site niet vanzelf opnieuw).
+
+**16d. Controleren**
+
+Open een wijn in je collectie: je ziet nu sterren om er een eigen score aan te geven, en bij "Ontkurken" kun je een notitie en beoordeling voor dat moment toevoegen. In het zijmenu (of onder Instellingen → Meer, op je telefoon) vind je nu ook "Geschiedenis", "Verlanglijst" en "Kelderkaart". Op het dashboard staat een nieuw blokje "Wat drink ik hierbij?" met etenskeuzes die wijnen uit je eigen kelder tonen. Bij "Wijn toevoegen" kies je "Scannen en herkennen met AI", maak je een foto van een etiket, en na "Analyseren" verschijnt een vooraf ingevuld formulier ter controle. Onder Instellingen staat tot slot een nieuw blokje "Exporteren" met een CSV-download en een "Printen/PDF"-knop.
+
+### Wat is er nieuw in deze versie
+
+- **Eigen score**: geef elke wijn 0-5 sterren, sorteer je collectie erop, en zie de score terug op de kaarten en in de lijst
+- **Drinkgeschiedenis met notitie en beoordeling**: bij het ontkurken kun je optioneel noteren hoe de wijn smaakte en bij welke gelegenheid, met een eigen "Geschiedenis"-scherm dat alles op een rij zet
+- **Verlanglijst**: houd wijnen bij die je nog wil proberen of kopen, met één klik over te zetten naar je echte kelder zodra je hem hebt aangeschaft
+- **Kelderkaart**: deel je kelder in zones/rekken in (met een eigen rooster van rijen en kolommen) en geef wijnen daar een concrete plek, zodat je in één oogopslag ziet wat waar ligt
+- **"Wat drink ik hierbij?"**: kies een gerecht op het dashboard en zie meteen welke wijnen uit je eigen voorraad daarbij passen
+- **AI-etiketherkenning**: maak een foto van een etiket en laat naam, producent, jaargang, druif, regio, land en type automatisch invullen — je controleert en vult aan voordat je opslaat
+- **Exporteren**: download je hele collectie als CSV (bijv. voor Excel), of maak een nette printvriendelijke lijst/PDF via de printfunctie van je browser
+
 ---
 
 ## Wat kan de app?

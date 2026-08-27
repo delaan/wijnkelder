@@ -1,5 +1,5 @@
 import { colorLabel, colorSwatch, formatCurrency } from '../lib/wineHelpers'
-import { HeartIcon } from './icons'
+import { HeartIcon, StarIcon } from './icons'
 
 export default function WineGridCard({ wine, onOpen, onToggleFavorite, hidePrivate }) {
   return (
@@ -52,8 +52,14 @@ export default function WineGridCard({ wine, onOpen, onToggleFavorite, hidePriva
           <p className="font-semibold text-text-primary leading-snug truncate mt-0.5">{wine.name}</p>
           <p className="text-text-secondary text-sm truncate">{wine.producer || '—'}</p>
           <div className="flex items-center justify-between mt-2.5">
-            <span className="text-text-tertiary text-xs">
+            <span className="text-text-tertiary text-xs flex items-center gap-1">
               {wine.vintage || '—'} · {wine.region || '—'}
+              {wine.rating > 0 && (
+                <span className="inline-flex items-center gap-0.5 text-warning ml-1">
+                  <StarIcon filled size={11} />
+                  {wine.rating}
+                </span>
+              )}
             </span>
             {!hidePrivate && (
               <span className="text-text-primary text-sm font-medium">{wine.quantity}×</span>

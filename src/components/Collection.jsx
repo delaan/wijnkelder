@@ -66,6 +66,7 @@ const SORT_OPTIONS = [
   { value: 'vintage_asc', label: 'Jaargang (oud eerst)' },
   { value: 'stock', label: 'Voorraad' },
   { value: 'value', label: 'Waarde' },
+  { value: 'rating', label: 'Beoordeling' },
   { value: 'favorites', label: 'Favorieten eerst' },
 ]
 
@@ -104,6 +105,8 @@ function sortWines(wines, sortBy) {
       return sorted.sort(
         (a, b) => (b.estimated_value || b.purchase_price || 0) - (a.estimated_value || a.purchase_price || 0)
       )
+    case 'rating':
+      return sorted.sort((a, b) => (b.rating || 0) - (a.rating || 0))
     case 'favorites':
       return sorted.sort((a, b) => (b.is_favorite ? 1 : 0) - (a.is_favorite ? 1 : 0))
     default:

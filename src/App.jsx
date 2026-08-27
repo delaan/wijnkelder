@@ -4,6 +4,7 @@ import { useAuth } from './hooks/useAuth'
 import { useWines } from './hooks/useWines'
 import { useProfile } from './hooks/useProfile'
 import { useCellarSettings } from './hooks/useCellarSettings'
+import { useWishlist } from './hooks/useWishlist'
 import { ThemeProvider } from './context/ThemeContext'
 import SetupNotice from './components/SetupNotice'
 import Auth from './components/Auth'
@@ -20,6 +21,9 @@ import Toast from './components/Toast'
 import WelcomeScreen from './components/WelcomeScreen'
 import SearchBar from './components/SearchBar'
 import Spinner from './components/Spinner'
+import History from './components/History'
+import Wishlist from './components/Wishlist'
+import CellarMap from './components/CellarMap'
 
 // Zelden bezochte schermen (eenmalige onboarding, alleen-voor-beheerders
 // gebruikersbeheer) worden pas opgehaald zodra ze echt nodig zijn, in
@@ -33,6 +37,9 @@ const VIEW_TITLES = {
   dashboard: 'Mijn kelder',
   collection: 'Collectie',
   favorites: 'Favorieten',
+  history: 'Geschiedenis',
+  wishlist: 'Verlanglijst',
+  cellarmap: 'Kelderkaart',
   settings: 'Instellingen',
   admin: 'Beheer gebruikers',
 }
@@ -55,6 +62,7 @@ function WineApp({ user, signOut }) {
   const wines = useWines(user.id)
   const { isAdmin } = useProfile(user.id)
   const cellarSettings = useCellarSettings(user.id)
+  const wishlist = useWishlist(user.id)
 
   const [view, setView] = useState('dashboard')
   const [search, setSearch] = useState('')
@@ -87,6 +95,7 @@ function WineApp({ user, signOut }) {
   const [deletingWine, setDeletingWine] = useState(null)
   const [deleteBusy, setDeleteBusy] = useState(false)
   const [toast, setToast] = useState(null)
+  const [convertingItem, setConvertingItem] = useState(null) // verlanglijst-item dat naar de kelder wordt overgezet
 
   const openDetail = (wine, isGuest = false) => {
     setViewingWine(wine)
@@ -104,8 +113,8 @@ function WineApp({ user, signOut }) {
     if (viewingWine?.id === updated.id) setViewingWine(updated)
   }
 
-  const handleUncork = async (wine, count) => {
-    const result = await wines.uncork(wine, count)
+  const handleUncork = async (wine, count, options) => {
+    const result = await wines.uncork(wine, count, options)
     if (result) {
       setViewingWine(result.wine)
       setToast({
@@ -118,6 +127,27 @@ function WineApp({ user, signOut }) {
   const handleUndo = async (event) => {
     const updated = await wines.undoEvent(event)
     if (updated && viewingWine?.id === updated.id) setViewingWine(updated)
+  }
+
+  // Alleen bekende WineForm-velden overnemen — het verlanglijst-item heeft
+  // ook kolommen (bv. target_price, notes) die niet op de wines-tabel
+  // bestaan, en die zouden de insert laten mislukken als we ze meesturen.
+  const wishlistPrefill = convertingItem && {
+    name: convertingItem.name,
+    producer: convertingItem.producer || '',
+    vintage: convertingItem.vintage || '',
+    region: convertingItem.region || '',
+    country: convertingItem.country || '',
+    grape_varieties: convertingItem.grape_varieties || '',
+    color: convertingItem.color || 'rood',
+    tasting_notes: convertingItem.notes || '',
+    quantity: 1,
+  }
+
+  const handleSaveConvertedWine = async (payload) => {
+    await wines.addWine(payload)
+    await wishlist.deleteItem(convertingItem.id)
+    setConvertingItem(null)
   }
 
   const confirmDelete = async () => {
@@ -163,6 +193,7 @@ function WineApp({ user, signOut }) {
           onSave={handleSaveWine}
           onClose={() => setAddModalOpen(false)}
           onUploadPhoto={wines.uploadLabelPhoto}
+          userId={user.id}
         />
       )}
 
@@ -172,6 +203,18 @@ function WineApp({ user, signOut }) {
           onSave={handleSaveWine}
           onClose={() => setEditingWine(null)}
           onUploadPhoto={wines.uploadLabelPhoto}
+          userId={user.id}
+        />
+      )}
+
+      {convertingItem && (
+        <WineForm
+          wine={wishlistPrefill}
+          onSave={handleSaveConvertedWine}
+          onClose={() => setConvertingItem(null)}
+          onUploadPhoto={wines.uploadLabelPhoto}
+          userId={user.id}
+          title="Toevoegen aan kelder"
         />
       )}
 
@@ -277,6 +320,18 @@ function WineApp({ user, signOut }) {
             showFavoritesToggle={false}
           />
         )}
+        {view === 'history' && <History userId={user.id} />}
+        {view === 'wishlist' && (
+          <Wishlist
+            items={wishlist.items}
+            loading={wishlist.loading}
+            error={wishlist.error}
+            onAddItem={wishlist.addItem}
+            onDeleteItem={(item) => wishlist.deleteItem(item.id)}
+            onConvert={setConvertingItem}
+          />
+        )}
+        {view === 'cellarmap' && <CellarMap userId={user.id} wines={wines.wines} onOpenWine={openDetail} />}
         {view === 'settings' && (
           <SettingsPage
             settings={cellarSettings.settings}
@@ -290,6 +345,10 @@ function WineApp({ user, signOut }) {
               wines.refetch({ silent: true })
               cellarSettings.refetch({ silent: true })
             }}
+            wines={wines.wines}
+            onOpenHistory={() => setView('history')}
+            onOpenWishlist={() => setView('wishlist')}
+            onOpenCellarMap={() => setView('cellarmap')}
           />
         )}
         {view === 'admin' && (
