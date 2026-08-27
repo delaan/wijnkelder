@@ -14,7 +14,7 @@ function StatCard({ label, value, sub }) {
   )
 }
 
-export default function Dashboard({ wines, onOpenWine, onToggleFavorite, onGoToCollection, displayName }) {
+export default function Dashboard({ wines, onOpenWine, onToggleFavorite, onGoToCollection, displayName, heroImageUrl }) {
   const stats = useMemo(() => {
     const bottles = totalBottles(wines)
     const distinct = wines.length
@@ -28,14 +28,27 @@ export default function Dashboard({ wines, onOpenWine, onToggleFavorite, onGoToC
 
   return (
     <div className="space-y-8">
-      <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-4">
-        <div>
-          <p className="text-text-tertiary text-sm font-medium">Mijn kelder</p>
-          <h1 className="text-2xl font-bold text-text-primary mt-0.5">
+      <div className="relative h-64 sm:h-80 rounded-token-lg overflow-hidden bg-surface-2">
+        <img src={heroImageUrl || '/hero-default.jpg'} alt="" className="absolute inset-0 w-full h-full object-cover" />
+        {/* De foto heeft onderaan al een lichte gloed; dit verloop trekt die
+            door naar de echte paginakleur, zodat de kaart — ook in donkere
+            modus — netjes overloopt in de blokjes eronder. */}
+        <div
+          className="absolute inset-0"
+          aria-hidden="true"
+          style={{ background: 'linear-gradient(to bottom, rgba(0,0,0,0.18) 0%, rgba(0,0,0,0) 38%, var(--bg) 97%)' }}
+        />
+        <div className="absolute inset-0 flex flex-col items-center justify-center text-center px-4 pb-10">
+          <h1 className="text-4xl sm:text-5xl font-bold text-white drop-shadow-[0_2px_14px_rgba(0,0,0,0.5)]">
             Welkom{displayName ? `, ${displayName}` : ''}
           </h1>
-          <p className="text-text-secondary text-sm mt-1">Een overzicht van je hele collectie.</p>
+          <p className="text-white/95 text-sm sm:text-base font-medium mt-2 drop-shadow-[0_1px_8px_rgba(0,0,0,0.45)]">
+            Een overzicht van je hele collectie.
+          </p>
         </div>
+      </div>
+
+      <div className="flex justify-end -mt-4">
         <WeatherWidget />
       </div>
 

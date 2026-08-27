@@ -16,9 +16,10 @@ function SettingsSection({ title, description, children }) {
   )
 }
 
-export default function SettingsPage({ settings, onUpdate, onUploadLogo, isAdmin, onOpenAdmin, onResetSuccess }) {
+export default function SettingsPage({ settings, onUpdate, onUploadLogo, onUploadHeroImage, isAdmin, onOpenAdmin, onResetSuccess }) {
   const { preference, setPreference, accent, setAccent } = useTheme()
   const logoInput = useRef(null)
+  const heroInput = useRef(null)
 
   const [name, setName] = useState(settings?.cellar_name || 'Mijn wijnkelder')
   const [nameSaved, setNameSaved] = useState(false)
@@ -26,6 +27,7 @@ export default function SettingsPage({ settings, onUpdate, onUploadLogo, isAdmin
   const [displayNameSaved, setDisplayNameSaved] = useState(false)
   const [customColor, setCustomColor] = useState(accent)
   const [uploadingLogo, setUploadingLogo] = useState(false)
+  const [uploadingHero, setUploadingHero] = useState(false)
 
   const [newCode, setNewCode] = useState('')
   const [codeMessage, setCodeMessage] = useState(null)
@@ -60,6 +62,23 @@ export default function SettingsPage({ settings, onUpdate, onUploadLogo, isAdmin
     } finally {
       setUploadingLogo(false)
     }
+  }
+
+  const handleHeroUpload = async (e) => {
+    const file = e.target.files?.[0]
+    if (!file) return
+    setUploadingHero(true)
+    try {
+      const url = await onUploadHeroImage(file)
+      await onUpdate({ hero_image_url: url })
+    } finally {
+      setUploadingHero(false)
+      if (heroInput.current) heroInput.current.value = ''
+    }
+  }
+
+  const handleRemoveHero = async () => {
+    await onUpdate({ hero_image_url: null })
   }
 
   const handleCustomColorChange = (hex) => {
@@ -237,6 +256,39 @@ export default function SettingsPage({ settings, onUpdate, onUploadLogo, isAdmin
           </div>
         </div>
       </SettingsSection>
+
+      <div className="lg:col-span-2">
+        <SettingsSection
+          title="Achtergrondfoto dashboard"
+          description="De foto boven je overzicht, met 'Welkom' erop. Zonder eigen foto gebruiken we de meegeleverde standaardfoto."
+        >
+          <div className="space-y-3">
+            <div className="relative h-36 sm:h-48 rounded-token-md overflow-hidden border border-border bg-surface-2">
+              <img
+                src={settings?.hero_image_url || '/hero-default.jpg'}
+                alt="Achtergrondfoto van je dashboard"
+                className="absolute inset-0 w-full h-full object-cover"
+              />
+            </div>
+            <div className="flex flex-wrap items-center gap-3">
+              <button
+                type="button"
+                onClick={() => heroInput.current?.click()}
+                disabled={uploadingHero}
+                className="h-10 px-4 rounded-token-md border border-border text-sm font-medium text-text-primary disabled:opacity-50"
+              >
+                {uploadingHero ? 'Bezig met uploaden…' : settings?.hero_image_url ? 'Andere foto kiezen' : 'Eigen foto uploaden'}
+              </button>
+              {settings?.hero_image_url && (
+                <button type="button" onClick={handleRemoveHero} className="text-sm font-medium text-text-secondary">
+                  Standaardfoto herstellen
+                </button>
+              )}
+              <input ref={heroInput} type="file" accept="image/*" onChange={handleHeroUpload} className="hidden" />
+            </div>
+          </div>
+        </SettingsSection>
+      </div>
 
       {isAdmin && (
         <SettingsSection title="Gebruikers" description="Wie heeft een wijnkast, rollen en toegang beheren.">

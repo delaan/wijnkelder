@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState } from 'react'
-import { GridIcon, ListIcon, ChevronDownIcon, CheckIcon } from './icons'
+import { GridIcon, ListIcon, ChevronDownIcon, CheckIcon, HeartIcon } from './icons'
 import { WINE_COLORS, colorLabel, tasteLabel } from '../lib/wineHelpers'
 import WineGridCard from './WineGridCard'
 import WineListRow from './WineListRow'
@@ -122,6 +122,13 @@ export default function Collection({
   hidePrivate,
   initialColorFilter = '',
   persist = true,
+  // De aparte "Favorieten"-bestemming staat niet meer in de navigatiebalk
+  // onderin (mobiel) — favorieten filteren gebeurt in plaats daarvan met
+  // een knop hier binnen Collectie, alleen zichtbaar op mobiel (op desktop
+  // heeft de zijbalk al een eigen Favorieten-item). Deze knop wordt
+  // uitgezet op de losse (desktop-only) Favorieten-weergave zelf, en in
+  // Gastmodus, om dubbele/overbodige UI te voorkomen.
+  showFavoritesToggle = true,
 }) {
   const persisted = persist ? readPersisted() : {}
   const [viewMode, setViewMode] = useState(persisted.viewMode || 'grid')
@@ -131,15 +138,16 @@ export default function Collection({
   // de gast heeft aangetikt, en blijft dat filter — net als in het
   // hoofdmenu — hier volledig aan/uit te zetten via de knoppen hieronder.
   const [colorFilter, setColorFilter] = useState(persisted.colorFilter || initialColorFilter)
+  const [favoritesOnly, setFavoritesOnly] = useState(persisted.favoritesOnly || false)
 
   useEffect(() => {
     if (!persist) return
     try {
-      localStorage.setItem(STORAGE_KEY, JSON.stringify({ viewMode, sortBy, groupBy, colorFilter }))
+      localStorage.setItem(STORAGE_KEY, JSON.stringify({ viewMode, sortBy, groupBy, colorFilter, favoritesOnly }))
     } catch {
       // negeer opslagfouten stilletjes
     }
-  }, [persist, viewMode, sortBy, groupBy, colorFilter])
+  }, [persist, viewMode, sortBy, groupBy, colorFilter, favoritesOnly])
 
   const filtered = useMemo(() => {
     let result = wines
@@ -152,8 +160,9 @@ export default function Collection({
       )
     }
     if (colorFilter) result = result.filter((w) => w.color === colorFilter)
+    if (showFavoritesToggle && favoritesOnly) result = result.filter((w) => w.is_favorite)
     return sortWines(result, sortBy)
-  }, [wines, search, colorFilter, sortBy])
+  }, [wines, search, colorFilter, sortBy, showFavoritesToggle, favoritesOnly])
 
   const groups = useMemo(() => {
     if (groupBy === 'none') return [{ label: null, wines: filtered }]
@@ -172,6 +181,18 @@ export default function Collection({
   return (
     <div className="space-y-5">
       <div className="flex items-center gap-2 overflow-x-auto -mx-1 px-1 pb-0.5" role="group" aria-label="Filter op wijntype">
+        {showFavoritesToggle && (
+          <button
+            onClick={() => setFavoritesOnly((v) => !v)}
+            aria-pressed={favoritesOnly}
+            className={`md:hidden h-9 pl-2.5 pr-3.5 rounded-token-full text-sm font-medium whitespace-nowrap border shrink-0 flex items-center gap-1.5 transition-colors ${
+              favoritesOnly ? 'bg-accent text-accent-contrast border-accent' : 'bg-surface text-text-secondary border-border hover:border-border-strong'
+            }`}
+          >
+            <HeartIcon size={13} filled={favoritesOnly} />
+            Favorieten
+          </button>
+        )}
         <button
           onClick={() => setColorFilter('')}
           aria-pressed={colorFilter === ''}
@@ -225,7 +246,7 @@ export default function Collection({
       </div>
 
       {filtered.length === 0 ? (
-        <EmptyState hasFilters={Boolean(search || colorFilter)} />
+        <EmptyState hasFilters={Boolean(search || colorFilter || (showFavoritesToggle && favoritesOnly))} />
       ) : (
         groups.map((group) => (
           <div key={group.label || 'all'}>

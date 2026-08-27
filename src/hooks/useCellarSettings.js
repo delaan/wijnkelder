@@ -26,6 +26,15 @@ export function useCellarSettings(userId) {
     return data.publicUrl
   }
 
+  const uploadHeroImage = async (file) => {
+    const ext = file.name.split('.').pop()
+    const path = `${userId}/${crypto.randomUUID()}.${ext}`
+    const { error } = await supabase.storage.from('cellar-hero').upload(path, file)
+    if (error) throw error
+    const { data } = supabase.storage.from('cellar-hero').getPublicUrl(path)
+    return data.publicUrl
+  }
+
   const update = async (patch) => {
     const { data, error } = await supabase
       .from('cellar_settings')
@@ -36,5 +45,5 @@ export function useCellarSettings(userId) {
     return data?.[0]
   }
 
-  return { settings, loading, refetch, update, uploadLogo }
+  return { settings, loading, refetch, update, uploadLogo, uploadHeroImage }
 }

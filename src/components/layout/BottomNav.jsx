@@ -1,14 +1,17 @@
 import { NAV_ITEMS } from '../../lib/navItems'
 import { PlusIcon } from '../icons'
 
+const MOBILE_NAV_ITEMS = NAV_ITEMS.filter((item) => item.mobile !== false)
+
 // Zwevende navigatiebalk (mobiel): losstaand van de schermranden, met
 // volledig afgeronde hoeken en een "liquid glass"-achtige vervaging en
 // doorschijnendheid — in plaats van een balk die plat tegen de onderkant
 // van het scherm zit. "Wijn toevoegen" krijgt een prominente, verhoogde
-// knop in het midden van de balk.
+// knop in het midden van de balk. Labels krimpen en breken zo nodig af
+// zodat ze altijd binnen hun eigen kolom blijven, ook op een smal scherm.
 export default function BottomNav({ view, onNavigate, onAdd }) {
-  const primaryItems = NAV_ITEMS.filter((item) => item.section !== 'secondary')
-  const secondaryItems = NAV_ITEMS.filter((item) => item.section === 'secondary')
+  const primaryItems = MOBILE_NAV_ITEMS.filter((item) => item.section !== 'secondary')
+  const secondaryItems = MOBILE_NAV_ITEMS.filter((item) => item.section === 'secondary')
 
   const renderItem = (item) => {
     const active = view === item.key
@@ -18,16 +21,18 @@ export default function BottomNav({ view, onNavigate, onAdd }) {
         key={item.key}
         onClick={() => onNavigate(item.key)}
         aria-current={active ? 'page' : undefined}
-        className="flex flex-col items-center justify-center gap-0.5 h-14 min-w-[44px] text-[10px] font-medium"
+        className="flex flex-col items-center justify-center gap-0.5 h-14 min-w-0 px-0.5 text-[9.5px] font-medium"
       >
         <span
-          className={`w-10 h-10 flex items-center justify-center rounded-full transition-colors duration-fast ${
+          className={`w-9 h-9 flex items-center justify-center rounded-full transition-colors duration-fast ${
             active ? 'bg-accent-soft text-accent-soft-text' : 'text-text-tertiary'
           }`}
         >
-          <Icon size={19} />
+          <Icon size={18} />
         </span>
-        <span className={active ? 'text-accent-soft-text' : 'text-text-tertiary'}>{item.label}</span>
+        <span className={`w-full truncate text-center leading-tight ${active ? 'text-accent-soft-text' : 'text-text-tertiary'}`}>
+          {item.label}
+        </span>
       </button>
     )
   }
@@ -44,10 +49,10 @@ export default function BottomNav({ view, onNavigate, onAdd }) {
           border border-[color-mix(in_srgb,var(--border-strong)_55%,transparent)]
           shadow-[inset_0_1px_0_0_rgba(255,255,255,0.3),0_12px_32px_-8px_rgba(0,0,0,0.28)]"
       >
-        <div className={`grid ${onAdd ? 'grid-cols-6' : 'grid-cols-5'} px-1.5 py-1.5 items-center`}>
+        <div className={`grid ${onAdd ? 'grid-cols-5' : 'grid-cols-4'} px-1 py-1.5`}>
           {primaryItems.map(renderItem)}
           {onAdd && (
-            <div className="flex items-center justify-center">
+            <div className="flex items-center justify-center min-w-0">
               <button
                 onClick={onAdd}
                 aria-label="Wijn toevoegen"

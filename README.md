@@ -248,6 +248,41 @@ Open je app-link met een harde refresh. Op "Mijn kelder" zie je nu "Welkom, [je 
 - **Gastmodus: eigen licht/donker-schakelaar** — een gast hoeft niet in te loggen om van thema te wisselen
 - **Gastmodus: dezelfde zwevende zoekbalk als in het hoofdmenu**, altijd bereikbaar onderin
 
+## Stap 12 — Bijwerken: eigen achtergrondfoto op het dashboard, favorieten verplaatst op mobiel
+
+Je bestaande account, wijnen, gebruikers en instellingen blijven gewoon behouden. Volg deze stappen in deze volgorde.
+
+**12a. Code bijwerken via GitHub Desktop**
+
+1. De nieuwe bestanden staan al klaargezet in je lokale map `wijnkelder`.
+2. Open **GitHub Desktop**, vul linksonder een korte omschrijving in (bijv. "Achtergrondfoto dashboard en favorieten op mobiel").
+3. Klik op **Commit to main**, en daarna op **Push origin**.
+
+Netlify start automatisch een nieuwe deploy (1-2 minuten) — voortgang volgen kan op je Netlify-dashboard onder **Deploys**.
+
+**12b. De database bijwerken**
+
+1. Ga in Supabase naar **SQL Editor → New query**.
+2. Open `supabase/migration_v4.sql` uit het nieuwe project, kopieer de hele inhoud, en plak die in de SQL Editor.
+3. Klik op **Run**. Je zou "Success. No rows returned" moeten zien.
+
+Dit voegt een veld voor je eigen achtergrondfoto toe aan je wijnkast-instellingen, en maakt een beveiligde opslagplek aan waar die foto's terechtkomen (net als bij je logo: iedereen mag de foto zien, alleen jijzelf mag hem uploaden of verwijderen).
+
+**12c. Omgevingsvariabelen**
+
+Geen actie nodig — er zijn geen nieuwe variabelen bijgekomen.
+
+**12d. Controleren**
+
+Open je app-link met een harde refresh. Op "Mijn kelder" zie je nu bovenaan een grote foto met "Welkom" er groot en wit overheen, die overloopt in de rest van de pagina — dit is standaard de meegeleverde wijngaardfoto, en is in **Instellingen** (onder "Achtergrondfoto dashboard") te vervangen door je eigen foto; verwijder je die weer, dan verschijnt automatisch weer de standaardfoto. Op je telefoon staat "Favorieten" niet meer in de navigatiebalk onderin — favorieten filteren doe je daar voortaan met een knopje bovenin de Collectie-tab. Alle tekst in de navigatiebalk onderin past nu netjes op het scherm, ook bij kleinere telefoons.
+
+### Wat is er nieuw in deze versie
+
+- **Eigen achtergrondfoto op het dashboard**: een grote foto bovenaan "Mijn kelder" met "Welkom, [je naam]" er groot en goed leesbaar overheen, die vloeiend overloopt in de rest van de pagina
+- **Achtergrondfoto zelf te vervangen**: in Instellingen kun je een eigen foto uploaden; verwijder je die weer, dan verschijnt automatisch de meegeleverde standaardfoto
+- **Favorieten verplaatst op mobiel**: niet meer als apart item in de navigatiebalk onderin, maar als knop binnen de Collectie-tab (op desktop staat Favorieten gewoon nog in de zijbalk)
+- **Navigatiebalk onderin altijd passend**: labels krimpen netjes mee zodat alle tekst altijd op het scherm past, ook op kleinere telefoons
+
 ---
 
 ## Wat kan de app?
@@ -259,7 +294,7 @@ Open je app-link met een harde refresh. Op "Mijn kelder" zie je nu "Welkom, [je 
 - Collectie doorzoeken en filteren, met raster- of lijstweergave en sorteren/groeperen naar keuze
 - Favorieten markeren, en wijnen ontkurken met automatische voorraadafboeking (met ongedaan-maken)
 - Gastmodus: een vereenvoudigde weergave zonder privégegevens, handig om aan anderen te laten zien
-- Eigen wijnkast-naam, logo, accentkleur en licht/donker-thema, gesynchroniseerd op al je apparaten
+- Eigen wijnkast-naam, logo, accentkleur, achtergrondfoto op het dashboard en licht/donker-thema, gesynchroniseerd op al je apparaten
 - Wijnkast volledig resetten met een zelf ingestelde, veilig versleutelde beveiligingscode
 - Werkt prettig op telefoon, tablet en desktop, en is te installeren als app op je beginscherm
 - Meerdere gebruikers, elk met een eigen privé wijnkast; een hoofdbeheerder kan gebruikers uitnodigen, rollen aanpassen en toegang intrekken/herstellen

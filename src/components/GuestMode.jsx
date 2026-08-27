@@ -213,6 +213,7 @@ export default function GuestMode({ wines, cellarName, logoType, logoUrl, onOpen
               hidePrivate
               persist={false}
               initialColorFilter={filter.kind === 'color' ? filter.value : ''}
+              showFavoritesToggle={false}
             />
           </div>
         )}

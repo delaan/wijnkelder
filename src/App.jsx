@@ -240,6 +240,7 @@ function WineApp({ user, signOut }) {
             onToggleFavorite={handleToggleFavorite}
             onGoToCollection={() => setView('collection')}
             displayName={displayName}
+            heroImageUrl={cellarSettings.settings?.hero_image_url}
           />
         )}
         {view === 'collection' && (
@@ -251,6 +252,7 @@ function WineApp({ user, signOut }) {
             search={search}
             onOpenWine={openDetail}
             onToggleFavorite={handleToggleFavorite}
+            showFavoritesToggle={false}
           />
         )}
         {view === 'settings' && (
@@ -258,6 +260,7 @@ function WineApp({ user, signOut }) {
             settings={cellarSettings.settings}
             onUpdate={cellarSettings.update}
             onUploadLogo={cellarSettings.uploadLogo}
+            onUploadHeroImage={cellarSettings.uploadHeroImage}
             isAdmin={isAdmin}
             onOpenAdmin={() => setView('admin')}
             onResetSuccess={() => {
