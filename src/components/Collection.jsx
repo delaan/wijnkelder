@@ -1,9 +1,57 @@
 import { useEffect, useMemo, useState } from 'react'
-import { GridIcon, ListIcon } from './icons'
+import { GridIcon, ListIcon, ChevronDownIcon, CheckIcon } from './icons'
 import { WINE_COLORS, colorLabel, tasteLabel } from '../lib/wineHelpers'
 import WineGridCard from './WineGridCard'
 import WineListRow from './WineListRow'
 import EmptyState from './EmptyState'
+
+// Compacte, aantikbare dropdown voor keuzes met veel opties (sorteren,
+// groeperen) — alle opties direct zichtbaar zodra hij open staat, in
+// plaats van een systeem-<select>.
+function FilterDropdown({ label, value, options, onChange }) {
+  const [open, setOpen] = useState(false)
+  const current = options.find((o) => o.value === value)
+  return (
+    <div className="relative shrink-0">
+      <button
+        type="button"
+        onClick={() => setOpen((v) => !v)}
+        aria-haspopup="menu"
+        aria-expanded={open}
+        className="h-10 pl-3.5 pr-2.5 rounded-token-full border border-border bg-surface text-sm font-medium text-text-primary flex items-center gap-1.5 hover:border-border-strong transition-colors whitespace-nowrap"
+      >
+        <span className="text-text-tertiary">{label}:</span> {current?.label}
+        <ChevronDownIcon size={14} className="text-text-tertiary" />
+      </button>
+      {open && (
+        <>
+          <button className="fixed inset-0 z-modal cursor-default" aria-hidden="true" onClick={() => setOpen(false)} />
+          <div
+            role="menu"
+            className="absolute left-0 mt-2 w-60 max-h-80 overflow-y-auto bg-surface border border-border rounded-token-md shadow-token-lg z-modal py-1"
+          >
+            {options.map((opt) => (
+              <button
+                key={opt.value}
+                role="menuitem"
+                onClick={() => {
+                  onChange(opt.value)
+                  setOpen(false)
+                }}
+                className={`w-full flex items-center justify-between gap-2 px-3 h-10 text-sm text-left ${
+                  value === opt.value ? 'text-accent bg-accent-soft font-medium' : 'text-text-primary hover:bg-surface-2'
+                }`}
+              >
+                {opt.label}
+                {value === opt.value && <CheckIcon size={14} />}
+              </button>
+            ))}
+          </div>
+        </>
+      )}
+    </div>
+  )
+}
 
 const STORAGE_KEY = 'wijnkast-collection-view'
 
@@ -111,43 +159,34 @@ export default function Collection({ wines, search, onOpenWine, onToggleFavorite
 
   return (
     <div className="space-y-5">
+      <div className="flex items-center gap-2 overflow-x-auto -mx-1 px-1 pb-0.5" role="group" aria-label="Filter op wijntype">
+        <button
+          onClick={() => setColorFilter('')}
+          aria-pressed={colorFilter === ''}
+          className={`h-9 px-3.5 rounded-token-full text-sm font-medium whitespace-nowrap border shrink-0 transition-colors ${
+            colorFilter === '' ? 'bg-accent text-accent-contrast border-accent' : 'bg-surface text-text-secondary border-border hover:border-border-strong'
+          }`}
+        >
+          Alle
+        </button>
+        {WINE_COLORS.slice(0, 5).map((c) => (
+          <button
+            key={c.value}
+            onClick={() => setColorFilter(colorFilter === c.value ? '' : c.value)}
+            aria-pressed={colorFilter === c.value}
+            className={`h-9 pl-2.5 pr-3.5 rounded-token-full text-sm font-medium whitespace-nowrap border shrink-0 flex items-center gap-1.5 transition-colors ${
+              colorFilter === c.value ? 'bg-accent text-accent-contrast border-accent' : 'bg-surface text-text-secondary border-border hover:border-border-strong'
+            }`}
+          >
+            <span className="w-2 h-2 rounded-token-full shrink-0" style={{ backgroundColor: c.dot }} />
+            {c.label}
+          </button>
+        ))}
+      </div>
+
       <div className="flex flex-wrap items-center gap-2.5">
-        <select
-          value={colorFilter}
-          onChange={(e) => setColorFilter(e.target.value)}
-          className="h-10 rounded-token-md border border-border bg-surface px-3 text-sm text-text-primary focus:outline-none focus:ring-2 focus:ring-accent"
-        >
-          <option value="">Alle types</option>
-          {WINE_COLORS.slice(0, 5).map((c) => (
-            <option key={c.value} value={c.value}>
-              {c.label}
-            </option>
-          ))}
-        </select>
-
-        <select
-          value={sortBy}
-          onChange={(e) => setSortBy(e.target.value)}
-          className="h-10 rounded-token-md border border-border bg-surface px-3 text-sm text-text-primary focus:outline-none focus:ring-2 focus:ring-accent"
-        >
-          {SORT_OPTIONS.map((o) => (
-            <option key={o.value} value={o.value}>
-              Sorteren: {o.label}
-            </option>
-          ))}
-        </select>
-
-        <select
-          value={groupBy}
-          onChange={(e) => setGroupBy(e.target.value)}
-          className="h-10 rounded-token-md border border-border bg-surface px-3 text-sm text-text-primary focus:outline-none focus:ring-2 focus:ring-accent"
-        >
-          {GROUP_OPTIONS.map((o) => (
-            <option key={o.value} value={o.value}>
-              Groeperen: {o.label}
-            </option>
-          ))}
-        </select>
+        <FilterDropdown label="Sorteren" value={sortBy} options={SORT_OPTIONS} onChange={setSortBy} />
+        <FilterDropdown label="Groeperen" value={groupBy} options={GROUP_OPTIONS} onChange={setGroupBy} />
 
         <div className="ml-auto flex items-center gap-1 bg-surface-2 rounded-token-md p-1">
           <button

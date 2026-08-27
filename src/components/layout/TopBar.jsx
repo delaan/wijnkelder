@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { SearchIcon, SunIcon, MoonIcon, AutoIcon, PlusIcon, ChevronDownIcon, LogoutIcon } from '../icons'
+import { SunIcon, MoonIcon, AutoIcon, PlusIcon, ChevronDownIcon, LogoutIcon } from '../icons'
 import { useTheme } from '../../context/ThemeContext'
 
 const THEME_OPTIONS = [
@@ -8,7 +8,7 @@ const THEME_OPTIONS = [
   { value: 'dark', label: 'Donker', icon: MoonIcon },
 ]
 
-export default function TopBar({ search, onSearch, showSearch = true, onAdd, email, onSignOut }) {
+export default function TopBar({ title, onAdd, email, onSignOut }) {
   const { preference, setPreference } = useTheme()
   const [themeMenuOpen, setThemeMenuOpen] = useState(false)
   const [userMenuOpen, setUserMenuOpen] = useState(false)
@@ -17,21 +17,9 @@ export default function TopBar({ search, onSearch, showSearch = true, onAdd, ema
   return (
     <header className="sticky top-0 z-nav bg-surface/90 backdrop-blur border-b border-border safe-top">
       <div className="h-16 px-4 sm:px-6 flex items-center gap-3">
-        {showSearch ? (
-          <div className="flex-1 relative max-w-xl">
-            <SearchIcon size={18} className="absolute left-3 top-1/2 -translate-y-1/2 text-text-tertiary" />
-            <input
-              type="text"
-              value={search}
-              onChange={(e) => onSearch(e.target.value)}
-              placeholder="Zoek op naam, producent, regio, land, druif, jaargang…"
-              aria-label="Zoek in je collectie"
-              className="w-full h-11 pl-10 pr-3 rounded-token-md bg-surface-2 border border-transparent text-sm text-text-primary placeholder:text-text-tertiary focus:outline-none focus:ring-2 focus:ring-accent focus:bg-surface transition-colors"
-            />
-          </div>
-        ) : (
-          <div className="flex-1" />
-        )}
+        <div className="flex-1 min-w-0">
+          {title && <span className="font-semibold text-text-primary truncate md:hidden">{title}</span>}
+        </div>
 
         <div className="flex items-center gap-2 shrink-0">
           <div className="relative">

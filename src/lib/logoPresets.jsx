@@ -1,9 +1,9 @@
-import { CellarIcon, WineGlassIcon, GridIcon, HeartIcon } from '../components/icons'
+import { CellarIcon, WineGlassIcon, CheersIcon, HeartIcon } from '../components/icons'
 
 export const LOGO_PRESETS = [
-  { key: 'cellar', icon: CellarIcon, label: 'Kelder' },
+  { key: 'cellar', icon: CellarIcon, label: 'Fles' },
   { key: 'glass', icon: WineGlassIcon, label: 'Glas' },
-  { key: 'grid', icon: GridIcon, label: 'Raster' },
+  { key: 'cheers', icon: CheersIcon, label: 'Proost' },
   { key: 'heart', icon: HeartIcon, label: 'Hart' },
 ]
 

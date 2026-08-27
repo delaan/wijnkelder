@@ -18,6 +18,18 @@ import WineForm from './components/WineForm'
 import WineDetailSheet from './components/WineDetailSheet'
 import ConfirmDialog from './components/ConfirmDialog'
 import Toast from './components/Toast'
+import Onboarding from './components/Onboarding'
+import WelcomeScreen from './components/WelcomeScreen'
+import SearchBar from './components/SearchBar'
+
+const WELCOME_KEY = 'wijnkast-welcomed'
+const VIEW_TITLES = {
+  dashboard: 'Mijn kelder',
+  collection: 'Collectie',
+  favorites: 'Favorieten',
+  settings: 'Instellingen',
+  admin: 'Beheer gebruikers',
+}
 
 export default function App() {
   if (!supabaseConfigured) return <SetupNotice />
@@ -40,6 +52,27 @@ function WineApp({ user, signOut }) {
 
   const [view, setView] = useState('dashboard')
   const [search, setSearch] = useState('')
+  const [welcomed, setWelcomed] = useState(() => {
+    try {
+      return sessionStorage.getItem(WELCOME_KEY) === '1'
+    } catch {
+      return false
+    }
+  })
+
+  const markWelcomed = () => {
+    try {
+      sessionStorage.setItem(WELCOME_KEY, '1')
+    } catch {
+      // sessionStorage kan geblokkeerd zijn — dan zie je het welkomstscherm iets vaker, geen probleem.
+    }
+    setWelcomed(true)
+  }
+
+  const handleSearch = (value) => {
+    setSearch(value)
+    if (view === 'dashboard' && value) setView('collection')
+  }
 
   const [addModalOpen, setAddModalOpen] = useState(false)
   const [editingWine, setEditingWine] = useState(null)
@@ -93,8 +126,10 @@ function WineApp({ user, signOut }) {
   }
 
   const cellarName = cellarSettings.settings?.cellar_name || 'Mijn wijnkelder'
+  const displayName = cellarSettings.settings?.display_name
   const logoType = cellarSettings.settings?.logo_type
   const logoUrl = cellarSettings.settings?.logo_url
+  const needsOnboarding = !cellarSettings.loading && !cellarSettings.settings?.onboarding_completed
 
   const overlays = (
     <>
@@ -147,6 +182,26 @@ function WineApp({ user, signOut }) {
     </>
   )
 
+  if (cellarSettings.loading) {
+    return <FullPageLoader />
+  }
+
+  if (needsOnboarding) {
+    return <Onboarding settings={cellarSettings.settings} onComplete={cellarSettings.update} />
+  }
+
+  if (!welcomed) {
+    return (
+      <WelcomeScreen
+        name={displayName}
+        cellarName={cellarName}
+        logoType={logoType}
+        logoUrl={logoUrl}
+        onDone={markWelcomed}
+      />
+    )
+  }
+
   if (view === 'guest') {
     return (
       <>
@@ -163,14 +218,7 @@ function WineApp({ user, signOut }) {
     )
   }
 
-  if (view === 'admin') {
-    return (
-      <>
-        <AdminPanel currentUserId={user.id} onBack={() => setView('settings')} />
-        {overlays}
-      </>
-    )
-  }
+  const showSearchBar = view === 'dashboard' || view === 'collection' || view === 'favorites'
 
   return (
     <>
@@ -180,9 +228,7 @@ function WineApp({ user, signOut }) {
         cellarName={cellarName}
         logoType={logoType}
         logoUrl={logoUrl}
-        search={search}
-        onSearch={setSearch}
-        showSearch={view === 'collection' || view === 'favorites'}
+        title={VIEW_TITLES[view]}
         onAdd={() => setAddModalOpen(true)}
         email={user.email}
         onSignOut={signOut}
@@ -219,7 +265,9 @@ function WineApp({ user, signOut }) {
             }}
           />
         )}
+        {view === 'admin' && <AdminPanel currentUserId={user.id} onBack={() => setView('settings')} />}
       </AppShell>
+      {showSearchBar && <SearchBar value={search} onChange={handleSearch} />}
       {overlays}
     </>
   )

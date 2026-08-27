@@ -3,7 +3,7 @@ import { useTheme } from '../context/ThemeContext'
 import { ACCENT_PRESETS, isValidHex } from '../lib/color'
 import { LOGO_PRESETS, LogoMark } from '../lib/logoPresets'
 import { setResetCode, resetCellar } from '../lib/cellarApi'
-import { SunIcon, MoonIcon, AutoIcon, CheckIcon, LockIcon } from './icons'
+import { SunIcon, MoonIcon, AutoIcon, CheckIcon, LockIcon, ColorWheelIcon } from './icons'
 
 function SettingsSection({ title, description, children }) {
   return (
@@ -17,11 +17,13 @@ function SettingsSection({ title, description, children }) {
 }
 
 export default function SettingsPage({ settings, onUpdate, onUploadLogo, isAdmin, onOpenAdmin, onResetSuccess }) {
-  const { preference, setPreference, accent, setAccent, dining, setDining } = useTheme()
+  const { preference, setPreference, accent, setAccent } = useTheme()
   const logoInput = useRef(null)
 
   const [name, setName] = useState(settings?.cellar_name || 'Mijn wijnkelder')
   const [nameSaved, setNameSaved] = useState(false)
+  const [displayName, setDisplayName] = useState(settings?.display_name || '')
+  const [displayNameSaved, setDisplayNameSaved] = useState(false)
   const [customColor, setCustomColor] = useState(accent)
   const [uploadingLogo, setUploadingLogo] = useState(false)
 
@@ -41,6 +43,13 @@ export default function SettingsPage({ settings, onUpdate, onUploadLogo, isAdmin
     setTimeout(() => setNameSaved(false), 2000)
   }
 
+  const handleDisplayNameBlur = async () => {
+    if (displayName === (settings?.display_name || '')) return
+    await onUpdate({ display_name: displayName.trim() })
+    setDisplayNameSaved(true)
+    setTimeout(() => setDisplayNameSaved(false), 2000)
+  }
+
   const handleLogoUpload = async (e) => {
     const file = e.target.files?.[0]
     if (!file) return
@@ -53,8 +62,9 @@ export default function SettingsPage({ settings, onUpdate, onUploadLogo, isAdmin
     }
   }
 
-  const applyCustomColor = () => {
-    if (isValidHex(customColor)) setAccent(customColor)
+  const handleCustomColorChange = (hex) => {
+    setCustomColor(hex)
+    if (isValidHex(hex)) setAccent(hex)
   }
 
   const handleSetCode = async (e) => {
@@ -90,14 +100,30 @@ export default function SettingsPage({ settings, onUpdate, onUploadLogo, isAdmin
   }
 
   return (
-    <div className="space-y-6 max-w-2xl">
+    <div className="space-y-6 w-full">
       <div>
         <h1 className="text-2xl font-bold text-text-primary">Instellingen</h1>
         <p className="text-text-secondary text-sm mt-1">Naam, logo, vormgeving en beheer van je kelder.</p>
       </div>
 
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 items-start">
       <SettingsSection title="Identiteit">
         <div className="space-y-4">
+          <div>
+            <label className="block text-sm font-medium text-text-secondary mb-1">Jouw naam</label>
+            <div className="flex items-center gap-2">
+              <input
+                value={displayName}
+                onChange={(e) => setDisplayName(e.target.value)}
+                onBlur={handleDisplayNameBlur}
+                placeholder="Bijv. Delano"
+                className="flex-1 h-11 rounded-token-md border border-border bg-surface px-3 text-sm text-text-primary focus:outline-none focus:ring-2 focus:ring-accent"
+              />
+              {displayNameSaved && <CheckIcon size={18} className="text-green-600 shrink-0" />}
+            </div>
+            <p className="text-text-tertiary text-xs mt-1">Wordt gebruikt in je welkomstscherm.</p>
+          </div>
+
           <div>
             <label className="block text-sm font-medium text-text-secondary mb-1">Naam van je wijnkelder</label>
             <div className="flex items-center gap-2">
@@ -192,36 +218,21 @@ export default function SettingsPage({ settings, onUpdate, onUploadLogo, isAdmin
                   }}
                 />
               ))}
-              <div className="flex items-center gap-1.5 ml-1">
+              <div
+                className="relative w-9 h-9 rounded-token-md border border-border overflow-hidden flex items-center justify-center text-text-secondary shrink-0"
+                title="Eigen kleur kiezen"
+              >
+                <ColorWheelIcon size={20} />
                 <input
                   type="color"
                   value={isValidHex(customColor) ? customColor : '#641027'}
-                  onChange={(e) => setCustomColor(e.target.value)}
-                  className="w-9 h-9 rounded-token-md border border-border cursor-pointer bg-transparent"
+                  onChange={(e) => handleCustomColorChange(e.target.value)}
+                  className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
                   aria-label="Eigen kleur kiezen"
                 />
-                <button onClick={applyCustomColor} className="text-xs font-medium text-accent">
-                  Toepassen
-                </button>
               </div>
             </div>
           </div>
-
-          <label className="flex items-center justify-between h-11">
-            <span className="text-sm font-medium text-text-secondary">Dinerweergave (donkerder, rustiger)</span>
-            <button
-              onClick={() => setDining(!dining)}
-              role="switch"
-              aria-checked={dining}
-              className={`w-11 h-6 rounded-token-full relative transition-colors ${dining ? 'bg-accent' : 'bg-surface-2 border border-border'}`}
-            >
-              <span
-                className={`absolute top-0.5 w-5 h-5 rounded-token-full bg-surface shadow-token-sm transition-transform ${
-                  dining ? 'translate-x-[22px]' : 'translate-x-0.5'
-                }`}
-              />
-            </button>
-          </label>
         </div>
       </SettingsSection>
 
@@ -232,6 +243,7 @@ export default function SettingsPage({ settings, onUpdate, onUploadLogo, isAdmin
           </button>
         </SettingsSection>
       )}
+      </div>
 
       <SettingsSection title="Wijnkelder resetten" description="Verwijdert al je wijnen. Dit kan niet ongedaan worden gemaakt.">
         <div className="space-y-5">

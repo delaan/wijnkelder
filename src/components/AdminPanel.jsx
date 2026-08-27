@@ -76,24 +76,18 @@ export default function AdminPanel({ currentUserId, onBack }) {
   }
 
   return (
-    <div className="min-h-screen bg-bg">
-      <header className="sticky top-0 z-20 bg-accent text-accent-contrast safe-top">
-        <div className="max-w-4xl mx-auto px-4 sm:px-6 py-4 flex items-center justify-between gap-4">
-          <div>
-            <h1 className="text-lg font-semibold leading-tight">Beheer gebruikers</h1>
-            <p className="text-accent-contrast/70 text-xs">Wie heeft een wijnkast, en met welke rechten</p>
-          </div>
-          <button
-            onClick={onBack}
-            className="bg-surface text-accent hover:bg-surface-2 text-sm font-medium px-3.5 py-2 rounded-token-md transition-colors"
-          >
-            ← Terug
+    <div className="space-y-6">
+      <div className="flex items-center justify-between gap-4">
+        <div>
+          <button onClick={onBack} className="text-accent text-sm font-medium mb-1">
+            ← Terug naar instellingen
           </button>
+          <h1 className="text-2xl font-bold text-text-primary">Beheer gebruikers</h1>
+          <p className="text-text-secondary text-sm mt-1">Wie heeft een wijnkast, en met welke rechten.</p>
         </div>
-      </header>
+      </div>
 
-      <main className="max-w-4xl mx-auto px-4 sm:px-6 py-6 space-y-6">
-        <div className="bg-surface border border-border rounded-token-lg p-5">
+      <div className="bg-surface border border-border rounded-token-lg p-5">
           <h2 className="font-semibold text-text-primary mb-3">Gebruiker uitnodigen</h2>
           <form onSubmit={handleInvite} className="flex flex-col sm:flex-row gap-3">
             <input
@@ -194,8 +188,7 @@ export default function AdminPanel({ currentUserId, onBack }) {
               })}
             </ul>
           )}
-        </div>
-      </main>
+      </div>
     </div>
   )
 }

@@ -167,6 +167,54 @@ Open je app-link. Log in en je zou het nieuwe ontwerp moeten zien: een zijbalk (
 - **AI-herkenning van etiketten** — in het "Wijn toevoegen"-scherm staat deze optie al, maar toont voorlopig "komt binnenkort" en verwijst naar handmatig invoeren. Dit vraagt een eigen (betaalde) AI-sleutel die je nog niet had ingesteld; kunnen we later alsnog toevoegen.
 - **Native deelvenster en opstartschermen (splash screens)** — de app is al installeerbaar met eigen icoon, maar het gebruiken van het systeemeigen deelvenster van je telefoon en aangepaste opstartafbeeldingen zijn bewust overgeslagen om de kern van de vernieuwing eerst goed af te maken.
 
+## Stap 10 — Bijwerken naar de nieuwste versie (welkomstscherm, onboarding, zwevende zoekbalk, Font Awesome-iconen)
+
+Je bestaande account, wijnen, gebruikers en instellingen blijven gewoon behouden. Volg deze stappen in deze volgorde.
+
+**10a. Code bijwerken via GitHub Desktop**
+
+Vanaf nu leveren we updates via GitHub Desktop in plaats van bestanden slepen op de GitHub-website — dat is betrouwbaarder, omdat verwijderde/hernoemde bestanden dan automatisch goed meegenomen worden.
+
+1. De nieuwe bestanden staan al klaargezet in je lokale map `wijnkelder` (via `~/Documents/GitHub/wijnkelder`).
+2. Open **GitHub Desktop**. Je ziet links een lijst met gewijzigde bestanden.
+3. Vul linksonder een korte omschrijving in, bijvoorbeeld "Welkomstscherm, onboarding, zoekbalk en nieuwe iconen".
+4. Klik op **Commit to main**.
+5. Klik daarna op **Push origin** (rechtsboven).
+
+Netlify start automatisch een nieuwe deploy zodra de wijziging op GitHub staat (1-2 minuten). Voortgang volgen kan op je Netlify-dashboard onder **Deploys**.
+
+**10b. De database bijwerken**
+
+1. Ga in Supabase naar **SQL Editor → New query**.
+2. Open `supabase/migration_v3.sql` uit het nieuwe project, kopieer de hele inhoud, en plak die in de SQL Editor.
+3. Klik op **Run**. Je zou "Success. No rows returned" moeten zien.
+
+Dit voegt een naamveld en een vinkje "onboarding voltooid" toe aan je wijnkast-instellingen. Bestaande wijnkasten worden automatisch gemarkeerd als "al voltooid", zodat jij en eventuele andere gebruikers niet alsnog door de onboarding hoeven.
+
+**10c. Omgevingsvariabelen**
+
+Geen actie nodig — er zijn geen nieuwe variabelen bijgekomen.
+
+**10d. Controleren**
+
+Open je app-link met een harde refresh (sluit het tabblad/de app helemaal en open opnieuw). Bestaande gebruikers zien direct een kort welkomstscherm met hun naam; nieuwe gebruikers doorlopen eerst een korte onboarding (naam, naam van de wijnkast, eventueel een kleur). Onderin het scherm staat nu een vaste zoekbalk, en de iconen in de hele app zien er verfijnder uit (Font Awesome).
+
+### Wat is er nieuw in deze versie
+
+- **Welkomstscherm** bij het openen van de app: "Welkom, [je naam]" met de naam van je wijnkast, verdwijnt vanzelf of met een tikje
+- **Onboarding voor nieuwe gebruikers**: bij de allereerste keer openen wordt eerst gevraagd naar je naam, de naam van je wijnkast en (optioneel) een accentkleur, voordat je de app zelf ziet
+- **Vaste, zwevende zoekbalk** onderin het scherm, altijd op dezelfde plek, met een subtiele schaduw — en blijft ook goed zichtbaar wanneer het toetsenbord op je telefoon/tablet omhoogkomt
+- **Alle iconen vervangen** door een consistente, professionele iconenset (Font Awesome), inclusief nieuwe wijn-/glazenpassende logo-opties (fles, glas, proostende glazen, hartje)
+- **Beter leesbare tekst in donkere modus** (hoger contrast voor secundaire en subtiele tekst)
+- **Filters in Collectie direct aantikbaar en live zichtbaar**: sorteren, groeperen en kleurfilter passen meteen toe, zonder aparte "toepassen"-knop
+- **Instellingen-pagina paginabreed**, overzichtelijker in twee kolommen op grotere schermen; de "dinerweergave"-knop is verwijderd
+- **Mooiere kleurenkiezer** voor je eigen accentkleur (regenboog-bolletjes-icoon) bij zowel onboarding als instellingen
+- **Consistente knoppen rechtsboven** op elk scherm (toevoegen, uitloggen e.d. staan overal op dezelfde plek)
+
+**Bewust nog niet gebouwd (komt later):**
+
+- **AI-herkenning van etiketten** — staat al als optie in "Wijn toevoegen", toont voorlopig "komt binnenkort".
+
 ---
 
 ## Wat kan de app?
@@ -182,6 +230,8 @@ Open je app-link. Log in en je zou het nieuwe ontwerp moeten zien: een zijbalk (
 - Wijnkast volledig resetten met een zelf ingestelde, veilig versleutelde beveiligingscode
 - Werkt prettig op telefoon, tablet en desktop, en is te installeren als app op je beginscherm
 - Meerdere gebruikers, elk met een eigen privé wijnkast; een hoofdbeheerder kan gebruikers uitnodigen, rollen aanpassen en toegang intrekken/herstellen
+- Persoonlijk welkomstscherm bij het openen, en een korte onboarding bij het allereerste gebruik
+- Vaste, zwevende zoekbalk onderin het scherm, ook prettig bruikbaar met het toetsenbord open
 
 ## Zelf iets aanpassen (optioneel)
 
@@ -193,7 +243,7 @@ cp .env.example .env   # vul je Supabase-gegevens in
 npm run dev
 ```
 
-Elke wijziging die je naar GitHub pusht, wordt automatisch opnieuw gedeployed door Netlify.
+Elke wijziging die je naar GitHub pusht (bijvoorbeeld via **GitHub Desktop**: wijzigingen bekijken → commit-bericht schrijven → **Commit to main** → **Push origin**), wordt automatisch opnieuw gedeployed door Netlify.
 
 ## Problemen oplossen
 
@@ -207,3 +257,5 @@ Elke wijziging die je naar GitHub pusht, wordt automatisch opnieuw gedeployed do
 - **Ik zie na het bijwerken nog steeds het oude ontwerp** → Meestal is stap 9a (opnieuw naar GitHub uploaden) overgeslagen, of de browser toont een oude cache. Controleer op GitHub of de map `src/components/layout` bestaat in je repository; zo niet, upload de bestanden opnieuw. Doe daarna in Netlify **Deploys → Trigger deploy → Clear cache and deploy site**.
 - **Instellingen of Gastmodus geven een foutmelding, of je logo/accentkleur wordt niet bewaard** → Controleer of je stap 9b (`migration_v2.sql`) hebt uitgevoerd; zonder die tabellen kan de app deze instellingen niet opslaan.
 - **Ik ben mijn resetcode voor de wijnkast vergeten** → Er is geen "wachtwoord vergeten" voor deze code, omdat hij nergens leesbaar wordt opgeslagen (ook niet door mij). Stel in **Instellingen → Wijnkelder resetten** eerst een nieuwe code in — dat overschrijft de oude.
+- **Ik krijg steeds de onboarding te zien, ook al gebruik ik de app al** → Controleer of je stap 10b (`migration_v3.sql`) hebt uitgevoerd; die zet bestaande wijnkasten automatisch op "onboarding voltooid".
+- **Iconen ontbreken of tonen vierkantjes/lege plekjes** → Even een harde refresh proberen; de iconen worden geladen vanaf een externe bron (Font Awesome) en soms toont de browser eerst nog een oude cache.
