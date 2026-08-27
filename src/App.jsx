@@ -24,6 +24,7 @@ import Spinner from './components/Spinner'
 import History from './components/History'
 import Wishlist from './components/Wishlist'
 import CellarMap from './components/CellarMap'
+import WineFoodMatch from './components/WineFoodMatch'
 
 // Zelden bezochte schermen (eenmalige onboarding, alleen-voor-beheerders
 // gebruikersbeheer) worden pas opgehaald zodra ze echt nodig zijn, in
@@ -40,6 +41,7 @@ const VIEW_TITLES = {
   history: 'Geschiedenis',
   wishlist: 'Verlanglijst',
   cellarmap: 'Kelderkaart',
+  pairing: 'Wine, food, match!',
   settings: 'Instellingen',
   admin: 'Beheer gebruikers',
 }
@@ -332,6 +334,9 @@ function WineApp({ user, signOut }) {
           />
         )}
         {view === 'cellarmap' && <CellarMap userId={user.id} wines={wines.wines} onOpenWine={openDetail} />}
+        {view === 'pairing' && (
+          <WineFoodMatch wines={wines.wines} onOpenWine={openDetail} onToggleFavorite={handleToggleFavorite} />
+        )}
         {view === 'settings' && (
           <SettingsPage
             settings={cellarSettings.settings}
@@ -346,9 +351,6 @@ function WineApp({ user, signOut }) {
               cellarSettings.refetch({ silent: true })
             }}
             wines={wines.wines}
-            onOpenHistory={() => setView('history')}
-            onOpenWishlist={() => setView('wishlist')}
-            onOpenCellarMap={() => setView('cellarmap')}
           />
         )}
         {view === 'admin' && (

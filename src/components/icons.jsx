@@ -47,6 +47,7 @@ export const DownloadIcon = (p) => <Icon name="download" {...p} />
 export const PrinterIcon = (p) => <Icon name="print" {...p} />
 export const SparklesIcon = (p) => <Icon name="wand-magic-sparkles" {...p} />
 export const ArrowRightIcon = (p) => <Icon name="arrow-right" {...p} />
+export const MoreIcon = (p) => <Icon name="ellipsis" {...p} />
 
 // Weer-iconen voor het "Mijn kelder"-dashboard.
 export const CloudIcon = (p) => <Icon name="cloud" {...p} />

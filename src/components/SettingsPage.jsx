@@ -15,9 +15,6 @@ import {
   CameraIcon,
   DownloadIcon,
   PrinterIcon,
-  HistoryIcon,
-  BookmarkIcon,
-  MapIcon,
 } from './icons'
 
 function SettingsSection({ title, description, children }) {
@@ -41,9 +38,6 @@ export default function SettingsPage({
   onOpenAdmin,
   onResetSuccess,
   wines = [],
-  onOpenHistory,
-  onOpenWishlist,
-  onOpenCellarMap,
 }) {
   const { preference, setPreference, accent, setAccent } = useTheme()
   const logoInput = useRef(null)
@@ -372,42 +366,6 @@ export default function SettingsPage({
           </div>
         </SettingsSection>
       </div>
-
-      {(onOpenHistory || onOpenWishlist || onOpenCellarMap) && (
-        <div className="lg:col-span-2">
-          <SettingsSection title="Meer" description="Ook op kleinere schermen te bereiken — op groter scherm staan deze al in de zijbalk.">
-            <div className="grid grid-cols-3 gap-2">
-              {onOpenHistory && (
-                <button
-                  onClick={onOpenHistory}
-                  className="h-20 rounded-token-md border border-border flex flex-col items-center justify-center gap-1.5 text-xs font-medium text-text-secondary"
-                >
-                  <HistoryIcon size={18} />
-                  Geschiedenis
-                </button>
-              )}
-              {onOpenWishlist && (
-                <button
-                  onClick={onOpenWishlist}
-                  className="h-20 rounded-token-md border border-border flex flex-col items-center justify-center gap-1.5 text-xs font-medium text-text-secondary"
-                >
-                  <BookmarkIcon size={18} />
-                  Verlanglijst
-                </button>
-              )}
-              {onOpenCellarMap && (
-                <button
-                  onClick={onOpenCellarMap}
-                  className="h-20 rounded-token-md border border-border flex flex-col items-center justify-center gap-1.5 text-xs font-medium text-text-secondary"
-                >
-                  <MapIcon size={18} />
-                  Kelderkaart
-                </button>
-              )}
-            </div>
-          </SettingsSection>
-        </div>
-      )}
 
       <div className="lg:col-span-2">
         <SettingsSection title="Exporteren" description="Een kopie van je collectie, voor eigen administratie of back-up.">
