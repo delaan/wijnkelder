@@ -1,38 +1,47 @@
 import { useState } from 'react'
 import { colorLabel, formatCurrency } from '../lib/wineHelpers'
-import { PlusIcon, TrashIcon, ArrowRightIcon } from './icons'
+import { BookmarkIcon, PlusIcon, TrashIcon, ArrowRightIcon } from './icons'
 import WishlistForm from './WishlistForm'
 import Spinner from './Spinner'
-import PageHeader from './PageHeader'
 
-function WishlistEntry({ item, index, onDelete, onConvert }) {
+function WishlistCard({ item, onDelete, onConvert }) {
   return (
-    <div className="grid grid-cols-[36px_1fr] sm:grid-cols-[36px_1fr_auto] gap-x-4 gap-y-2 py-5 border-t border-border">
-      <span className="font-serif text-xl text-text-tertiary">{String(index + 1).padStart(2, '0')}</span>
-      <div className="min-w-0">
-        <p className="font-serif text-[19px] font-semibold text-text-primary">{item.name}</p>
-        <p className="byline mt-0.5">
-          {[item.region, item.color ? colorLabel(item.color) : null, item.target_price ? `± ${formatCurrency(item.target_price)}` : null]
-            .filter(Boolean)
-            .join(' · ')}
-        </p>
-        {item.notes && <p className="text-text-secondary text-sm mt-1.5">{item.notes}</p>}
-      </div>
-      <div className="col-span-2 sm:col-span-1 flex items-center gap-4 sm:self-start">
-        <button
-          onClick={() => onConvert(item)}
-          className="text-sm font-semibold text-accent-soft-text whitespace-nowrap flex items-center gap-1"
-        >
-          Toevoegen aan kelder <ArrowRightIcon size={13} />
-        </button>
+    <div className="bg-surface border border-border rounded-token-lg p-4 flex flex-col gap-2">
+      <div className="flex items-start justify-between gap-3">
+        <div className="min-w-0">
+          <p className="font-semibold text-text-primary truncate">{item.name}</p>
+          <p className="text-text-secondary text-sm truncate">
+            {item.producer || '—'} {item.vintage ? `· ${item.vintage}` : ''}
+          </p>
+        </div>
         <button
           onClick={() => onDelete(item)}
           aria-label="Van verlanglijst verwijderen"
-          className="w-8 h-8 rounded-token-full flex items-center justify-center text-text-tertiary hover:bg-surface-2 hover:text-danger-text shrink-0"
+          className="w-9 h-9 rounded-token-full flex items-center justify-center text-text-tertiary hover:bg-surface-2 hover:text-danger-text shrink-0"
         >
-          <TrashIcon size={14} />
+          <TrashIcon size={15} />
         </button>
       </div>
+      <div className="flex flex-wrap items-center gap-1.5">
+        {item.color && (
+          <span className="text-xs px-2.5 py-1 rounded-token-full bg-surface-2 text-text-secondary">{colorLabel(item.color)}</span>
+        )}
+        {item.region && (
+          <span className="text-xs px-2.5 py-1 rounded-token-full bg-surface-2 text-text-secondary">{item.region}</span>
+        )}
+        {item.target_price && (
+          <span className="text-xs px-2.5 py-1 rounded-token-full bg-surface-2 text-text-secondary">
+            ± {formatCurrency(item.target_price)}
+          </span>
+        )}
+      </div>
+      {item.notes && <p className="text-text-secondary text-sm">{item.notes}</p>}
+      <button
+        onClick={() => onConvert(item)}
+        className="mt-1 self-start inline-flex items-center gap-1.5 text-sm font-semibold text-accent-soft-text"
+      >
+        Toevoegen aan kelder <ArrowRightIcon size={13} />
+      </button>
     </div>
   )
 }
@@ -41,19 +50,21 @@ export default function Wishlist({ items, loading, error, onAddItem, onDeleteIte
   const [formOpen, setFormOpen] = useState(false)
 
   return (
-    <div className="space-y-5 max-w-2xl">
-      <PageHeader
-        eyebrow="Wijnen die je nog wil proberen"
-        title="Verlanglijst"
-        action={
-          <button
-            onClick={() => setFormOpen(true)}
-            className="h-11 px-4 border border-border-strong text-text-secondary text-sm font-medium flex items-center gap-1.5 hover:border-text-primary hover:text-text-primary transition-colors"
-          >
-            <PlusIcon size={14} /> Toevoegen
-          </button>
-        }
-      />
+    <div className="space-y-5">
+      <div className="flex items-center justify-between gap-3">
+        <div>
+          <h1 className="text-2xl font-bold text-text-primary flex items-center gap-2.5">
+            <BookmarkIcon size={20} className="text-accent-soft-text" /> Verlanglijst
+          </h1>
+          <p className="text-text-secondary text-sm mt-1">Wijnen die je nog wil kopen.</p>
+        </div>
+        <button
+          onClick={() => setFormOpen(true)}
+          className="h-11 px-4 rounded-token-md bg-accent hover:bg-accent-hover text-accent-contrast text-sm font-semibold flex items-center gap-1.5 shrink-0"
+        >
+          <PlusIcon size={15} /> Toevoegen
+        </button>
+      </div>
 
       {loading ? (
         <div className="py-16 flex justify-center">
@@ -62,14 +73,15 @@ export default function Wishlist({ items, loading, error, onAddItem, onDeleteIte
       ) : error ? (
         <p className="text-danger-text text-sm">Verlanglijst kon niet worden opgehaald: {error}</p>
       ) : items.length === 0 ? (
-        <div className="text-center py-16 border-t border-border">
+        <div className="bg-surface border border-border rounded-token-lg text-center py-16">
+          <BookmarkIcon size={28} className="text-text-tertiary mx-auto mb-3" />
           <p className="text-text-secondary text-sm">Nog niks op je verlanglijst.</p>
           <p className="text-text-tertiary text-xs mt-1">Zet hier wijnen op die je nog wil proberen of kopen.</p>
         </div>
       ) : (
-        <div>
-          {items.map((item, i) => (
-            <WishlistEntry key={item.id} item={item} index={i} onDelete={onDeleteItem} onConvert={onConvert} />
+        <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
+          {items.map((item) => (
+            <WishlistCard key={item.id} item={item} onDelete={onDeleteItem} onConvert={onConvert} />
           ))}
         </div>
       )}

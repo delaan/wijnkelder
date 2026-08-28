@@ -5,7 +5,6 @@ import { LOGO_PRESETS, LogoMark } from '../lib/logoPresets'
 import { setResetCode, resetCellar } from '../lib/cellarApi'
 import { downloadWinesCsv } from '../lib/exportUtils'
 import ExportReport from './ExportReport'
-import PageHeader from './PageHeader'
 import {
   SunIcon,
   MoonIcon,
@@ -20,10 +19,10 @@ import {
 
 function SettingsSection({ title, description, children }) {
   return (
-    <section className="border border-border-strong bg-surface p-5">
-      <p className="kicker mb-1.5">{title}</p>
-      {description && <p className="text-text-secondary text-sm mb-4">{description}</p>}
-      {!description && <div className="mb-2" />}
+    <section className="bg-surface border border-border rounded-token-lg p-5">
+      <h2 className="font-semibold text-text-primary">{title}</h2>
+      {description && <p className="text-text-secondary text-sm mt-0.5 mb-4">{description}</p>}
+      {!description && <div className="mt-4" />}
       {children}
     </section>
   )
@@ -162,7 +161,10 @@ export default function SettingsPage({
 
   return (
     <div className="space-y-6 w-full">
-      <PageHeader eyebrow="Naam, vormgeving en beheer" title="Instellingen" />
+      <div>
+        <h1 className="text-2xl font-bold text-text-primary">Instellingen</h1>
+        <p className="text-text-secondary text-sm mt-1">Naam, logo, vormgeving en beheer van je kelder.</p>
+      </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 items-start lg:items-stretch">
       <SettingsSection title="Identiteit">

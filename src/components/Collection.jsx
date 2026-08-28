@@ -1,10 +1,9 @@
 import { useEffect, useMemo, useState } from 'react'
 import { GridIcon, ListIcon, ChevronDownIcon, CheckIcon, HeartIcon } from './icons'
-import { WINE_COLORS, colorLabel, tasteLabel, totalBottles } from '../lib/wineHelpers'
+import { WINE_COLORS, colorLabel, tasteLabel } from '../lib/wineHelpers'
 import WineGridCard from './WineGridCard'
 import WineListRow from './WineListRow'
 import EmptyState from './EmptyState'
-import PageHeader from './PageHeader'
 import { useFocusTrap } from '../hooks/useFocusTrap'
 
 // Compacte, aantikbare dropdown voor keuzes met veel opties (sorteren,
@@ -136,7 +135,6 @@ export default function Collection({
   // uitgezet op de losse (desktop-only) Favorieten-weergave zelf, en in
   // Gastmodus, om dubbele/overbodige UI te voorkomen.
   showFavoritesToggle = true,
-  title = 'Collectie',
 }) {
   const persisted = persist ? readPersisted() : {}
   const [viewMode, setViewMode] = useState(persisted.viewMode || 'grid')
@@ -188,8 +186,6 @@ export default function Collection({
 
   return (
     <div className="space-y-5">
-      <PageHeader eyebrow={`${wines.length} wijnen · ${totalBottles(wines)} flessen`} title={title} />
-
       <div className="flex items-center gap-2 overflow-x-auto -mx-1 px-1 pb-0.5" role="group" aria-label="Filter op wijntype">
         {showFavoritesToggle && (
           <button
@@ -262,7 +258,7 @@ export default function Collection({
           <div key={group.label || 'all'}>
             {group.label && <h3 className="text-sm font-semibold text-text-secondary mb-2.5 mt-4">{group.label}</h3>}
             {viewMode === 'grid' ? (
-              <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-x-6 gap-y-8">
+              <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4">
                 {group.wines.map((wine) => (
                   <WineGridCard
                     key={wine.id}
@@ -274,7 +270,7 @@ export default function Collection({
                 ))}
               </div>
             ) : (
-              <div>
+              <div className="divide-y divide-border bg-surface border border-border rounded-token-lg px-2">
                 {group.wines.map((wine) => (
                   <WineListRow
                     key={wine.id}

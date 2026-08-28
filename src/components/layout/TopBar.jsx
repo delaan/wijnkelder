@@ -20,20 +20,20 @@ export default function TopBar({ title, cellarName, logoType, logoUrl, onAdd, em
           balk (incl. tekst) wazig als de blur direct op het sticky element
           zelf staat, i.p.v. op een aparte laag erachter — vooral zichtbaar
           op iPad. */}
-      <div className="absolute inset-0 bg-surface/95 backdrop-blur rule-double-b" aria-hidden="true" />
+      <div className="absolute inset-0 bg-surface/90 backdrop-blur border-b border-border" aria-hidden="true" />
       <div className="relative safe-top">
       <div className="h-16 flex items-center gap-3">
         <div className="hidden md:flex items-center gap-2.5 w-64 shrink-0 min-w-0 pl-5">
           <span className="w-8 h-8 rounded-token-md bg-accent-soft flex items-center justify-center shrink-0 overflow-hidden">
             <LogoMark logoType={logoType} logoUrl={logoUrl} size={18} className="text-accent-soft-text" />
           </span>
-          <span className="font-serif font-semibold text-text-primary truncate min-w-0" title={cellarName}>
+          <span className="font-semibold text-text-primary truncate min-w-0" title={cellarName}>
             {cellarName}
           </span>
         </div>
 
         <div className="flex-1 min-w-0 pl-4 sm:pl-6 md:pl-0">
-          {title && <span className="font-serif font-semibold text-text-primary truncate md:hidden">{title}</span>}
+          {title && <span className="font-semibold text-text-primary truncate md:hidden">{title}</span>}
         </div>
 
         <div className="flex items-center gap-2 shrink-0 pr-4 sm:pr-6">
@@ -42,7 +42,7 @@ export default function TopBar({ title, cellarName, logoType, logoUrl, onAdd, em
           {onAdd && (
             <button
               onClick={onAdd}
-              className="hidden md:flex h-11 px-4 rounded-token-md bg-accent hover:bg-accent-hover text-accent-contrast text-sm font-semibold items-center gap-2 transition-colors duration-fast"
+              className="hidden md:flex h-11 px-4 rounded-token-md bg-accent hover:bg-accent-hover text-accent-contrast text-sm font-semibold items-center gap-2 shadow-[0_0_0_1px_var(--accent-soft),0_8px_24px_-8px_var(--accent)] transition-colors duration-fast"
             >
               <PlusIcon size={17} />
               <span>Wijn toevoegen</span>
