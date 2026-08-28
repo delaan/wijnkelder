@@ -7,7 +7,6 @@ import {
   HistoryIcon,
   BookmarkIcon,
   MapIcon,
-  BowlFoodIcon,
 } from '../components/icons'
 
 // Eén bron voor de navigatie, gedeeld door zijbalk en bottom nav, zodat
@@ -24,7 +23,6 @@ export const NAV_ITEMS = [
   { key: 'favorites', label: 'Favorieten', icon: HeartIcon, section: 'primary', mobile: false },
   { key: 'wishlist', label: 'Verlanglijst', icon: BookmarkIcon, section: 'primary', mobile: false, more: true },
   { key: 'history', label: 'Geschiedenis', icon: HistoryIcon, section: 'primary', mobile: false, more: true },
-  { key: 'pairing', label: 'Wine, food, match!', icon: BowlFoodIcon, section: 'primary', mobile: false, more: true },
   { key: 'guest', label: 'Gastmodus', icon: GuestIcon, section: 'secondary', mobile: false, more: true },
   { key: 'settings', label: 'Instellingen', icon: SettingsIcon, section: 'secondary' },
 ]

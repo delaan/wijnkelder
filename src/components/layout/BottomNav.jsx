@@ -6,7 +6,7 @@ import { useFocusTrap } from '../../hooks/useFocusTrap'
 const MOBILE_NAV_ITEMS = NAV_ITEMS.filter((item) => item.mobile !== false)
 // Vaste volgorde voor het "Meer"-keuzemenu, los van de volgorde in de
 // zijbalk — dit is wat Delano expliciet heeft opgegeven.
-const MORE_MENU_KEYS = ['history', 'wishlist', 'cellarmap', 'pairing', 'guest']
+const MORE_MENU_KEYS = ['history', 'wishlist', 'cellarmap', 'guest']
 const MORE_MENU_ITEMS = MORE_MENU_KEYS.map((key) => NAV_ITEMS.find((item) => item.key === key)).filter(Boolean)
 
 function MoreSheet({ view, onNavigate, onClose }) {
